@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: "git@github.com:zbigniewzolnierowicz/gensokyo.git"
+  url: "https://github.com/zbigniewzolnierowicz/gensokyo"
   ref:
     branch: "main"
   ignore: |
