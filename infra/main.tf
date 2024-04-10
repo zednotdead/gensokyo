@@ -59,6 +59,10 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   node_name = each.value.node_name
   tags      = ["kubernetes", "talos"]
 
+  agent {
+    enabled = true
+  }
+
   initialization {
     user_account {
       username = "admin"
@@ -99,6 +103,6 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
 
   network_device {
     bridge = "vmbr0"
-    mac_address = each.value.talos_nic
+    mac_address = upper(each.value.talos_nic)
   }
 }
