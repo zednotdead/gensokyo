@@ -59,10 +59,6 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   node_name = each.value.node_name
   tags      = ["kubernetes", "talos"]
 
-  agent {
-    enabled = true
-  }
-
   initialization {
     user_account {
       username = "admin"
