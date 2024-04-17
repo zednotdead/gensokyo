@@ -27,6 +27,10 @@ spec:
     - name: rook-ceph-operator
       namespace: rook-ceph
   values:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128M
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -78,61 +82,47 @@ spec:
         mon: *placement
       resources:
         mgr:
-          limits:
-            cpu: 500m
-            memory: 640Mi
           requests:
-            cpu: 50m
-            memory: 320Mi
+            cpu: "125m"
+            memory: "512M"
+          limits:
+            memory: "1G"
         mon:
-          limits:
-            cpu: 1000m
-            memory: 1280Mi
           requests:
-            cpu: 50m
-            memory: 256Mi
+            cpu: "49m"
+            memory: "512M"
+          limits:
+            memory: "1G"
         osd:
-          limits:
-            cpu: 500m
-            memory: 1792Mi
           requests:
-            cpu: 250m
-            memory: 256Mi
-        prepareosd:
+            cpu: "442m"
+            memory: "1024M"
           limits:
-            cpu: 1000m
-            memory: 400Mi
-          requests:
-            cpu: 50m
-            memory: 200Mi
+            memory: "1536M"
         mgr-sidecar:
-          limits:
-            cpu: 256m
-            memory: 100Mi
           requests:
-            cpu: 50m
-            memory: 40Mi
+            cpu: "49m"
+            memory: "94M"
+          limits:
+            memory: "208M"
         crashcollector:
-          limits:
-            cpu: 100m
-            memory: 220M
           requests:
-            cpu: 15m
-            memory: 64M
+            cpu: "15m"
+            memory: "64M"
+          limits:
+            memory: "64M"
         logcollector:
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
           requests:
             cpu: "100m"
-            memory: "100Mi"
+            memory: "100M"
+          limits:
+            memory: "1G"
         cleanup:
-          limits:
-            cpu: "500m"
-            memory: "1Gi"
           requests:
-            cpu: "100m"
-            memory: "100Mi"
+            cpu: "250m"
+            memory: "100M"
+          limits:
+            memory: "1G"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -163,49 +153,5 @@ spec:
       deletionPolicy: Delete
     cephFileSystems: []
     cephFileSystemVolumeSnapshotClass:
-      enabled: true
-      name: csi-ceph-filesystem
-      isDefault: false
-      deletionPolicy: Delete
-    cephObjectStores:
-      - name: ceph-objectstore
-        spec:
-          metadataPool:
-            failureDomain: host
-            replicated:
-              size: 1
-          dataPool:
-            failureDomain: host
-            erasureCoded:
-              dataChunks: 2
-              codingChunks: 1
-          preservePoolsOnDelete: true
-          gateway:
-            port: 80
-            resources:
-              requests:
-                cpu: 100m
-                memory: 1Gi
-              limits:
-                memory: 2Gi
-            instances: 2
-            priorityClassName: system-cluster-critical
-          healthCheck:
-            bucket:
-              interval: 60s
-        storageClass:
-          enabled: true
-          name: ceph-bucket
-          reclaimPolicy: Delete
-          volumeBindingMode: Immediate
-          parameters:
-            region: us-east-1
-        ingress:
-          enabled: true
-          ingressClassName: internal
-          host:
-            name: &host s3.${SECRET_DOMAIN}
-            path: /
-          tls:
-            - hosts:
-                - *host
+      enabled: false
+    cephObjectStores: []
