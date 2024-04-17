@@ -31,6 +31,8 @@ tasks:
     cmd: tofu plan
     silent: true
   apply:
+    aliases:
+      - up
     desc: "Run the infrastructure"
     dir: infra
     cmd: tofu apply
@@ -40,7 +42,9 @@ tasks:
     dir: infra
     cmd: tofu show
     silent: true
-  down:
+  destroy:
+    aliases:
+      - down
     desc: "Destroy the infrastructure"
     dir: infra
     cmd: tofu destroy
