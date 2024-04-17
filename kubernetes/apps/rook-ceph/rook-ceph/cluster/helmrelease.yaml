@@ -82,7 +82,7 @@ spec:
             cpu: 100m
             memory: 512Mi
           limits:
-            memory: 2Gi
+            memory: 1Gi
         mon:
           requests:
             cpu: 50m
@@ -92,9 +92,9 @@ spec:
         osd:
           requests:
             cpu: 500m
-            memory: 2Gi
+            memory: 512Mi
           limits:
-            memory: 6Gi
+            memory: 1Gi
         mgr-sidecar:
           requests:
             cpu: 50m
@@ -106,7 +106,7 @@ spec:
         spec:
           failureDomain: host
           replicated:
-            size: 3
+            size: 1
         storageClass:
           enabled: true
           name: ceph-block
@@ -134,11 +134,11 @@ spec:
         spec:
           metadataPool:
             replicated:
-              size: 3
+              size: 1
           dataPools:
             - failureDomain: host
               replicated:
-                size: 3
+                size: 1
               name: data0
           metadataServer:
             activeCount: 1
@@ -186,7 +186,7 @@ spec:
           metadataPool:
             failureDomain: host
             replicated:
-              size: 3
+              size: 1
           dataPool:
             failureDomain: host
             erasureCoded:

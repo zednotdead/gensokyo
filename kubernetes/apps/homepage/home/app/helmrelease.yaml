@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app homepage
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      main:
+        strategy: RollingUpdate
+        replicas: 3
+        containers:
+          main:
+            image:
+              repository: ghcr.io/zbigniewzolnierowicz/home
+              tag: v3.3.2
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128M
+              limits:
+                memory: 256M
+            env:
+              HOST: 0.0.0.0
+              PORT: &port 80
+              PAYLOAD_URL: "http://payload-homepage"
+              S3_PUBLIC_URL: "https://s3.zed.gay"
+    service:
+      main:
+        ports:
+          http:
+            port: *port
+    ingress:
+      main:
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTP
+        hosts:
+          - host: &host "${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    defaultPodOptions:
+      imagePullSecrets:
+        - name: ghcr-secret
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *app
