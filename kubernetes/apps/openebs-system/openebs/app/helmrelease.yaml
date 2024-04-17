@@ -21,16 +21,16 @@ spec:
     remediation:
       retries: 3
   values:
+    release:
+      version: "4.0.0"
+    mayastor:
+      enabled: true
+      hostpathClass:
+        enabled: true
+        name: openebs-mayastor
+        isDefaultClass: true
+        basePath: /var/openebs/local
     ndm:
       enabled: false
     ndmOperator:
       enabled: false
-    localprovisioner:
-      enabled: true
-      deviceClass:
-        enabled: false
-      hostpathClass:
-        enabled: true
-        name: openebs-hostpath
-        isDefaultClass: false
-        basePath: /var/openebs/local
