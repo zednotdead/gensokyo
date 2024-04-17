@@ -23,25 +23,25 @@ tasks:
   upgrade:
     desc: "Upgrade terraform providers"
     dir: infra
-    cmds:
-      - tofu init -upgrade
+    cmd: tofu init -upgrade
     silent: true
   plan:
     desc: "Plan the infrastructure"
     dir: infra
-    cmds:
-      - tofu plan
+    cmd: tofu plan
     silent: true
   apply:
     desc: "Run the infrastructure"
     dir: infra
-    cmds:
-      - tofu apply
+    cmd: tofu apply
     silent: true
   show:
     desc: "Show the infrastructure"
     dir: infra
-    cmds:
-      - tofu show
+    cmd: tofu show
     silent: true
-
+  down:
+    desc: "Destroy the infrastructure"
+    dir: infra
+    cmd: tofu destroy
+    silent: true
