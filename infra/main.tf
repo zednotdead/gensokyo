@@ -33,7 +33,6 @@ locals {
   hosts  = local.config.bootstrap_node_inventory
 }
 
-
 resource "proxmox_virtual_environment_file" "talos_iso" {
   for_each = {
     for index, node in local.hosts :
@@ -98,7 +97,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge      = "vmbr0"
     mac_address = upper(each.value.talos_nic)
   }
 }
