@@ -3,6 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./namespace.yaml
-  - ./payload-home/ks.yaml
-  - ./home/ks.yaml
   - ./ghcr-secret.sops.yaml
+  # - ./payload-home/ks.yaml
+  # - ./home/ks.yaml
