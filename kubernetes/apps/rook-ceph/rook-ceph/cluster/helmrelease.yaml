@@ -114,9 +114,9 @@ spec:
         logcollector:
           requests:
             cpu: "100m"
-            memory: "100M"
+            memory: "25M"
           limits:
-            memory: "1G"
+            memory: "50M"
         cleanup:
           requests:
             cpu: "250m"
