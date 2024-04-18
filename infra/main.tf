@@ -56,6 +56,8 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   vm_id     = each.value.vmid
   name      = each.value.name
   node_name = each.value.node_name
+  machine   = "q35"
+  bios      = "seabios"
   tags      = ["kubernetes", "talos"]
 
   initialization {
@@ -95,9 +97,24 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
     size         = 100
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
   }
-
+  #
+  # efi_disk {
+  #   datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
+  #   type         = "4m"
+  #   file_format  = "raw"
+  # }
+  #
   network_device {
     bridge      = "vmbr0"
     mac_address = upper(each.value.talos_nic)
+  }
+
+  dynamic "hostpci" {
+    for_each = each.value.node_name == "thinkcentre" ? [] : [each.value.node_name]
+    content {
+      pcie   = true
+      device = "hostpci0"
+      id     = "0000:00:02"
+    }
   }
 }

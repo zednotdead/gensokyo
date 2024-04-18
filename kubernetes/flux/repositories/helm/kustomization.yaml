@@ -16,3 +16,6 @@ resources:
   - ./rook-ceph.yaml
   - ./external-secrets.yaml
   - ./cloudnative-pg.yaml
+  - ./node-feature-discovery.yaml
+  - ./intel.yaml
+  - ./bitnami.yaml
