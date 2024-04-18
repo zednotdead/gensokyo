@@ -7,12 +7,4 @@ if [[ ! -d $TALOS_MEDIA_PATH ]] then
     mkdir $TALOS_MEDIA_PATH
 fi
 
-wget "https://github.com/siderolabs/talos/releases/download/v1.6.7/nocloud-amd64.raw.xz" -c \
-    -O "$TALOS_MEDIA_PATH/nocloud-amd64.raw.xz"
-
-if [[ ! -f "$TALOS_MEDIA_PATH/nocloud-amd64.raw.xz" ]] then
-    echo "Could not get the Talos install media - it probably failed to download."
-    exit 1
-fi
-
-xz -d -c "$TALOS_MEDIA_PATH/nocloud-amd64.raw.xz" > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
+curl "https://factory.talos.dev/image/ebdfa27a8d6272acf806ac6a5c968c3c284a47ce880273cecb19442c11bf0474/v1.7.0-beta.1/metal-amd64.raw.xz" | xz -d > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
