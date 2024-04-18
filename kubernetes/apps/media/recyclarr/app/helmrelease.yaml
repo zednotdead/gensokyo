@@ -59,8 +59,9 @@ spec:
               tag: 6.0.2
             env:
               TZ: America/New_York
-              RADARR_API_KEY: "${SECRET_RADARR_API_KEY}"
-              SONARR_API_KEY: "${SECRET_SONARR_API_KEY}"
+            envFrom:
+              - secretRef:
+                  name: recyclarr-secret
             resources:
               requests:
                 cpu: 5m
