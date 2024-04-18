@@ -3,13 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-ceph
+  name: rook-ceph
   namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
+      app.kubernetes.io/name: rook-ceph
   path: "./kubernetes/apps/rook-ceph/rook-ceph/operator"
   prune: true # TODO: delete after testing
   # prune: false # never should be deleted
@@ -25,13 +25,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rook-ceph-cluster
+  name: rook-ceph-cluster
   namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
+      app.kubernetes.io/name: rook-ceph-cluster
   dependsOn:
     - name: rook-ceph
   path: "./kubernetes/apps/rook-ceph/rook-ceph/cluster"
