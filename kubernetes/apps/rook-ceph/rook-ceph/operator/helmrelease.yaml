@@ -24,6 +24,7 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    disableAdmissionController: true
     csi:
       cephFSKernelMountOptions: ms_mode=prefer-crc
       enableLiveness: true

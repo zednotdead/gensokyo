@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      qbittorrent:
         containers:
           main:
             image:
@@ -40,13 +40,14 @@ spec:
               QBT_Preferences__WebUI__LocalHostAuth: false
     service:
       main:
+        controller: qbittorrent
         ports:
           http:
             port: *port
       bittorrent:
         enabled: true
         type: LoadBalancer
-        controller: main
+        controller: qbittorrent
         annotations:
           io.cilium/lb-ipam-ips: ${QBIT_ADDRESS}
         ports:
@@ -66,12 +67,13 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: qbittorrent
                   port: http
         tls:
           - hosts:
               - *host
     defaultPodOptions:
+      enableServiceLinks: true
       securityContext:
         runAsUser: 568
         runAsGroup: 568
