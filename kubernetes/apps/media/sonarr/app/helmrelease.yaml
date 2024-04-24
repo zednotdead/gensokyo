@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      sonarr:
         containers:
           main:
             image:
@@ -43,6 +43,7 @@ spec:
                   name: sonarr-secret
     service:
       main:
+        controller: sonarr
         ports:
           http:
             port: *port
@@ -56,12 +57,13 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: sonarr
                   port: http
         tls:
           - hosts:
               - *host
     defaultPodOptions:
+      enableServiceLinks: true
       securityContext:
         runAsUser: 568
         runAsGroup: 568

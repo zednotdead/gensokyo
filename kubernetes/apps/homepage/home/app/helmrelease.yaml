@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      homepage:
         strategy: RollingUpdate
         replicas: 2
         containers:
@@ -47,6 +47,7 @@ spec:
               S3_PUBLIC_URL: "https://s3.zed.gay"
     service:
       main:
+        controller: homepage
         ports:
           http:
             port: *port
@@ -63,12 +64,13 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: homepage
                   port: http
         tls:
           - hosts:
               - *host
     defaultPodOptions:
+      enableServiceLinks: true
       imagePullSecrets:
         - name: ghcr-secret
     podAnnotations:
