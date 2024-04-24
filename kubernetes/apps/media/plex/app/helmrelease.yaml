@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -27,7 +27,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      plex:
         type: statefulset
         containers:
           main:
@@ -47,6 +47,7 @@ spec:
 
     service:
       main:
+        controller: plex
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         annotations:
@@ -67,11 +68,12 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: plex
                   port: http
         tls:
           - hosts: [*host]
     defaultPodOptions:
+      enableServiceLinks: true
       securityContext:
         runAsUser: 568
         runAsGroup: 568
