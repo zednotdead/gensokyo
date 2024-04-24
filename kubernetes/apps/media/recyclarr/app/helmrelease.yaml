@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      recyclarr:
         type: statefulset
         statefulset:
           volumeClaimTemplates:
@@ -37,6 +37,7 @@ spec:
               globalMounts:
                 - path: /config
         pod:
+          enableServiceLinks: true
           securityContext:
             runAsUser: 568
             runAsGroup: 568
@@ -70,9 +71,11 @@ spec:
                 memory: 128M
     service:
       main:
+        controller: radarr
         enabled: false
 
     defaultPodOptions:
+      enableServiceLinks: true
       podSecurityContext:
         runAsUser: 568
         runAsGroup: 568
