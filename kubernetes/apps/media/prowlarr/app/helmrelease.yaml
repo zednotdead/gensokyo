@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -27,7 +27,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      prowlarr:
         containers:
           main:
             image:
@@ -40,6 +40,7 @@ spec:
               PROWLARR__PORT: &port 80
     service:
       main:
+        controller: prowlarr
         ports:
           http:
             port: *port
@@ -53,12 +54,13 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: prowlarr
                   port: http
         tls:
           - hosts:
               - *host
     defaultPodOptions:
+      enableServiceLinks: true
       securityContext:
         runAsUser: 568
         runAsGroup: 568
