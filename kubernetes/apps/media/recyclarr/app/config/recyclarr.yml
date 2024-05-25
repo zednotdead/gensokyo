@@ -8,6 +8,16 @@ sonarr:
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
 
+    # Media Naming Configuration
+    media_naming:
+      series: plex
+      season: default
+      episodes:
+        rename: true
+        standard: default
+        daily: default
+        anime: default
+
     quality_definition:
       type: series
 
@@ -107,6 +117,12 @@ radarr:
 
     delete_old_custom_formats: true
     replace_existing_custom_formats: true
+
+    media_naming:
+      folder: plex
+      movie:
+        rename: true
+        standard: default
 
     quality_definition:
       type: movie
