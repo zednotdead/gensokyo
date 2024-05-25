@@ -35,8 +35,7 @@ spec:
   dependsOn:
     - name: rook-ceph
   path: "./kubernetes/apps/rook-ceph/rook-ceph/cluster"
-  prune: true # TODO: delete after testing
-  # prune: false # never should be deleted
+  prune: false # never should be deleted
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
