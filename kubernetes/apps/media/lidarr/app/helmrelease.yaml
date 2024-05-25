@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app lidarr
@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.1.0
+      version: 3.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -32,7 +32,7 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/lidarr-develop
-              tag: 2.2.0.4053
+              tag: 2.3.3.4204
             env:
               TZ: Europe/Warsaw
               LIDARR__INSTANCE_NAME: LIDARR
@@ -58,7 +58,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: lidarr
+                  identifier: main
                   port: http
         tls:
           - hosts:
