@@ -58,7 +58,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: lidarr
+                  identifier: main
                   port: http
         tls:
           - hosts:
