@@ -22,6 +22,7 @@ metadata:
   name: external-secrets-stores
   namespace: flux-system
 spec:
+  targetNamespace: external-secrets
   path: ./kubernetes/apps/external-secrets/external-secrets/stores
   prune: true
   sourceRef:
