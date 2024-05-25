@@ -64,7 +64,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: homepage
+                  identifier: main
                   port: http
         tls:
           - hosts:

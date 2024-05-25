@@ -57,7 +57,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: radarr
+                  identifier: main
                   port: http
         tls:
           - hosts:

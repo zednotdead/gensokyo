@@ -62,7 +62,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: payload
+                  identifier: main
                   port: http
         tls:
           - hosts:

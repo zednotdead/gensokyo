@@ -67,7 +67,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: qbittorrent
+                  identifier: main
                   port: http
         tls:
           - hosts:
