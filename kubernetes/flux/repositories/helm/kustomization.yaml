@@ -19,3 +19,5 @@ resources:
   - ./node-feature-discovery.yaml
   - ./intel.yaml
   - ./bitnami.yaml
+  - ./backube.yaml
+  - ./piraeus.yaml

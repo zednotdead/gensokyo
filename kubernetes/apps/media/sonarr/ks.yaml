@@ -7,6 +7,8 @@ metadata:
 spec:
   targetNamespace: media
   path: ./kubernetes/apps/media/sonarr/app
+  dependsOn:
+    - name: external-secrets-stores
   prune: true
   sourceRef:
     kind: GitRepository
