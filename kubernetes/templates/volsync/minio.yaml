@@ -37,9 +37,6 @@ spec:
     pruneIntervalDays: 7
     repository: "${APP}-volsync-secret"
     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-4Gi}"
-    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}"
-    cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"]
     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
     accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
     moverSecurityContext:
@@ -50,27 +47,24 @@ spec:
       hourly: 24
       daily: 7
       weekly: 5
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
-apiVersion: volsync.backube/v1alpha1
-kind: ReplicationDestination
-metadata:
-  name: "${APP}-dst"
-spec:
-  trigger:
-    manual: restore-once
-  restic:
-    repository: "${APP}-volsync-secret"
-    copyMethod: Snapshot # must be Snapshot
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
-    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}"
-    cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"]
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-8Gi}"
-    storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-    accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
-    capacity: "${VOLSYNC_CAPACITY}"
-    # moverSecurityContext:
-    #   runAsUser: 568
-    #   runAsGroup: 568
-    #   fsGroup: 568
-
+# ---
+# # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
+# apiVersion: volsync.backube/v1alpha1
+# kind: ReplicationDestination
+# metadata:
+#   name: "${APP}-dst"
+# spec:
+#   trigger:
+#     manual: restore-once
+#   restic:
+#     repository: "${APP}-volsync-secret"
+#     copyMethod: Snapshot # must be Snapshot
+#     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
+#     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
+#     accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
+#     capacity: "${VOLSYNC_CAPACITY}"
+#     # moverSecurityContext:
+#     #   runAsUser: 568
+#     #   runAsGroup: 568
+#     #   fsGroup: 568
+#
