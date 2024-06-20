@@ -12,13 +12,6 @@ spec:
   nfs:
     server: "${NAS_ADDRESS}"
     path: "${NAS_BASE_URL}/media/software/applications/immich"
-  # Note: The first two options are strictly for NFSv4.2
-  mountOptions:
-    - nfsvers=4
-    - tcp
-    - hard
-    - noatime
-    - nodiratime
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -7,4 +7,4 @@ if [[ ! -d $TALOS_MEDIA_PATH ]] then
     mkdir $TALOS_MEDIA_PATH
 fi
 
-curl -L "https://github.com/siderolabs/talos/releases/download/v1.7.2/nocloud-amd64.raw.xz" | xz -d > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
+curl -L "https://github.com/siderolabs/talos/releases/download/v1.7.4/nocloud-amd64.raw.xz" | xz -d > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
