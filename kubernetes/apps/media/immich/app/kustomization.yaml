@@ -5,7 +5,7 @@ resources:
   # - ./externalsecret.yaml
   - ./database.yaml
   - ./nfs-pvc.yaml
-  # - ./configmap.yaml
-  # - ./redis
-  # - ./server
-  # - ./machine-learning
+  - ./configmap.yaml
+  - ./redis
+  - ./server
+  - ./machine-learning

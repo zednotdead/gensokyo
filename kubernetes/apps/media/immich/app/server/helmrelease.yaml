@@ -1,0 +1,138 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich-server
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+
+  values:
+    controllers:
+      immich-server:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          enableServiceLinks: false
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: immich-server
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/immich-app/immich-server
+              tag: v1.106.4
+
+            env:
+              LOG_LEVEL: verbose
+              IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
+              SERVER_PORT: &port 3001
+              DB_HOSTNAME: "postgres16-rw.database.svc.cluster.local"
+              DB_PORT: 5432
+              DB_DATABASE_NAME:
+                valueFrom:
+                  secretKeyRef:
+                    key: DATABASE_NAME
+                    name: immich-immich-user
+              DB_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    key: LOGIN
+                    name: immich-immich-user
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    key: PASSWORD
+                    name: immich-immich-user
+            envFrom:
+              - configMapRef:
+                  name: immich-configmap
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 4096Mi
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/server-info/ping
+                    port: 3001
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/server-info/ping
+                    port: 3001
+                  failureThreshold: 30
+                  periodSeconds: 5
+                  successThreshold: 1
+                  timeoutSeconds: 1
+
+    service:
+      main:
+        controller: immich-server
+        ports:
+          http:
+            port: *port
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        className: external
+        hosts:
+          - host: &host "img.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      library:
+        type: persistentVolumeClaim
+        existingClaim: immich-nfs
+        globalMounts:
+          - path: *mediaLocation

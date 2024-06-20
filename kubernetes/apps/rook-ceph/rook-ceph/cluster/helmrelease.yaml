@@ -95,7 +95,7 @@ spec:
             memory: "1G"
         osd:
           requests:
-            cpu: "442m"
+            cpu: "200m"
             memory: "1024M"
           limits:
             memory: "1536M"
@@ -113,13 +113,13 @@ spec:
             memory: "64M"
         logcollector:
           requests:
-            cpu: "100m"
+            cpu: "50m"
             memory: "25M"
           limits:
             memory: "50M"
         cleanup:
           requests:
-            cpu: "250m"
+            cpu: "50m"
             memory: "100M"
           limits:
             memory: "1G"
