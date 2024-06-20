@@ -21,3 +21,4 @@ resources:
   - ./bitnami.yaml
   - ./backube.yaml
   - ./piraeus.yaml
+  - ./ext-postgres-operator.yaml

@@ -6,10 +6,8 @@ metadata:
   name: postgres16
 spec:
   instances: 1
+  imageName: ghcr.io/tensorchord/cloudnative-pgvecto.rs:16.2-v0.2.0
   primaryUpdateStrategy: unsupervised
-  enableSuperuserAccess: true
-  superuserSecret:
-    name: cloudnative-pg-secret
   storage:
     size: 20Gi
   monitoring:
@@ -18,3 +16,45 @@ spec:
     podMonitorMetricRelabelings:
       - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
       - { regex: cluster, action: labeldrop }
+  superuserSecret:
+    name: &secret cloudnative-pg-secret
+  enableSuperuserAccess: true
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore: &barmanObjectStore
+      data:
+        compression: bzip2
+      wal:
+        compression: bzip2
+        maxParallel: 8
+      destinationPath: s3://postgresql/pgvector
+      endpointURL: http://${NAS_ADDRESS}
+      # Note: serverName version needs to be incremented or changed
+      # when recovering from an existing cnpg cluster
+      serverName: &currentCluster pgvector-v1
+      s3Credentials:
+        accessKeyId:
+          name: *secret
+          key: access_id
+        secretAccessKey:
+          name: *secret
+          key: access_key
+  # Note: previousCluster needs to be set to the name of the previous
+  # cluster when recovering from an existing cnpg cluster
+  # bootstrap:
+  #   recovery:
+  #     # volumeSnapshots:
+  #     #   storage:
+  #     #     name: pg-snapshot
+  #     #     kind: VolumeSnapshot
+  #     #     apiGroup: snapshot.storage.k8s.io
+  #     source: &previousCluster pgvector-v2
+  # externalClusters:
+  #   - name: *previousCluster
+  #     barmanObjectStore:
+  #       <<: *barmanObjectStore
+  #       serverName: *previousCluster
+  #
+  postgresql:
+    shared_preload_libraries:
+      - "vectors.so"
