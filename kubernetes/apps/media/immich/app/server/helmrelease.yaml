@@ -15,7 +15,6 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
   maxHistory: 2
   install:
     createNamespace: true
@@ -53,24 +52,20 @@ spec:
             env:
               LOG_LEVEL: verbose
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
-              SERVER_PORT: &port 3001
+              IMMICH_PORT: &port 3001
               DB_HOSTNAME: "postgres16-rw.database.svc.cluster.local"
               DB_PORT: 5432
-              DB_DATABASE_NAME:
-                valueFrom:
-                  secretKeyRef:
-                    key: DATABASE_NAME
-                    name: immich-immich-user
+              DB_DATABASE_NAME: immich
               DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
-                    key: LOGIN
-                    name: immich-immich-user
+                    key: username
+                    name: immich-secret
               DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    key: PASSWORD
-                    name: immich-immich-user
+                    key: password
+                    name: immich-secret
             envFrom:
               - configMapRef:
                   name: immich-configmap
@@ -87,7 +82,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/server-info/ping
-                    port: 3001
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -99,7 +94,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/server-info/ping
-                    port: 3001
+                    port: *port
                   failureThreshold: 30
                   periodSeconds: 5
                   successThreshold: 1
@@ -117,7 +112,7 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        className: external
+        className: internal
         hosts:
           - host: &host "img.${SECRET_DOMAIN}"
             paths:
