@@ -111,8 +111,7 @@ spec:
         enabled: true
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        className: internal
+        className: external
         hosts:
           - host: &host "img.${SECRET_DOMAIN}"
             paths:
