@@ -73,7 +73,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: sonarr-config
+        existingClaim: sonarr
       media:
         enabled: true
         type: nfs
@@ -91,8 +91,5 @@ spec:
     podAnnotations:
       secret.reloader.stakater.com/reload: sonarr
     resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
       limits:
         memory: 500Mi

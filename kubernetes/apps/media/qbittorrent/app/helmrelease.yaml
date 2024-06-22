@@ -99,8 +99,5 @@ spec:
         server: "${NAS_ADDRESS}"
         path: "${NAS_BASE_URL}/media/downloads"
     resources:
-      requests:
-        cpu: 10m
-        memory: 250Mi
       limits:
         memory: 1Gi

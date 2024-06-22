@@ -35,9 +35,6 @@ spec:
               repository: ghcr.io/zbigniewzolnierowicz/home
               tag: v3.3.2
             resources:
-              requests:
-                cpu: 50m
-                memory: 128M
               limits:
                 memory: 256M
             env:

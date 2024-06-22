@@ -5,7 +5,7 @@ resources:
   - ./namespace.yaml
   - ./sonarr/ks.yaml
   - ./qbittorrent/ks.yaml
-  - ./plex/ks.yaml
+  - ./jellyfin/ks.yaml
   - ./lidarr/ks.yaml
   - ./radarr/ks.yaml
   - ./prowlarr/ks.yaml
