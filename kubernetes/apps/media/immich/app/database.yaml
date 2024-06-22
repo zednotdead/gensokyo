@@ -6,3 +6,15 @@ metadata:
   namespace: immich
 spec:
   database: immich
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: immich-user
+  namespace: immich
+spec:
+  role: immich
+  database: immich-db
+  secretName: immich
+  privileges: OWNER
+

@@ -27,8 +27,8 @@ spec:
       wal:
         compression: bzip2
         maxParallel: 8
-      destinationPath: s3://postgresql/pgvector
-      endpointURL: http://${NAS_ADDRESS}
+      destinationPath: s3://postgresql
+      endpointURL: http://${NAS_ADDRESS}:9000
       # Note: serverName version needs to be incremented or changed
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster pgvector-v1
@@ -38,7 +38,7 @@ spec:
           key: access_id
         secretAccessKey:
           name: *secret
-          key: access_key
+          key: secret_key
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   # bootstrap:
