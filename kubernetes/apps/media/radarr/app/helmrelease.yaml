@@ -34,10 +34,14 @@ spec:
               tag: 5.6.0
             env:
               TZ: Europe/Warsaw
-              RADARR__INSTANCE_NAME: Radarr
-              RADARR__LOG_LEVEL: info
-              RADARR__PORT: &port 80
-              RADARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+              RADARR__APP__INSTANCENAME: Radarr
+              RADARR__APP__THEME: dark
+              RADARR__AUTH__METHOD: External
+              RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              RADARR__LOG__DBENABLED: "False"
+              RADARR__LOG__LEVEL: info
+              RADARR__SERVER__PORT: &port 80
+              RADARR__UPDATE__BRANCH: develop
             envFrom:
               - secretRef:
                   name: radarr-secret
@@ -73,7 +77,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: radarr-config
+        existingClaim: radarr
       media:
         enabled: true
         type: nfs
