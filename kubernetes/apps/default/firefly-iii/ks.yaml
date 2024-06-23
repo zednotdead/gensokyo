@@ -22,22 +22,22 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: firefly-iii-importer
-#   namespace: flux-system
-# spec:
-#   targetNamespace: default
-#   path: ./kubernetes/apps/default/firefly-iii/importer
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: home-kubernetes
-#   dependsOn:
-#     - name: firefly-iii
-#   wait: false
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: firefly-iii-importer
+  namespace: flux-system
+spec:
+  targetNamespace: default
+  path: ./kubernetes/apps/default/firefly-iii/importer
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  dependsOn:
+    - name: firefly-iii
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
