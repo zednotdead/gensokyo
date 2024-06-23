@@ -43,6 +43,8 @@ includes:
     aliases:
       - "tf"
     taskfile: .taskfiles/Terraform/Taskfile.yaml
+  volsync:
+    taskfile: .taskfiles/VolSync/Taskfile.yaml
 
 tasks:
 
