@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: firefly-iii
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controllers:
+      firefly-iii:
+        containers:
+          main:
+            image:
+              repository: fireflyiii/core
+              tag: version-6.1.18
+            resources:
+              limits:
+                memory: 175Mi
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            envFrom:
+              - secretRef:
+                  name: firefly-iii-secret
+            env:
+              TZ: Europe/Warsaw
+              DB_CONNECTION: pgsql
+              DB_HOST: postgres16-rw.database.svc.cluster.local
+              DB_PORT: 5432
+              DB_DATABASE: firefly-iii
+              APP_URL: https://money.${SECRET_DOMAIN}
+              FIREFLY_III_LAYOUT: v1
+              ALLOW_WEBHOOKS: true
+              AUTHENTICATION_GUARD: web
+              ENABLE_EXCHANGE_RATES: true
+              ENABLE_EXTERNAL_RATES: true
+              MAIL_MAILER: smtp
+              MAIL_ENCRYPTION: tls
+              MAP_DEFAULT_ZOOM: "6"
+              TRUSTED_PROXIES: "**"
+          cronjob:
+            image:
+              repository: alpine
+              tag: 3.20.1
+              pullPolicy: IfNotPresent
+            command:
+              - sh
+            args:
+              - -c
+              - >-
+                echo "0 */3 * * * wget -qO- http://firefly-iii:8080/api/v1/cron/$(STATIC_CRON_TOKEN)"
+                | crontab -
+                && crond -f -L /dev/stdout
+            env:
+              - name: STATIC_CRON_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-iii-secret
+                    key: STATIC_CRON_TOKEN
+    service:
+      main:
+        controller: firefly-iii
+        ports:
+          http:
+            port: 8080
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        className: external
+        hosts:
+          - host: &host money.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      data:
+        enabled: true
+        existingClaim: firefly-iii
+        advancedMounts:
+          firefly-iii:
+            main:
+              - path: /var/www/html/storage/upload
+
