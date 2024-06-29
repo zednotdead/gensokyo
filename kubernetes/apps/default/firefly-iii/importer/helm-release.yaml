@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.2.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -25,15 +25,23 @@ spec:
   dependsOn:
     - name: firefly-iii
   values:
-    global:
-      nameOverride: *app
     controllers:
-      main:
+      firefly-iii-data-importer:
         containers:
           main:
             image:
               repository: fireflyiii/data-importer
               tag: version-1.3.0
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             env:
               TZ: Europe/Warsaw
               TRUSTED_PROXIES: "**"
@@ -53,20 +61,21 @@ spec:
                   name: firefly-iii-secret
     service:
       main:
+        controller: firefly-iii-data-importer
         ports:
           http:
             port: 8080
     ingress:
       main:
         enabled: true
-        className: "internal"
+        className: external
         hosts:
-          - host: &host "firefly-iii-data-importer.${SECRET_DOMAIN}"
+          - host: &host firefly-iii-data-importer.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: main
                   port: http
         tls:
           - hosts:
@@ -74,9 +83,8 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: firefly-iii-importer
+        existingClaim: firefly-iii-data-importer
         advancedMounts:
-          main:
+          firefly-iii:
             main:
               - path: *import-dir
-
