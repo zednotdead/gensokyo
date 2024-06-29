@@ -54,21 +54,26 @@ spec:
                 memory: 1390Mi
                 gpu.intel.com/i915: 3
             probes:
-              startup:
+              liveness: &probes
                 enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
+                  httpGet:
+                    path: /health
+                    port: &port 8096
+                  initialDelaySeconds: 90
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 300
+              readiness: *probes
+              startup:
+                enabled: false
     service:
       main:
         controller: jellyfin
         ports:
           http:
-            port: 8096
+            port: *port
     ingress:
       main:
         enabled: true
