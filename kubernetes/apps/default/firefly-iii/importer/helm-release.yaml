@@ -81,10 +81,19 @@ spec:
           - hosts:
               - *host
     persistence:
-      data:
+      # data:
+      #   enabled: true
+      #   existingClaim: firefly-iii-importer
+      #   advancedMounts:
+      #     firefly-iii-data-importer:
+      #       main:
+      #         - path: *import-dir
+      config-file:
         enabled: true
-        existingClaim: firefly-iii-importer
+        type: configMap
+        name: data-importer-config
         advancedMounts:
           firefly-iii-data-importer:
             main:
-              - path: *import-dir
+              - path: /import
+                readOnly: true

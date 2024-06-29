@@ -4,3 +4,11 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ../../../../templates/volsync/
+configMapGenerator:
+  - name: data-importer-config
+    files:
+      - config.json=./config/import_config_2024-06-29.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
