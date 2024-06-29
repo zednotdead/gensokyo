@@ -83,8 +83,8 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: firefly-iii-data-importer
+        existingClaim: firefly-iii-importer
         advancedMounts:
-          firefly-iii:
+          firefly-iii-data-importer:
             main:
               - path: *import-dir
