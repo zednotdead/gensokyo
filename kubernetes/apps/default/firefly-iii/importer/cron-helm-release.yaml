@@ -1,0 +1,50 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: firefly-iii-cron-import
+  namespace: home
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 30m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: firefly-iii
+    - name: firefly-iii-data-importer
+  values:
+    controllers:
+      cron-import:
+        type: cronjob
+        cronjob:
+          backoffLimit: 6
+          schedule: 0 16 * * *
+        containers:
+          main:
+            image:
+              repository: alpine/curl
+              tag: 8.8.0
+            args:
+              - --location
+              - --request
+              - POST
+              - $(FIDI_URL)/autoimport?directory=/import&secret=$(AUTO_IMPORT_SECRET)
+            env:
+              FIDI_URL: "http://firefly-iii-data-importer.default.svc.cluster.local:8080"
+            envFrom:
+              - secretRef:
+                  name: firefly-iii-secret
+
