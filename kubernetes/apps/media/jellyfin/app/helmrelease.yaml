@@ -47,25 +47,26 @@ spec:
               repository: ghcr.io/jellyfin/jellyfin
               tag: 10.9.7
             resources:
-              requests:
-                cpu: 15m
-                memory: 866Mi
               limits:
                 memory: 1390Mi
                 gpu.intel.com/i915: 3
             probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: &port 8096
-                  initialDelaySeconds: 90
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 300
-              readiness: *probes
+              # liveness: &probes
+              #   enabled: true
+              #   custom: true
+              #   spec:
+              #     httpGet:
+              #       path: /health
+              #       port: &port 8096
+              #     initialDelaySeconds: 90
+              #     periodSeconds: 10
+              #     timeoutSeconds: 1
+              #     failureThreshold: 300
+              # readiness: *probes
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
               startup:
                 enabled: false
     service:
