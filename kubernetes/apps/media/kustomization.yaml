@@ -13,4 +13,3 @@ resources:
   - ./immich/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./komga/ks.yaml
-  - ./mylar/ks.yaml
