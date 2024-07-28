@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: sonarr
+  name: &app komga
 spec:
   interval: 30m
   chart:
@@ -21,40 +21,33 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
     controllers:
-      sonarr:
+      komga:
         containers:
-          main:
+          app:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.5.1791
+              repository: gotson/komga
+              tag: 1.11.2@sha256:4724a2848c13ed79ea452a3267efe2ae39596c866de3b6d87da3a50d9f795ed5
             env:
-              TZ: Europe/Warsaw
-              SONARR__APP__INSTANCENAME: Sonarr
-              SONARR__APP__THEME: dark
-              SONARR__AUTH__METHOD: External
-              SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              SONARR__LOG__DBENABLED: "False"
-              SONARR__LOG__LEVEL: info
-              SONARR__SERVER__PORT: &port 80
-              SONARR__UPDATE__BRANCH: develop
-            envFrom:
-              - secretRef:
-                  name: sonarr-secret
+              TZ: "${TIMEZONE}"
+              SERVER_PORT: &port 8080
     service:
-      main:
-        controller: sonarr
+      app:
+        controller: *app
         ports:
           http:
             port: *port
     ingress:
-      main:
+      app:
         enabled: true
-        className: internal
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -66,34 +59,24 @@ spec:
         tls:
           - hosts:
               - *host
-    defaultPodOptions:
-      enableServiceLinks: true
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [10000]
     persistence:
       config:
         enabled: true
-        existingClaim: sonarr
-      media:
+        existingClaim: *app
+        globalMounts:
+          - path: /config
+      comics:
         enabled: true
         type: nfs
         globalMounts:
-          - path: /media
+          - path: /mnt/storage/documents/comics
         server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media"
-      downloads:
+        path: "${NAS_BASE_URL}/media/documents/comics"
+      manga:
         enabled: true
         type: nfs
         globalMounts:
-          - path: /downloads
+          - path: /mnt/storage/documents/manga
         server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media/downloads"
-    podAnnotations:
-      secret.reloader.stakater.com/reload: sonarr
-    resources:
-      limits:
-        memory: 500Mi
+        path: "${NAS_BASE_URL}/media/documents/manga"
+
