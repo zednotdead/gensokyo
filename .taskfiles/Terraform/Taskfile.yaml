@@ -6,7 +6,7 @@ vars:
   TALOS_DIR: "{{.KUBERNETES_DIR}}/bootstrap/talos"
   TALHELPER_SECRET_FILE: "{{.TALOS_DIR}}/talsecret.sops.yaml"
   TALHELPER_CONFIG_FILE: "{{.TALOS_DIR}}/talconfig.yaml"
-  REMOTE_PROXMOX: "root@192.168.1.50"
+  REMOTE_PROXMOX: "root@10.0.1.1"
 
 env:
   TALOSCONFIG: "{{.TALOS_DIR}}/clusterconfig/talosconfig"

@@ -18,7 +18,7 @@ locals {
 }
 
 provider "proxmox" {
-  endpoint = "https://192.168.1.50:8006/"
+  endpoint = "https://10.0.1.1:8006/"
   insecure = true
 
   ssh {
@@ -68,8 +68,8 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
 
     ip_config {
       ipv4 {
-        address = format("%s/24", each.value.address)
-        gateway = "192.168.1.1"
+        address = format("%s/8", each.value.address)
+        gateway = "10.0.0.1"
       }
     }
   }
