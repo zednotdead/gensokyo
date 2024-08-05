@@ -31,7 +31,7 @@ spec:
       endpointURL: http://${NAS_ADDRESS}:9000
       # Note: serverName version needs to be incremented or changed
       # when recovering from an existing cnpg cluster
-      serverName: &currentCluster pgvector-v1
+      serverName: &currentCluster pgvector-v2
       s3Credentials:
         accessKeyId:
           name: *secret
@@ -41,20 +41,20 @@ spec:
           key: secret_key
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
-  # bootstrap:
-  #   recovery:
-  #     # volumeSnapshots:
-  #     #   storage:
-  #     #     name: pg-snapshot
-  #     #     kind: VolumeSnapshot
-  #     #     apiGroup: snapshot.storage.k8s.io
-  #     source: &previousCluster pgvector-v2
-  # externalClusters:
-  #   - name: *previousCluster
-  #     barmanObjectStore:
-  #       <<: *barmanObjectStore
-  #       serverName: *previousCluster
-  #
+  bootstrap:
+    recovery:
+      # volumeSnapshots:
+      #   storage:
+      #     name: pg-snapshot
+      #     kind: VolumeSnapshot
+      #     apiGroup: snapshot.storage.k8s.io
+      source: &previousCluster pgvector-v1
+  externalClusters:
+    - name: *previousCluster
+      barmanObjectStore:
+        <<: *barmanObjectStore
+        serverName: *previousCluster
+
   postgresql:
     shared_preload_libraries:
       - "vectors.so"
