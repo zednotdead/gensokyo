@@ -68,7 +68,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
 
     ip_config {
       ipv4 {
-        address = format("%s/8", each.value.address)
+        address = format("%s/16", each.value.address)
         gateway = "10.0.0.1"
       }
     }
