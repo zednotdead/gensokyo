@@ -22,3 +22,5 @@ resources:
   - ./backube.yaml
   - ./piraeus.yaml
   - ./ext-postgres-operator.yaml
+  - ./crunchydata.yaml
+  - ./crunchy-userinit.yaml
