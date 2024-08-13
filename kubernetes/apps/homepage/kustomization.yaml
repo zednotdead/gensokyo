@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./ghcr-secret.sops.yaml
-  - ./payload-home/ks.yaml
+  # - ./payload-home/ks.yaml
   - ./home/ks.yaml
