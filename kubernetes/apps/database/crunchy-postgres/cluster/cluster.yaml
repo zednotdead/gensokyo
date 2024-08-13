@@ -67,6 +67,11 @@ spec:
         - immich
       password:
         type: AlphaNumeric
+    - name: authentik
+      databases:
+        - authentik
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig

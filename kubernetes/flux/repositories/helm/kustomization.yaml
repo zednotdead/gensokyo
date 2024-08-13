@@ -24,3 +24,4 @@ resources:
   - ./ext-postgres-operator.yaml
   - ./crunchydata.yaml
   - ./crunchy-userinit.yaml
+  - ./authentik.yaml
