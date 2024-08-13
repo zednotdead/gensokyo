@@ -14,8 +14,8 @@ spec:
     type: LoadBalancer
     metadata:
       annotations:
-        external-dns.alpha.kubernetes.io/hostname: postgres.bjw-s.dev
-        io.cilium/lb-ipam-ips: 10.1.1.134
+        external-dns.alpha.kubernetes.io/hostname: postgres.${SECRET_DOMAIN}
+        io.cilium/lb-ipam-ips: ${CRUNCHY_PGO_ADDRESS}
   patroni: # turn on sync writes to at least 1 other replica
     dynamicConfiguration:
       synchronous_mode: true
@@ -74,6 +74,7 @@ spec:
         repo1-path: /crunchy-pgo
         repo1-retention-full: "30" # days
         repo1-retention-full-type: "time"
+        repo1-storage-verify-tls: "n"
         repo1-s3-uri-style: path
       manual:
         repoName: repo1
