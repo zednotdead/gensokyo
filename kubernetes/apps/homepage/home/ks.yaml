@@ -8,8 +8,6 @@ spec:
   targetNamespace: homepage
   path: ./kubernetes/apps/homepage/home/app
   prune: true
-  dependsOn:
-    - name: payload-homepage
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
