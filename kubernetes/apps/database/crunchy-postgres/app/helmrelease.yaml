@@ -1,9 +1,9 @@
 ---
-# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app crunchy-postgres-operator
+  name: crunchy-postgres-operator
 spec:
   interval: 30m
   chart:
@@ -14,20 +14,12 @@ spec:
         kind: HelmRepository
         name: crunchydata
         namespace: flux-system
-  maxHistory: 2
+      interval: 5m
   install:
     crds: CreateReplace
-    remediation:
-      retries: 3
   upgrade:
     crds: CreateReplace
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    monitoring: true
     install:
       clusterLabels:
         app.kubernetes.io/name: pgo
