@@ -60,6 +60,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-/infra/talos/*
-!/infra/talos/{.gitkeep,README.md}
+/terraform/infra/talos/*
+!/terraform/infra/talos/{.gitkeep,README.md}
 /.env

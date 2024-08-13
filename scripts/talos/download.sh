@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT_ROOT=$(readlink -e "$(dirname $0)/../..")
-TALOS_MEDIA_PATH="$PROJECT_ROOT/infra/talos"
+TALOS_MEDIA_PATH="$PROJECT_ROOT/terraform/infra/talos"
 
 if [[ ! -d $TALOS_MEDIA_PATH ]] then
     mkdir $TALOS_MEDIA_PATH

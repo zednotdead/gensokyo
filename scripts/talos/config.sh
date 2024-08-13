@@ -6,7 +6,7 @@ if [[ -d "$PROJECT_ROOT/_out" ]] then
     exit 1
 fi
 
-INFRA_PATH="$PROJECT_ROOT/infra"
+INFRA_PATH="$PROJECT_ROOT/terraform/infra"
 RAW_ADDRESSES=$(cd $INFRA_PATH && tofu output -json | jq -rc .ip_addresses.value[] | sed 's/\/24//g')
 declare -a ADDRESSES=($(echo $RAW_ADDRESSES | tr "\n" " "))
 
