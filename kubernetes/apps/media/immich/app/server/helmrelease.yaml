@@ -53,20 +53,9 @@ spec:
               LOG_LEVEL: verbose
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
               IMMICH_PORT: &port 3001
-              DB_HOSTNAME: "postgres16-rw.database.svc.cluster.local"
-              DB_PORT: 5432
-              DB_DATABASE_NAME: immich
-              DB_USERNAME:
-                valueFrom:
-                  secretKeyRef:
-                    key: username
-                    name: immich-secret
-              DB_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    key: password
-                    name: immich-secret
             envFrom:
+              - secretRef:
+                  name: immich-secret
               - configMapRef:
                   name: immich-configmap
             resources:
