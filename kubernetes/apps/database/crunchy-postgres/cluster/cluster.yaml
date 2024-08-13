@@ -29,6 +29,9 @@ spec:
         parameters:
           shared_preload_libraries: "vectors.so"
           search_path: '"$user", public, vectors"'
+  databaseInitSQL:
+    name: immich-db-init-sql
+    key: init.sql
   instances:
     - name: postgres
       metadata:
