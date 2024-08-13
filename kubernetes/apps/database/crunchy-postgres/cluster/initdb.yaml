@@ -7,5 +7,10 @@ metadata:
 data:
   init.sql: |-
     \c immich\\
+    BEGIN;
     CREATE EXTENSION vectors;
+    CREATE EXTENSION earthdistance CASCADE;
+    ALTER DATABASE immich SET search_path TO "$user", public, vectors;
+    ALTER SCHEMA vectors OWNER TO immich;
+    COMMIT;
 
