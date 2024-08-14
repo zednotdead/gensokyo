@@ -72,11 +72,11 @@ spec:
         - authentik
       password:
         type: AlphaNumeric
-    - name: grafana
-      databases:
-        - grafana
-      password:
-        type: AlphaNumeric
+    # - name: grafana
+    #   databases:
+    #     - grafana
+    #   password:
+    #     type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig
