@@ -25,3 +25,5 @@ resources:
   - ./crunchydata.yaml
   - ./crunchy-userinit.yaml
   - ./authentik.yaml
+  - ./prometheus-community.yaml
+  - ./grafana.yaml

@@ -23,6 +23,21 @@ resource "authentik_group" "media" {
   parent       = resource.authentik_group.users.id
 }
 
+resource "authentik_group" "monitoring" {
+  name         = "Monitoring"
+  is_superuser = false
+}
+
+resource "authentik_group" "grafana_admins" {
+  name         = "Grafana Admins"
+  is_superuser = false
+}
+
+resource "authentik_group" "grafana_editors" {
+  name         = "Grafana Editors"
+  is_superuser = false
+}
+
 ##Oauth
 resource "authentik_source_oauth" "discord" {
   name                = "Discord"

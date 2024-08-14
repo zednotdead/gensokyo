@@ -3,8 +3,8 @@ provider "vault" {
 }
 
 resource "vault_mount" "kv" {
-  path        = "kv"
-  type        = "kv"
+  path = "kv"
+  type = "kv"
   options = {
     version = "2"
   }
@@ -16,7 +16,7 @@ data "vault_kv_secret_v2" "authentik_token" {
 }
 
 provider "authentik" {
-  url   = "https://sso.${var.cluster_domain}"
-  token = local.authentik_token
+  url      = "https://sso.${var.cluster_domain}"
+  token    = local.authentik_token
   insecure = true
 }
