@@ -77,6 +77,10 @@ spec:
         - grafana
       password:
         type: AlphaNumeric
+    - name: "gatus"
+      databases: ["gatus"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig
