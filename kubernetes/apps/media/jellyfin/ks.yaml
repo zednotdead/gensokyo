@@ -19,3 +19,4 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_CACHE_CAPACITY: 5Gi
+      GATUS_SUBDOMAIN: jf
