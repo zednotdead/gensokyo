@@ -8,3 +8,5 @@ resources:
   - ./grafana/ks.yaml
   - ./exporters
   - ./gatus/ks.yaml
+  - ./loki/ks.yaml
+  - ./promtail/ks.yaml
