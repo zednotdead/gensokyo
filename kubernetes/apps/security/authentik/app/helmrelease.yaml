@@ -31,6 +31,7 @@ spec:
       envFrom:
         - secretRef:
             name: authentik-secret
+      addPrometheusAnnotations: true
     authentik:
       redis:
         host: dragonfly.database.svc.cluster.local
@@ -38,9 +39,11 @@ spec:
       autoscaling:
         enabled: false
       metrics:
+        enabled: true
         prometheus:
           serviceMonitor:
             enabled: true
+            namespace: security
       ingress:
         enabled: true
         ingressClassName: external
