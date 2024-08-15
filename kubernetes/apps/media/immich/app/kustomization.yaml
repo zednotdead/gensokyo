@@ -9,3 +9,4 @@ resources:
   - ./redis
   - ./server
   - ./machine-learning
+  - ../../../../templates/gatus/external/
