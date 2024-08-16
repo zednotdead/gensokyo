@@ -43,6 +43,9 @@ spec:
               PROWLARR__LOG__LEVEL: info
               PROWLARR__SERVER__PORT: &port 80
               PROWLARR__UPDATE__BRANCH: develop
+            envFrom:
+              - secretRef:
+                  name: prowlarr-secret
     service:
       main:
         controller: prowlarr
@@ -53,6 +56,15 @@ spec:
       main:
         enabled: true
         className: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads
+          gethomepage.dev/name: Prowlarr
+          gethomepage.dev/icon: prowlarr.png
+          gethomepage.dev/description: Torrent/NZB Indexer Management
+          gethomepage.dev/widget.type: prowlarr
+          gethomepage.dev/widget.url: http://prowlarr.media
+          gethomepage.dev/widget.key: "{{`{{HOMEPAGE_VAR_PROWLARR_TOKEN}}`}}"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
