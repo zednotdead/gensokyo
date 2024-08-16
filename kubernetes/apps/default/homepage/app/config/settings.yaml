@@ -9,6 +9,7 @@ headerStyle: clean
 statusStyle: dot
 useEqualHeights: false
 fiveColumns: true
+target: _self
 quicklaunch:
   searchDescriptions: true
   hideInternetSearch: true
