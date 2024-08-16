@@ -29,7 +29,7 @@ provider "proxmox" {
 }
 
 locals {
-  config = yamldecode(file("../config.yaml"))
+  config = yamldecode(file("../../config.yaml"))
   hosts  = local.config.bootstrap_node_inventory
 }
 
