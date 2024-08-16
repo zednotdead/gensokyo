@@ -22,4 +22,13 @@
           tunnelid: "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}"
           key: "{{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}"
           fields: ["status"]
-
+    - TrueNAS:
+        href: "https://{{HOMEPAGE_VAR_NAS_ADDRESS}}"
+        icon: truenas.png
+        description: Bulk Storage
+        widget:
+          type: truenas
+          url: "http://{{HOMEPAGE_VAR_NAS_ADDRESS}}"
+          key: "{{HOMEPAGE_VAR_TRUENAS_API_TOKEN}}"
+          enablePools: true
+          nasType: core
