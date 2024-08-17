@@ -47,8 +47,13 @@ spec:
               repository: ghcr.io/jellyfin/jellyfin
               tag: 10.9.9
             resources:
+              requests:
+                cpu: 15m
+                memory: 650M
+                gpu.intel.com/i915: 3
               limits:
-                memory: 1390Mi
+                cpu: 1321m
+                memory: 4G
                 gpu.intel.com/i915: 3
             probes:
               # liveness: &probes

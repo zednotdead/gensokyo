@@ -62,11 +62,12 @@ spec:
               MACHINE_LEARNING_CACHE_FOLDER: /cache
               TRANSFORMERS_CACHE: /cache
             resources:
-              # requests:
-              #   cpu: 100m
-              #   memory: 274M
+              requests:
+                cpu: 15m
+                memory: 249M
               limits:
-                memory: 3949M
+                cpu: 15m
+                memory: 249M
 
     service:
       app:

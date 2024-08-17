@@ -45,6 +45,13 @@ spec:
             envFrom:
               - secretRef:
                   name: sonarr-secret
+            resources:
+              requests:
+                cpu: 15m
+                memory: 204M
+              limits:
+                cpu: 15m
+                memory: 204M
     service:
       main:
         controller: sonarr

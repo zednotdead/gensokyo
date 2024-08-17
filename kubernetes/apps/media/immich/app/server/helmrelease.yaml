@@ -59,11 +59,12 @@ spec:
               - configMapRef:
                   name: immich-configmap
             resources:
-            #   requests:
-            #     cpu: 100m
-            #     memory: 256Mi
+              requests:
+                cpu: 15m
+                memory: 549M
               limits:
-                memory: 4096Mi
+                cpu: 15m
+                memory: 549M
             probes:
               liveness: &probes
                 enabled: true

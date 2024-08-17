@@ -45,6 +45,13 @@ spec:
             envFrom:
               - secretRef:
                   name: radarr-secret
+            resources:
+              requests:
+                cpu: 15m
+                memory: 477M
+              limits:
+                cpu: 15m
+                memory: 477M
     service:
       main:
         controller: radarr

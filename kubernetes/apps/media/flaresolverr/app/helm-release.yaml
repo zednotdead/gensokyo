@@ -35,10 +35,11 @@ spec:
               tag: v3.3.21@sha256:f104ee51e5124d83cf3be9b37480649355d223f7d8f9e453d0d5ef06c6e3b31b
             resources:
               requests:
-                cpu: 10m
-                memory: 150Mi
+                cpu: 15m
+                memory: 324M
               limits:
-                memory: 500Mi
+                cpu: 15m
+                memory: 324M
     service:
       app:
         controller: flaresolverr
