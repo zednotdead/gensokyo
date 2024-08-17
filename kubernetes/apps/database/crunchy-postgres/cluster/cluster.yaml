@@ -81,6 +81,10 @@ spec:
       databases: ["gatus"]
       password:
         type: AlphaNumeric
+    - name: "tandoor"
+      databases: ["tandoor"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig

@@ -1,0 +1,168 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tandoor
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+    controllers:
+      tandoor:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          migrations:
+            image:
+              repository: vabene1111/recipes
+              tag: 1.5.18@sha256:e5f1287a5961d455e2239f3e96f05987cb018749d565342d93dc8ccadd2bfd65
+            envFrom: &envFrom
+              - secretRef:
+                  name: tandoor-secret
+            command:
+            - sh
+            - -c
+            - |
+              set -e
+              source /opt/recipes/venv/bin/activate
+              echo "Updating database"
+              python3 /opt/recipes/manage.py migrate
+              python3 /opt/recipes/manage.py collectstatic_js_reverse
+              python3 /opt/recipes/manage.py collectstatic --noinput
+        containers:
+          app:
+            image:
+              repository: vabene1111/recipes
+              tag: 1.5.18@sha256:e5f1287a5961d455e2239f3e96f05987cb018749d565342d93dc8ccadd2bfd65
+            envFrom: *envFrom
+            env:
+              DEBUG: "0"
+              ALLOWED_HOSTS: "*"
+              GUNICORN_MEDIA: "0"
+              TZ: ${TIMEZONE}
+              TANDOOR_PORT: &port 8888
+              FRACTION_PREF_DEFAULT: "0"
+              COMMENT_PREF_DEFAULT: "1"
+              SHOPPING_MIN_AUTOSYNC_INTERVAL: "5"
+            command:
+              - /opt/recipes/venv/bin/gunicorn
+              - -b
+              - :8888
+              - --access-logfile
+              - "-"
+              - --error-logfile
+              - "-"
+              - --log-level
+              - INFO
+              - recipes.wsgi
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+          nginx:
+            image:
+              repository: ghcr.io/nginxinc/nginx-unprivileged
+              tag: 1.27.0-alpine@sha256:f9abf2e3f911c05e28d97b2e6826ebe83a2fb26ec5d441522d3b2a8a6f7947ad
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+          nginx:
+            port: &port2 8080
+    ingress:
+      app:
+        enabled: true
+        className: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Media
+          gethomepage.dev/name: Tandoor
+          gethomepage.dev/icon: tandoor.png
+          gethomepage.dev/description: Recipe Book
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+              - path: /media
+                service:
+                  identifier: app
+                  port: *port2
+              - path: /static
+                service:
+                  identifier: app
+                  port: *port2
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        existingClaim: *app
+        advancedMounts:
+          tandoor:
+            app:
+              - path: /opt/recipes/mediafiles
+            nginx:
+              - path: /media
+      nginx-config:
+        type: configMap
+        name: tandoor-configmap
+        advancedMounts:
+          tandoor:
+            nginx:
+              - path: /etc/nginx/nginx.conf
+                subPath: nginx-config
+      django-js-reverse:
+        type: emptyDir
+        advancedMounts:
+          tandoor:
+            app:
+              - path: /opt/recipes/cookbook/static/django_js_reverse
+            migrations:
+              - path: /opt/recipes/cookbook/static/django_js_reverse
+      static:
+        type: emptyDir
+        advancedMounts:
+          tandoor:
+            app:
+              - path: /opt/recipes/staticfiles
+            nginx:
+              - path: /static
+            migrations:
+              - path: /opt/recipes/staticfiles
+      cache:
+        type: emptyDir
+        advancedMounts:
+          tandoor:
+            nginx:
+              - path: /var/cache/nginx
