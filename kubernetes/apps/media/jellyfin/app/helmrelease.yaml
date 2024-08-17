@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: jellyfin
+  name: &app jellyfin
 spec:
   interval: 15m
   chart:
@@ -103,11 +103,9 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: jellyfin
-        advancedMounts:
-          jellyfin:
-            main:
-              - path: /config
+        existingClaim: *app
+        globalMounts:
+          - path: /config
       media:
         enabled: true
         type: nfs
@@ -117,14 +115,11 @@ spec:
           - path: /media
       transcode:
         enabled: true
-        existingClaim: jellyfin-transcode
+        type: emptyDir
         globalMounts:
-          - path: /config/transcodes
+          - path: /transcode
       cache:
         enabled: true
         type: emptyDir
-        advancedMounts:
-          jellyfin:
-            main:
-              - path: /config/cache
-
+        globalMounts:
+          - path: /cache
