@@ -27,3 +27,4 @@ resources:
   - ./authentik.yaml
   - ./prometheus-community.yaml
   - ./grafana.yaml
+  - ./fairwinds.yaml

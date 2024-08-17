@@ -55,9 +55,11 @@ spec:
                 type: RuntimeDefault
             resources:
               requests:
-                cpu: 10m
+                cpu: 15m
+                memory: 105M
               limits:
-                memory: 64Mi
+                cpu: 15m
+                memory: 105M
         pod:
           securityContext:
             runAsUser: 65534
