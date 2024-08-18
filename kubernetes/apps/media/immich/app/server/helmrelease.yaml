@@ -100,7 +100,7 @@ spec:
         enabled: true
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
+          gethomepage.dev/group: Personal
           gethomepage.dev/name: Immich
           gethomepage.dev/icon: immich.png
           gethomepage.dev/description: Photo Backup

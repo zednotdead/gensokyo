@@ -39,3 +39,27 @@ resource "authentik_application" "tandoor_application" {
   meta_launch_url    = "https://tandoor.${var.cluster_domain}"
   policy_engine_mode = "all"
 }
+
+resource "authentik_provider_oauth2" "mealie_oauth2" {
+  name                  = "mealie"
+  client_type           = "public"
+  client_id             = local.mealie_id
+  authorization_flow    = resource.authentik_flow.provider-authorization-implicit-consent.uuid
+  property_mappings     = data.authentik_scope_mapping.oauth2.ids
+  access_token_validity = "hours=4"
+  redirect_uris = [
+    "https://mealie.${var.cluster_domain}/login",
+    "https://mealie.${var.cluster_domain}/login?direct=1",
+  ]
+}
+
+resource "authentik_application" "mealie_application" {
+  name               = "Mealie"
+  slug               = authentik_provider_oauth2.mealie_oauth2.name
+  protocol_provider  = authentik_provider_oauth2.mealie_oauth2.id
+  group              = authentik_group.users.name
+  open_in_new_tab    = true
+  meta_icon          = "https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/mealie.png"
+  meta_launch_url    = "https://mealie.${var.cluster_domain}"
+  policy_engine_mode = "all"
+}

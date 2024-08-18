@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app mealie
+spec:
+  interval: 30m
+  maxHistory: 3
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+    controllers:
+      mealie:
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mealie-recipes/mealie
+              tag: v1.11.0@sha256:797df6808afb5883a374c701099ea68a77461fc734f12cade3b76c002f171b9a
+            env:
+              BASE_URL: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+              DB_ENGINE: postgres
+            envFrom:
+              - secretRef:
+                  name: mealie-secret
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 271m
+                memory: 381M
+              limits:
+                cpu: 271m
+                memory: 381M
+    service:
+      app:
+        controller: mealie
+        ports:
+          http:
+            port: 9000
+    ingress:
+      app:
+        className: internal
+        annotations:
+          gethomepage.dev/name: *app
+          gethomepage.dev/enabled: 'true'
+          gethomepage.dev/group: Personal
+          gethomepage.dev/icon: mealie.png
+        hosts:
+          - host: *host
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host

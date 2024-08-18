@@ -38,6 +38,11 @@ resource "authentik_group" "grafana_editors" {
   is_superuser = false
 }
 
+resource "authentik_group" "mealie_admins" {
+  name         = "Mealie Admins"
+  is_superuser = false
+}
+
 ##Oauth
 resource "authentik_source_oauth" "discord" {
   name                = "Discord"

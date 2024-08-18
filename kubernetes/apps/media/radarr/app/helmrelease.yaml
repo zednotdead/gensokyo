@@ -57,7 +57,7 @@ spec:
         className: internal
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Downloads
+          gethomepage.dev/group: Media
           gethomepage.dev/name: Radarr
           gethomepage.dev/icon: radarr.png
           gethomepage.dev/description: Movie Downloads

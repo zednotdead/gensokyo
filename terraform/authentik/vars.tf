@@ -13,6 +13,11 @@ data "vault_kv_secret_v2" "tandoor_secret" {
   name  = "cluster/default/tandoor"
 }
 
+data "vault_kv_secret_v2" "mealie_secret" {
+  mount = vault_mount.kv.path
+  name  = "cluster/default/mealie"
+}
+
 locals {
   authentik_token = lookup(data.vault_kv_secret_v2.authentik_token.data, "AUTHENTIK_TOKEN")
 
@@ -24,4 +29,6 @@ locals {
 
   tandoor_id     = lookup(data.vault_kv_secret_v2.tandoor_secret.data, "CLIENT_ID")
   tandoor_secret = lookup(data.vault_kv_secret_v2.tandoor_secret.data, "CLIENT_SECRET")
+
+  mealie_id     = lookup(data.vault_kv_secret_v2.mealie_secret.data, "CLIENT_ID")
 }

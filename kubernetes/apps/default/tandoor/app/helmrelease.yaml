@@ -103,7 +103,7 @@ spec:
         className: internal
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Media
+          gethomepage.dev/group: Personal
           gethomepage.dev/name: Tandoor
           gethomepage.dev/icon: tandoor.png
           gethomepage.dev/description: Recipe Book

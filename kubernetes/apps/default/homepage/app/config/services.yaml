@@ -1,4 +1,4 @@
-- Administration:
+- Infrastructure:
     # - Proxmox:
     #     icon: proxmox.png
     #     href: https://ares.{{HOMEPAGE_VAR_SECRET_TECH_DOMAIN_NAME}}:8006
