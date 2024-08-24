@@ -3,7 +3,7 @@
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 talosVersion: v1.7.6
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.31.0
+kubernetesVersion: v1.30.0
 
 clusterName: &cluster gensokyo
 endpoint: https://10.0.255.254:6443
@@ -29,7 +29,7 @@ nodes:
           hardwareAddr: "bc:24:11:c4:51:d9"
         dhcp: false
         addresses:
-          - "10.68.0.1/16"
+          - "10.0.10.1/16"
         mtu: 1500
         routes:
           - network: 0.0.0.0/0
@@ -63,7 +63,7 @@ nodes:
           hardwareAddr: "bc:24:11:64:45:2c"
         dhcp: false
         addresses:
-          - "10.68.0.3/16"
+          - "10.0.10.3/16"
         mtu: 1500
         routes:
           - network: 0.0.0.0/0
