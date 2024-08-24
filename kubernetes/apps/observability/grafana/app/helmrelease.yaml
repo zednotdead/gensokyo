@@ -89,7 +89,7 @@ spec:
             disableDeletion: false
             editable: true
             options:
-              path: /var/lib/grafana/dashboards/data
+              path: /var/lib/grafana/dashboards/database
           - name: flux
             orgId: 1
             folder: Flux
@@ -170,7 +170,7 @@ spec:
             jsonData:
               implementation: prometheus
     dashboards:
-      data:
+      database:
         crunchy-pgbackrest: #https://github.com/CrunchyData/postgres-operator-examples/issues/264
           url: https://raw.githubusercontent.com/CrunchyData/postgres-operator-examples/main/kustomize/monitoring/grafana/dashboards/pgbackrest.json
           datasource: Prometheus

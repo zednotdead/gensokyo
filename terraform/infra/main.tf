@@ -41,7 +41,6 @@ resource "proxmox_virtual_environment_file" "talos_iso" {
   content_type = "iso"
   datastore_id = "local"
   node_name    = each.value.node_name
-  # url          = "https://github.com/siderolabs/talos/releases/download/v1.7.0-beta.0/nocloud-amd64.raw.xz"
   source_file {
     path      = "./talos/nocloud-amd64.raw"
     file_name = "nocloud-amd64.img"

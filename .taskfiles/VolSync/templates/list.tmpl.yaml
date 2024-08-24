@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://kubernetesjsonschema.dev/v1.18.1/job-batch-v1.json
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -13,8 +14,18 @@ spec:
       containers:
         - name: main
           image: docker.io/restic/restic:0.16.4
-          args: ["snapshots"]
+          args: ["snapshots", "--cacert", "/cert/ca.crt"]
           envFrom:
             - secretRef:
                 name: ${app}-volsync-secret
           resources: {}
+          volumeMounts:
+            - mountPath: /cert
+              name: certificate
+      volumes:
+        - name: certificate
+          secret:
+            secretName: ${app}-volsync-secret
+            items:
+              - key: ca.crt
+                path: ca.crt
