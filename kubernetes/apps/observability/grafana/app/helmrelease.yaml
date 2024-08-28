@@ -106,6 +106,14 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/games
+          - name: media
+            orgId: 1
+            folder: Media
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/media
           - name: kubernetes
             orgId: 1
             folder: Kubernetes
@@ -209,6 +217,10 @@ spec:
           url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
           datasource: Prometheus
       # games:
+      # media:
+      #   unpackerr:
+      #     url: https://raw.githubusercontent.com/zbigniewzolnierowicz/gensokyo/main/kubernetes/apps/media/unpackerr/app/grafana.json
+      #     datasource: Prometheus
       kubernetes:
         kubernetes-api-server:
           # renovate: depName="Kubernetes / System / API Server"
