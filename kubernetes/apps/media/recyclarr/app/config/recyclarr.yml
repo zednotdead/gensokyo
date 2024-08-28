@@ -26,10 +26,13 @@ sonarr:
         reset_unmatched_scores:
           enabled: true
         upgrade:
-          allowed: false
+          allowed: true
+          until_quality: Bluray-1080p
+          until_score: 0
         min_format_score: 0
         quality_sort: top
         qualities:
+          - name: Bluray-1080p
           - name: WEB 1080p
             qualities:
               - WEBDL-1080p
@@ -38,7 +41,9 @@ sonarr:
         reset_unmatched_scores:
           enabled: true
         upgrade:
-          allowed: false
+          allowed: true
+          until_quality: Bluray-2160p
+          until_score: 0
         min_format_score: 0
         quality_sort: top
         qualities:
@@ -95,6 +100,23 @@ sonarr:
           - 17e889ce13117940092308f48b48b45b # HLG
           - 9b27ab6498ec0f31a3353992e19434ca # DV (WEBDL)
           - 0dad0a507451acddd754fe6dc3a7f5e7 # HDR10+Boost
+          # Anime BD
+          - 949c16fe0a8147f50ba82cc2df9411c9 # Anime BD Tier 01
+          - ed7f1e315e000aef424a58517fa48727 # Anime BD Tier 02
+          - 096e406c92baa713da4a72d88030b815 # Anime BD Tier 03
+          - 30feba9da3030c5ed1e0f7d610bcadc4 # Anime BD Tier 04
+          - 545a76b14ddc349b8b185a6344e28b04 # Anime BD Tier 05
+          - 25d2afecab632b1582eaf03b63055f72 # Anime BD Tier 06
+          - 0329044e3d9137b08502a9f84a7e58db # Anime BD Tier 07
+          # Anime Web
+          - e0014372773c8f0e1bef8824f00c7dc4 # Anime Web Tier 01
+          - 19180499de5ef2b84b6ec59aae444696 # Anime Web Tier 02
+          - c27f2ae6a4e82373b0f1da094e2489ad # Anime Web Tier 03
+          - 4fd5528a3a8024e6b49f9c67053ea5f3 # Anime Web Tier 04
+          - 29c2a13d091144f63307e4a8ce963a39 # Anime Web Tier 05
+          - dc262f88d74c651b12e9d90b39f6c753 # Anime Web Tier 06
+          # Anime Misc
+          - 418f50b10f1907201b6cfdf881f467b7 # Anime Dual Audio
           # Unwanted
           - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
           - 85c61753df5da1fb2aab6f2a47426b09 # BR-DISK
@@ -104,6 +126,8 @@ sonarr:
           - e1a997ddb54e3ecbfe06341ad323c458 # Obfuscated
           - 06d66ab109d4d2eddb2794d21526d140 # Retags
           - 9b64dff695c2115facf1b6ea59c9bd07 # x265 (HD, no HDR)
+          - b4a1b3d705159cdca36d71e57ca86871 # Anime Raws
+          - e3515e519f3b1360cbfc17651944354c # Anime LQ Groups
 
         assign_scores_to:
           - name: HD-1080p
@@ -228,6 +252,23 @@ radarr:
           - c9fd353f8f5f1baf56dc601c4cb29920 # PCOK
           - e36a0ba1bc902b26ee40818a1d59b8bd # PMTP
           - c2863d2a50c9acad1fb50e53ece60817 # STAN
+          # Anime BD
+          - fb3ccc5d5cc8f77c9055d4cb4561dded # Anime BD Tier 01
+          - 66926c8fa9312bc74ab71bf69aae4f4a # Anime BD Tier 02
+          - fa857662bad28d5ff21a6e611869a0ff # Anime BD Tier 03
+          - f262f1299d99b1a2263375e8fa2ddbb3 # Anime BD Tier 04
+          - ca864ed93c7b431150cc6748dc34875d # Anime BD Tier 05
+          - 9dce189b960fddf47891b7484ee886ca # Anime BD Tier 06
+          - 1ef101b3a82646b40e0cab7fc92cd896 # Anime BD Tier 07
+          # Anime Web
+          - 8167cffba4febfb9a6988ef24f274e7e # Anime Web Tier 01
+          - 8526c54e36b4962d340fce52ef030e76 # Anime Web Tier 02
+          - de41e72708d2c856fa261094c85e965d # Anime Web Tier 03
+          - 9edaeee9ea3bcd585da9b7c0ac3fc54f # Anime Web Tier 04
+          - 22d953bbe897857b517928f3652b8dd3 # Anime Web Tier 05
+          - a786fbc0eae05afe3bb51aee3c83a9d4 # Anime Web Tier 06
+          # Anime Misc
+          - 4a3b087eea2ce012fcc1ce319259a3be # Anime Dual Audio
           # Misc
           - e7718d7a3ce595f289bfee26adc178f5 # Repack/Proper
           - ae43b294509409a6a13919dedd4764c4 # Repack2
@@ -237,6 +278,8 @@ radarr:
           - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (HD, no HDR/DV)
           - b8cd450cbfa689c0259a01d9e29ba3d6 # 3D
           - 7357cf5161efbf8c4d5d0c30b4815ee2 # Obfuscated
+          - 06b6542a47037d1e33b15aa3677c2365 # Anime Raws
+          - b0fdc5897f68c9a68c70c25169f77447 # Anime LQ Groups
 
         assign_scores_to:
           - name: HD-1080p
