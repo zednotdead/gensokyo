@@ -4,7 +4,6 @@ _.python.venv = { path = ".venv", create = true }
 
 KUBECONFIG = "{{ config_root }}/kubeconfig"
 SOPS_AGE_KEY_FILE="{{ config_root }}/age.key"
-GITHUB_TOKEN="{{ exec(command='gh auth token') }}"
 ANSIBLE_COLLECTIONS_PATH="{{ config_root }}/.venv/galaxy"
 ANSIBLE_ROLES_PATH="{{ config_root }}/.venv/galaxy/ansible_roles"
 ANSIBLE_VARS_ENABLED="host_group_vars"
@@ -14,7 +13,6 @@ K8S_AUTH_KUBECONFIG="{{ config_root }}/kubeconfig"
 TALOSCONFIG="{{ config_root }}/kubernetes/bootstrap/talos/clusterconfig/talosconfig"
 
 [tools]
-ubi = "latest"
 cloudflared = "latest"
 task = "latest"
 helmfile = "latest"
