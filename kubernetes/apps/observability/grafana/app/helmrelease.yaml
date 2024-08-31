@@ -60,12 +60,6 @@ spec:
         role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
     deploymentStrategy:
       type: RollingUpdate
-    resources:
-      requests:
-        cpu: 23m
-        memory: 127M
-      limits:
-        memory: 219M
     admin:
       existingSecret: grafana-secret
       passwordKey: adminPass

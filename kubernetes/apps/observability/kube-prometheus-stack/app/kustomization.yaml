@@ -7,3 +7,9 @@ resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
   - ./flux-podmonitor.yaml
+configMapGenerator:
+  - name: flux-kube-state-metrics-config
+    files:
+      - ./config/flux-resource.yaml
+configurations:
+  - kustomizeconfig.yaml

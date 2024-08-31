@@ -30,6 +30,10 @@ spec:
       namespace: observability
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  valuesFrom:
+    - kind: ConfigMap
+      name: flux-kube-state-metrics-config
+      valuesKey: flux-resource.yaml
   values:
     crds:
       enabled: false
