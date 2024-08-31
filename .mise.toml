@@ -1,0 +1,33 @@
+[env]
+_.file = ".env"
+_.python.venv = { path = ".venv", create = true }
+
+KUBECONFIG = "{{ config_root }}/kubeconfig"
+SOPS_AGE_KEY_FILE="{{ config_root }}/age.key"
+GITHUB_TOKEN="{{ exec(command='gh auth token') }}"
+ANSIBLE_COLLECTIONS_PATH="{{ config_root }}/.venv/galaxy"
+ANSIBLE_ROLES_PATH="{{ config_root }}/.venv/galaxy/ansible_roles"
+ANSIBLE_VARS_ENABLED="host_group_vars"
+ANSIBLE_LOCALHOST_WARNING="False"
+ANSIBLE_INVENTORY_UNPARSED_WARNING="False"
+K8S_AUTH_KUBECONFIG="{{ config_root }}/kubeconfig"
+TALOSCONFIG="{{ config_root }}/kubernetes/bootstrap/talos/clusterconfig/talosconfig"
+
+[tools]
+ubi = "latest"
+cloudflared = "latest"
+task = "latest"
+helmfile = "latest"
+yq = "latest"
+flux2 = "latest"
+helm = "latest"
+kubeconform = "latest"
+kustomize = "latest"
+sops = "latest"
+stern = "latest"
+talhelper = "latest"
+talosctl = "latest"
+"pipx:makejinja" = "latest"
+"pipx:email-validator" = "latest"
+"pipx:netaddr" = "latest"
+python = "3.12"
