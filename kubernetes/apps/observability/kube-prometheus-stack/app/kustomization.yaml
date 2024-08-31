@@ -6,4 +6,4 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
-  # - ./flux-podmonitor.yaml
+  - ./flux-podmonitor.yaml
