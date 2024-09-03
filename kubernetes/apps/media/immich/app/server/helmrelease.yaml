@@ -58,6 +58,9 @@ spec:
                   name: immich-secret
               - configMapRef:
                   name: immich-configmap
+            resources:
+              limits:
+                gpu.intel.com/i915: 1
             probes:
               liveness: &probes
                 enabled: true
