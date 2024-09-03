@@ -75,12 +75,5 @@ spec:
               app.kubernetes.io/name: ingress-nginx
               app.kubernetes.io/instance: ingress-nginx-internal
               app.kubernetes.io/component: controller
-      resources:
-        requests:
-          cpu: 23m
-          memory: 110M
-        limits:
-          cpu: 23m
-          memory: 110M
     defaultBackend:
       enabled: false
