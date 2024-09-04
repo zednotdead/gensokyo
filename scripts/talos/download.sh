@@ -3,7 +3,7 @@
 PROJECT_ROOT=$(readlink -e "$(dirname $0)/../..")
 TALOS_MEDIA_PATH="$PROJECT_ROOT/terraform/infra/talos"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-TALOS_VERSION="v1.7.5"
+TALOS_VERSION="v1.8.0-alpha.2"
 
 if [[ ! -d $TALOS_MEDIA_PATH ]] then
     mkdir $TALOS_MEDIA_PATH
