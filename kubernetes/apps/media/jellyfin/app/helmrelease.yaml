@@ -41,6 +41,7 @@ spec:
             supplementalGroups:
               - 44
               - 109
+              - 122
           nodeSelector:
             intel.feature.node.kubernetes.io/gpu: "true"
           affinity:
