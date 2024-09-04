@@ -113,7 +113,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
     content {
       pcie   = true
       device = "hostpci0"
-      id     = "0000:00:02"
+      id     = each.value.gpu_address
     }
   }
 }

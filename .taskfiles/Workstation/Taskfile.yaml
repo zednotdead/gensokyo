@@ -11,10 +11,9 @@ tasks:
 
   direnv:
     desc: Run direnv hooks
-    cmd: direnv allow .
+    cmd: mise trust -y
     status:
-      - "[[ $(direnv status --json | jq '.state.foundRC.allowed') == 0 ]]"
-      - "[[ $(direnv status --json | jq '.state.loadedRC.allowed') == 0 ]]"
+      - "mise trust --show | grep untrusted; [[ $? == 0 ]]"
 
   venv:
     desc: Set up virtual environment
