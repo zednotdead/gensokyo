@@ -14,3 +14,4 @@ resources:
   - ./flaresolverr/ks.yaml
   - ./unpackerr/ks.yaml
   - ./cross-seed/ks.yaml
+  - ./autobrr/ks.yaml

@@ -89,6 +89,10 @@ spec:
       databases: ["mealie"]
       password:
         type: AlphaNumeric
+    - name: "autobrr"
+      databases: ["autobrr"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig
