@@ -14,3 +14,9 @@ data:
     ALTER SCHEMA vectors OWNER TO immich;
     COMMIT;
 
+    \c postgres\\
+    BEGIN;
+    DROP DATABASE "synapse";
+    CREATE DATABASE "synapse" with template=template0 owner="synapse" encoding=UTF8 locale='C';
+    GRANT ALL PRIVILEGES ON DATABASE "synapse" to "synapse";
+    COMMIT;

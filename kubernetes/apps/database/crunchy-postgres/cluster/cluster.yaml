@@ -19,6 +19,10 @@ spec:
         io.cilium/lb-ipam-ips: ${CRUNCHY_PGO_ADDRESS}
   patroni: # turn on sync writes to at least 1 other replica
     dynamicConfiguration:
+      bootstrap:
+        initdb:
+          - encoding=C
+          - locale=C
       synchronous_mode: true
       postgresql:
         max_wal_size: 5GB
