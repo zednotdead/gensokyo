@@ -48,6 +48,10 @@ spec:
         client-header-timeout: 120
         enable-brotli: "true"
         enable-real-ip: "true"
+        ssl-prefer-server-ciphers: false
+        ssl-protocols: "TLSv1.3 TLSv1.2"
+        ssl-redirect: false
+        hsts: false
         hsts-max-age: 31449600
         keep-alive-requests: 10000
         keep-alive: 120
@@ -60,7 +64,6 @@ spec:
           "http_user_agent": "$http_user_agent"}
         proxy-body-size: 0
         proxy-buffer-size: 16k
-        ssl-protocols: TLSv1.3 TLSv1.2
       metrics:
         enabled: true
         serviceMonitor:

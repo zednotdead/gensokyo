@@ -2,10 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: zerossl-production
-    external-dns-cf/is-dns-public: "true"
-    external-dns-cf/is-public: "true"
-    external-dns.target/enabled: "true"
     meta.helm.sh/release-name: matrix-synapse
     meta.helm.sh/release-namespace: comms
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -20,7 +16,7 @@ metadata:
   name: matrix-synapse-int
   namespace: comms
 spec:
-  ingressClassName: internal-nginx
+  ingressClassName: internal
   rules:
     - host: ${SECRET_DOMAIN}
       http:
@@ -140,9 +136,16 @@ spec:
                   number: 8008
             path: /_synapse
             pathType: Prefix
+          - backend:
+              service:
+                name: matrix-synapse-wellknown-lighttpd
+                port:
+                  number: 80
+            path: /.well-known/matrix
+            pathType: Prefix
   tls:
     - hosts:
         - ${SECRET_DOMAIN}
-        - ${SECRET_DOMAIN}
+        - matrix.${SECRET_DOMAIN}
       secretName: matrix-tls
 

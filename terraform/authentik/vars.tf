@@ -8,14 +8,14 @@ data "vault_kv_secret_v2" "grafana_secret" {
   name  = "cluster/monitoring/grafana"
 }
 
-data "vault_kv_secret_v2" "tandoor_secret" {
-  mount = vault_mount.kv.path
-  name  = "cluster/default/tandoor"
-}
-
 data "vault_kv_secret_v2" "mealie_secret" {
   mount = vault_mount.kv.path
   name  = "cluster/default/mealie"
+}
+
+data "vault_kv_secret_v2" "synapse_secret" {
+  mount = vault_mount.kv.path
+  name  = "cluster/comms/synapse"
 }
 
 locals {
@@ -27,8 +27,8 @@ locals {
   grafana_id     = lookup(data.vault_kv_secret_v2.grafana_secret.data, "GRAFANA_CLIENT_ID")
   grafana_secret = lookup(data.vault_kv_secret_v2.grafana_secret.data, "GRAFANA_CLIENT_SECRET")
 
-  tandoor_id     = lookup(data.vault_kv_secret_v2.tandoor_secret.data, "CLIENT_ID")
-  tandoor_secret = lookup(data.vault_kv_secret_v2.tandoor_secret.data, "CLIENT_SECRET")
-
   mealie_id     = lookup(data.vault_kv_secret_v2.mealie_secret.data, "CLIENT_ID")
+
+  synapse_id     = lookup(data.vault_kv_secret_v2.synapse_secret.data, "CLIENT_ID")
+  synapse_secret = lookup(data.vault_kv_secret_v2.synapse_secret.data, "CLIENT_SECRET")
 }

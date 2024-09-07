@@ -5,3 +5,4 @@ resources:
   - ./hr.yaml
   - ./es.yaml
   - ./internal-ingress.yaml
+  - ../../../../templates/volsync/
