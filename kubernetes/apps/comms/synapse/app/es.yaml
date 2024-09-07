@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: synapse
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+  target:
+    name: synapse-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        values.yaml: |
+          redis:
+            enabled: true
+            auth:
+             enabled: true
+             password: {{ .REDIS_PASSWORD }}
+
+          extraConfig:
+            email:
+              smtp_host: "{{ .SMTP_HOST }}"
+              smtp_port: "{{ .SMTP_PORT }}"
+              smtp_user: "{{ .SMTP_USERNAME }}"
+              smtp_pass: "{{ .SMTP_PASSWORD }}"
+              notif_from: "Synapse <noreply@${SECRET_DOMAIN}>"
+            oidc_providers:
+              - idp_id: authentik
+                idp_name: Authentik SSO
+                discover: true
+                issuer: "https://sso.${SECRET_DOMAIN}/application/o/matrix/"
+                client_id: "{{ .CLIENT_ID }}"
+                client_secret: "{{ .CLIENT_SECRET }}"
+                scopes:
+                  - "openid"
+                  - "profile"
+                  - "email"
+                user_mapping_provider:
+                  config:
+                    localpart_template: "{{ `{{ user.nickname }}` }}"
+                    display_name_template: "{{ `{{ user.name | capitalize }}` }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/comms/synapse
+    - extract:
+        key: kv/cluster/smtp
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: synapse-db
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: crunchy-pgo-secrets
+    kind: ClusterSecretStore
+  target:
+    name: synapse-secret
+    creationPolicy: Merge
+    deletionPolicy: Retain
+    template:
+      type: Opaque
+      data:
+        postgres.yaml: |
+          externalPostgresql:
+            host: '{{ index . "pgbouncer-host" }}'
+            port: '{{ index . "pgbouncer-port" }}'
+            username: '{{ index . "user" }}'
+            password: '{{ index . "password" }}'
+            database: '{{ index . "dbname" }}'
+  dataFrom:
+    - extract:
+        key: postgres-pguser-synapse
+
