@@ -97,10 +97,10 @@ spec:
       databases: ["autobrr"]
       password:
         type: AlphaNumeric
-    - name: "synapse"
-      databases: ["synapse"]
-      password:
-        type: AlphaNumeric
+    # - name: "synapse"
+    #   databases: ["synapse"]
+    #   password:
+    #     type: AlphaNumeric
   backups:
     pgbackrest:
       configuration: &backupConfig
