@@ -36,9 +36,6 @@ spec:
       redis:
         host: dragonfly.database.svc.cluster.local
     server:
-      image:
-        image: ghcr.io/goauthentik/dev-server
-        tag: gh-version-2024.8
       autoscaling:
         enabled: false
       metrics:
