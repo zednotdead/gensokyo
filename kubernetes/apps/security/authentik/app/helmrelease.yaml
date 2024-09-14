@@ -37,7 +37,8 @@ spec:
         host: dragonfly.database.svc.cluster.local
     server:
       autoscaling:
-        enabled: false
+        enabled: true
+        minReplicas: 2
       metrics:
         enabled: true
         prometheus:
