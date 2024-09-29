@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.63.0"
+      version = "0.65.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -83,9 +83,10 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   }
 
   disk {
+    datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
+    file_format  = "raw"
     interface    = "scsi0"
     size         = 40
-    datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
     file_id      = resource.proxmox_virtual_environment_file.talos_iso[each.value.node_name].id
     discard      = "on"
   }
@@ -93,7 +94,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = 100
+    size         = each.value.node_name == "reimu" ? 50 : 100
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
   }
   #

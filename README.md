@@ -38,7 +38,8 @@ Hopefully some of this peeked your interests!  If you are marching forward, now 
 |---------|----------|---------------|---------------------------|
 | Control | 4 _(6*)_ | 8GB _(24GB*)_ | 100GB _(500GB*)_ SSD/NVMe |
 | Worker  | 4 _(6*)_ | 8GB _(24GB*)_ | 100GB _(500GB*)_ SSD/NVMe |
-| _\* recommended_ |
+
+_\* recommended_
 
 ### Talos
 
