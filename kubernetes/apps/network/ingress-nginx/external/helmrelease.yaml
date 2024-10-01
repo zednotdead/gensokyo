@@ -51,8 +51,8 @@ spec:
         ssl-prefer-server-ciphers: false
         ssl-protocols: "TLSv1.3 TLSv1.2"
         ssl-redirect: false
-        hsts: false
-        hsts-max-age: 31449600
+        hsts: "false"
+        # hsts-max-age: 31449600
         keep-alive-requests: 10000
         keep-alive: 120
         log-format-escape-json: "true"
