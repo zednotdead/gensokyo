@@ -9,4 +9,4 @@ if [[ ! -d $TALOS_MEDIA_PATH ]] then
     mkdir $TALOS_MEDIA_PATH
 fi
 
-curl -L "https://factory.talos.dev/image/900748ce495285fc709caacfff7df8d547014ad94d7e4f130c4d6d56fe933e26/$TALOS_VERSION/nocloud-amd64.raw.xz" | xz -d > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
+curl -L "https://factory.talos.dev/image/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057/$TALOS_VERSION/nocloud-amd64.raw.xz" | xz -d > "$TALOS_MEDIA_PATH/nocloud-amd64.raw"
