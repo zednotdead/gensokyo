@@ -109,6 +109,10 @@ spec:
           gethomepage.dev/widget.url: http://jellyfin.media.svc.cluster.local:8096
           gethomepage.dev/widget.key: "{{`{{HOMEPAGE_VAR_JELLYFIN_TOKEN}}`}}"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header Accept-Encoding "";
+            sub_filter '</body>' '<script src="configurationpage?name=skip-intro-button.js&release=1.0.0.2"></script>';
+            sub_filter_once on;
         hosts:
           - host: &host jf.${SECRET_DOMAIN}
             paths:
