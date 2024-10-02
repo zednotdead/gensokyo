@@ -26,7 +26,11 @@ spec:
   values:
     fullnameOverride: ingress-nginx-external
     controller:
+      allowSnippetAnnotations: true
+      enableAnnotationValidations: true
+
       replicaCount: 3
+
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "external.${SECRET_DOMAIN}"
