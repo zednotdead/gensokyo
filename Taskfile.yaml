@@ -48,7 +48,7 @@ includes:
 
 tasks:
 
-  default: go-task -l
+  default: task -l
 
   init:
     desc: Initialize configuration files
