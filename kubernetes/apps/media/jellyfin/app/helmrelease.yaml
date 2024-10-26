@@ -65,7 +65,7 @@ spec:
           main:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 10.9.11
+              tag: 10.10.0
             resources:
               limits:
                 memory: 1390Mi
