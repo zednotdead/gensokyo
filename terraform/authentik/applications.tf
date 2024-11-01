@@ -3,7 +3,7 @@ resource "authentik_provider_oauth2" "grafana_oauth2" {
   client_id             = local.grafana_id
   client_secret         = local.grafana_secret
   authorization_flow    = resource.authentik_flow.provider-authorization-implicit-consent.uuid
-  property_mappings     = data.authentik_scope_mapping.oauth2.ids
+  property_mappings     = data.authentik_property_mapping_provider_scope.oauth2.ids
   access_token_validity = "hours=4"
   redirect_uris         = ["https://grafana.${var.cluster_domain}/login/generic_oauth"]
 }
@@ -21,10 +21,11 @@ resource "authentik_application" "grafana_application" {
 
 resource "authentik_provider_oauth2" "mealie_oauth2" {
   name                  = "mealie"
-  client_type           = "public"
+  client_type           = "confidential"
   client_id             = local.mealie_id
+  client_secret         = local.mealie_secret
   authorization_flow    = resource.authentik_flow.provider-authorization-implicit-consent.uuid
-  property_mappings     = data.authentik_scope_mapping.oauth2.ids
+  property_mappings     = data.authentik_property_mapping_provider_scope.oauth2.ids
   access_token_validity = "hours=4"
   redirect_uris = [
     "https://mealie.${var.cluster_domain}/login",
@@ -48,7 +49,7 @@ resource "authentik_provider_oauth2" "synapse_oauth2" {
   client_id             = local.synapse_id
   client_secret         = local.synapse_secret
   authorization_flow    = resource.authentik_flow.provider-authorization-implicit-consent.uuid
-  property_mappings     = data.authentik_scope_mapping.oauth2.ids
+  property_mappings     = data.authentik_property_mapping_provider_scope.oauth2.ids
   access_token_validity = "hours=4"
   redirect_uris         = ["https://matrix.${var.cluster_domain}/_synapse/client/oidc/callback"]
 }

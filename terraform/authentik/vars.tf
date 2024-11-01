@@ -28,6 +28,7 @@ locals {
   grafana_secret = lookup(data.vault_kv_secret_v2.grafana_secret.data, "GRAFANA_CLIENT_SECRET")
 
   mealie_id     = lookup(data.vault_kv_secret_v2.mealie_secret.data, "CLIENT_ID")
+  mealie_secret = lookup(data.vault_kv_secret_v2.mealie_secret.data, "CLIENT_SECRET")
 
   synapse_id     = lookup(data.vault_kv_secret_v2.synapse_secret.data, "CLIENT_ID")
   synapse_secret = lookup(data.vault_kv_secret_v2.synapse_secret.data, "CLIENT_SECRET")
