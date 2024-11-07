@@ -103,6 +103,9 @@ spec:
     #     type: AlphaNumeric
   backups:
     pgbackrest:
+      restore:
+        enabled: true
+        repoName: repo1
       configuration: &backupConfig
         - secret:
             name: crunchy-pgo-secret
