@@ -68,8 +68,8 @@ spec:
               tag: 10.10.0
             resources:
               limits:
-                memory: 1390Mi
-                gpu.intel.com/i915: 3
+                memory: 3Gi
+                gpu.intel.com/i915: 2
             probes:
               # liveness: &probes
               #   enabled: true
