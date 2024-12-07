@@ -67,7 +67,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/server-info/ping
+                    path: /api/server/ping
                     port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
@@ -79,7 +79,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/server-info/ping
+                    path: /api/server/ping
                     port: *port
                   failureThreshold: 30
                   periodSeconds: 5
