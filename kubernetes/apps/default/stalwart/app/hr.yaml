@@ -1,0 +1,181 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app stalwart
+spec:
+  interval: 30m
+  maxHistory: 3
+  chartRef:
+    kind: OCIRepository
+    name: stalwart-mail
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    image:
+      repository: stalwartlabs/mail-server
+      tag: "v0.10.7"
+    config:
+      server:
+        listener:
+          smtp:
+            bind: ["[::]:25"]
+            protocol: "smtp"
+          submission:
+            bind: ["[::]:587"]
+            protocol: "smtp"
+          submissions:
+            bind: ["[::]:465"]
+            protocol: "smtp"
+            tls:
+              implicit: true
+          imap:
+            bind: ["[::]:143"]
+            protocol: "imap"
+          imaptls:
+            bind: ["[::]:993"]
+            protocol: "imap"
+            tls:
+              implicit: true
+          pop3:
+            bind: ["[::]:110"]
+            protocol: "pop3"
+          pop3s:
+            bind: ["[::]:995"]
+            protocol: "pop3"
+            tls:
+              implicit: true
+          sieve:
+            bind: ["[::]:4190"]
+            protocol: "managesieve"
+          http:
+            protocol: "http"
+            bind: ["[::]:80"]
+          https:
+            protocol: "http"
+            bind: ["[::]:443"]
+            tls:
+              implicit: true
+      storage:
+        data: "rocksdb"
+        fts: "rocksdb"
+        blob: "rocksdb"
+        lookup: "rocksdb"
+        directory: "internal"
+      store:
+        rocksdb:
+          type: rocksdb
+          path: "/data"
+          compression: "lz4"
+      directory:
+        internal:
+          type: "internal"
+          store: "rocksdb"
+      tracer:
+        otel:
+          enable: false
+          type: "open-telemetry"
+          level: "info"
+          # -- grpc or http
+          transport: "grpc"
+          endpoint: "https://127.0.0.1/otel"
+          # -- headers for usage with http (e.g. 'Authorization: <place_auth_here>')
+          headers: []
+        stdout:
+          enable: true
+          type: "stdout"
+          level: "info"
+          ansi: false
+
+      auth:
+        dkim:
+          sign:
+            - if: "listener != 'smtp'"
+              then: "['rsa', 'ed25519']"
+            - else: false
+          # -- verify of dkim signature (relaxed, strict, disable)
+          # @section -- DKIM
+          verify: "relaxed"
+
+      authentication:
+        fallback-admin:
+          # -- username for fallback authentfication
+          # @section -- Authentification
+          user: "admin"
+          # -- password for fallback authentfication (use env for store in secrets of kubernetes)
+          # @section -- Authentification
+          secret: "%{env:FALLBACK_ADMIN_SECRET}%"
+      metrics:
+        prometheus:
+          enable: true
+          auth:
+            username: "%{env:METRICS_USERNAME}%"
+            secret: "%{env:METRICS_SECRET}%"
+    secrets:
+      env:
+        FALLBACK_ADMIN_SECRET: supersecret
+    env: []
+
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
+      supplementalGroups:
+        - 44
+        - 109
+        - 122
+      capabilities:
+        drop:
+        - ALL
+    livenessProbe:
+      httpGet:
+        path: /healthz/live
+        port: http
+    readinessProbe:
+      httpGet:
+        path: /healthz/ready
+        port: http
+    ingress:
+      enabled: true
+      className: "external"
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+      hosts:
+        - host: &host mail.${SECRET_DOMAIN}
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls:
+        - hosts: [*host]
+    prometheus:
+      servicemonitor:
+        enabled: true
+    certificate:
+      certmanager:
+        enabled: true
+        issuerRef:
+          group: cert-manager.io
+          kind: ClusterIssuer
+          name: letsencrypt-production
+        dnsNames:
+          - *host
+    resources: {}
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 3
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+    persistence:
+      enabled: true
+      existingClaim: *app
