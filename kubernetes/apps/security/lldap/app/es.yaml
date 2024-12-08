@@ -30,13 +30,13 @@ spec:
     name: crunchy-pgo-secrets
     kind: ClusterSecretStore
   target:
-    name: lldap
+    name: lldap-secret
     creationPolicy: Merge
     deletionPolicy: Retain
     template:
       type: Opaque
       data:
-        LLDAP_DATABASE_URL: '{{ .pgbouncer-uri }}'
+        LLDAP_DATABASE_URL: '{{ .uri }}'
   dataFrom:
   - extract:
       key: postgres-pguser-authentik

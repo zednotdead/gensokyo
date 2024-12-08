@@ -27,3 +27,4 @@ spec:
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: ldap
+      VOLSYNC_CAPACITY: 5Gi
