@@ -17,6 +17,9 @@ spec:
             env:
               FALLBACK_ADMIN_SECRET: "{{ .ADMIN_SECRET }}"
               LDAP_BASE_DN: "{{ .LDAP_BASE_DN }}"
+              LDAP_BIND_DN: "cn=admin,ou=people,{{ .LDAP_BASE_DN }}"
+              LDAP_BIND_SECRET: "{{ .LDAP_USER_PASS }}"
+              LDAP_BIND_AUTH_DN: "cn=?,ou=people,{{ .LDAP_BASE_DN }}"
 
   dataFrom:
     - extract:

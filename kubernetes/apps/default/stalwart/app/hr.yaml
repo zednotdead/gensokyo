@@ -72,7 +72,7 @@ spec:
         fts: "rocksdb"
         blob: "rocksdb"
         lookup: "rocksdb"
-        directory: "internal"
+        directory: "ldap"
       store:
         rocksdb:
           type: rocksdb
@@ -89,6 +89,13 @@ spec:
           tls:
             enabled: false
             allow-invalid-certs: false
+          bind:
+            dn: "%{env:LDAP_BIND_DN}%"
+            secret: "%{env:LDAP_BIND_SECRET}%"
+            auth:
+              enable: true
+              dn: "%{env:LDAP_BIND_AUTH_DN}%"
+              search: true
       tracer:
         otel:
           enable: false
