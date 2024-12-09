@@ -82,6 +82,13 @@ spec:
         internal:
           type: "internal"
           store: "rocksdb"
+        ldap:
+          type: "ldap"
+          url: "ldap://lldap.security.svc.cluster.local:3890"
+          base-dn: "%{env:LDAP_BASE_DN}%"
+          tls:
+            enabled: false
+            allow-invalid-certs: false
       tracer:
         otel:
           enable: false
