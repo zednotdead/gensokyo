@@ -12,7 +12,10 @@ spec:
     creationPolicy: Owner
     template:
       data:
-        ADMIN_SECRET: "{{ .ADMIN_SECRET }}"
+        values.yaml: |
+          secrets:
+            env:
+              FALLBACK_ADMIN_SECRET: "{{ .ADMIN_SECRET }}"
   dataFrom:
     - extract:
         key: kv/cluster/default/stalwart

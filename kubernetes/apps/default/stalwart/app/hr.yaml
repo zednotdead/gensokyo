@@ -19,6 +19,9 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  valuesFrom:
+    - kind: Secret
+      name: stalwart-secret
   values:
     image:
       repository: stalwartlabs/mail-server
@@ -119,9 +122,6 @@ spec:
           auth:
             username: "%{env:METRICS_USERNAME}%"
             secret: "%{env:METRICS_SECRET}%"
-    secrets:
-      env:
-        FALLBACK_ADMIN_SECRET: supersecret
     env: []
 
     securityContext:
