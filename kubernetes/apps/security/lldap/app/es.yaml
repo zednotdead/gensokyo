@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
@@ -15,28 +16,17 @@ spec:
         LLDAP_JWT_SECRET: "{{ .JWT_SECRET }}"
         LLDAP_LDAP_USER_PASS: "{{ .LDAP_USER_PASS }}"
         LLDAP_LDAP_BASE_DN: "{{ .LDAP_BASE_DN }}"
+        LLDAP_DATABASE_URL: '{{ .uri }}'
   dataFrom:
     - extract:
         key: kv/cluster/security/lldap
----
-# yaml-language-server: $schema=https://kube-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: lldap-db
-spec:
-  refreshInterval: 1m
-  secretStoreRef:
-    name: crunchy-pgo-secrets
-    kind: ClusterSecretStore
-  target:
-    name: lldap-secret
-    creationPolicy: Merge
-    deletionPolicy: Retain
-    template:
-      type: Opaque
-      data:
-        LLDAP_DATABASE_URL: '{{ .uri }}'
-  dataFrom:
-  - extract:
-      key: postgres-pguser-authentik
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: postgres-pguser-authentik
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets
