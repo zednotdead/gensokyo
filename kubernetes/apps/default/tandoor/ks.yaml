@@ -18,6 +18,7 @@ spec:
   dependsOn:
     - name: external-secrets-stores
     - name: rook-ceph-cluster
+    - name: crunchy-postgres-operator-cluster
     - name: volsync
   wait: false
   interval: 30m
@@ -26,4 +27,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_CAPACITY: 10Gi

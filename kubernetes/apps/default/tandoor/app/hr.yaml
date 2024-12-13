@@ -4,12 +4,13 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app tandoor
+  namespace: default
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 3.3.2
+      version: 3.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -39,7 +40,7 @@ spec:
           migrations:
             image:
               repository: vabene1111/recipes
-              tag: 1.5.18@sha256:e5f1287a5961d455e2239f3e96f05987cb018749d565342d93dc8ccadd2bfd65
+              tag: 1.5.24@sha256:e790307a447f0a546df6bd16421f0b82b38ba2fdea52601d07143a54fd708db4
             envFrom: &envFrom
               - secretRef:
                   name: tandoor-secret
@@ -56,59 +57,75 @@ spec:
         containers:
           app:
             image:
-              repository: vabene1111/recipes
-              tag: 1.5.18@sha256:e5f1287a5961d455e2239f3e96f05987cb018749d565342d93dc8ccadd2bfd65
-            envFrom: *envFrom
+              repository: ghcr.io/tandoorrecipes/recipes
+              tag: 1.5.24
             env:
-              DEBUG: "0"
-              ALLOWED_HOSTS: "*"
-              GUNICORN_MEDIA: "0"
-              TZ: ${TIMEZONE}
-              TANDOOR_PORT: &port 8888
-              FRACTION_PREF_DEFAULT: "0"
-              COMMENT_PREF_DEFAULT: "1"
-              SHOPPING_MIN_AUTOSYNC_INTERVAL: "5"
-            command:
-              - /opt/recipes/venv/bin/gunicorn
-              - -b
-              - :8888
-              - --access-logfile
-              - "-"
-              - --error-logfile
-              - "-"
-              - --log-level
-              - INFO
-              - recipes.wsgi
+              COMMENT_PREF_DEFAULT: 0
+              DEBUG: 1
+              ENABLE_SIGNUP: 0
+              FRACTION_PREF_DEFAULT: 0
+              GUNICORN_MEDIA: 0
+              MAX_OWNED_SPACES_PREF_DEFAULT: 1000
+              SHOPPING_MIN_AUTOSYNC_INTERVAL: 5
+              TANDOOR_PORT: &tandoorPort 8888
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /accounts/login/
+                    port: *tandoorPort
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /accounts/login/
+                    port: *tandoorPort
+                  failureThreshold: 30
+                  periodSeconds: 10
             resources:
               requests:
-                cpu: 100m
-                memory: 256Mi
+                cpu: 10m
+                memory: 500Mi
               limits:
-                memory: 512Mi
+                memory: 750Mi
           nginx:
             image:
               repository: ghcr.io/nginxinc/nginx-unprivileged
-              tag: 1.27.0-alpine@sha256:f9abf2e3f911c05e28d97b2e6826ebe83a2fb26ec5d441522d3b2a8a6f7947ad
+              tag: 1.27.3-alpine
     service:
       app:
         controller: *app
         ports:
           http:
-            port: *port
+            port: *tandoorPort
           nginx:
-            port: &port2 8080
+            port: &nginxPort 8080
     ingress:
       app:
-        enabled: true
-        className: internal
+        className: "external"
         annotations:
+          external-dns.alpha.kubernetes.io/target: external.rafaribe.com
+          hajimari.io/icon: mdi:chef-hat
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: Personal
           gethomepage.dev/name: Tandoor
+          gethomepage.dev/description: Managing recipes, planned meals, shopping lists.
+          gethomepage.dev/group: Applications
           gethomepage.dev/icon: tandoor.png
-          gethomepage.dev/description: Recipe Book
+          gethomepage.dev/pod-selector: >-
+            app in (
+              tandoor
+            )
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: tandoor.${SECRET_DOMAIN}
             paths:
               - path: /
                 service:
@@ -117,14 +134,11 @@ spec:
               - path: /media
                 service:
                   identifier: app
-                  port: *port2
+                  port: *nginxPort
               - path: /static
                 service:
                   identifier: app
-                  port: *port2
-        tls:
-          - hosts:
-              - *host
+                  port: *nginxPort
     persistence:
       config:
         existingClaim: *app
