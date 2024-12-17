@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: standard-notes
+spec:
+  target:
+    name: standard-notes-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        DATABASE_URL: '{{ index . "pgbouncer-uri" }}'
+  dataFrom:
+    # - extract:
+    #     key: kv/cluster/default/standard-notes
+    #   rewrite:
+    #     - regexp:
+    #         source: "(.*)"
+    #         target: "MEALIE_$1"
+    #   sourceRef:
+    #     storeRef:
+    #       kind: ClusterSecretStore
+    #       name: vault-backend
+    - extract:
+        key: postgres-pguser-affine
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets

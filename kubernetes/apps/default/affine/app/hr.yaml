@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app affine
+spec:
+  interval: 30m
+  maxHistory: 3
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+    controllers:
+      affine:
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        strategy: Recreate
+        containers:
+          app:
+            image: &appImage
+              repository: ghcr.io/toeverything/affine-graphql
+              tag: stable-a9aa31a@sha256:0892ba5b574b24f12d396585bd124fce42cf88b45e1fb5cf03437fc223accd06
+            env: &env
+              AFFINE_SERVER_HOST: &host "notes.${SECRET_DOMAIN}"
+              NODE_ENV: production
+              PORT: &port 3010
+            envFrom: &envFrom
+              - secretRef:
+                  name: affine-secret
+            resources:
+              requests:
+                memory: 1Gi
+              limits:
+                memory: 1Gi
+        initContainers:
+          migrations:
+            image: *appImage
+            envFrom: *envFrom
+            env: *env
+            command:
+              - sh
+              - -c
+              - "node ./scripts/self-host-predeploy.js"
+    service:
+      app:
+        controller: affine
+        ports:
+          http:
+            port: *port
+    ingress:
+      app:
+        className: internal
+        annotations:
+          gethomepage.dev/name: *app
+          gethomepage.dev/enabled: 'true'
+          gethomepage.dev/group: Personal
+          gethomepage.dev/icon: affine.png
+        hosts:
+          - host: *host
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /root/.affine
