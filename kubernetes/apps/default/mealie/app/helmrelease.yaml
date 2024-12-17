@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mealie-recipes/mealie
-              tag: v2.3.0@sha256:562ba8b1c98fbfa98a019ab6e0e45c88dae9a2e9a858ec4eac8f6321e46e9227
+              tag: v2.4.0@sha256:264a59cd88b24a3b14c62426f1bc0771fd6ac81501a0197735c1ac4c1381032f
             env:
               BASE_URL: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
               DB_ENGINE: postgres
@@ -53,11 +53,9 @@ spec:
                 enabled: false
             resources:
               requests:
-                cpu: 271m
-                memory: 381M
+                memory: 1Gi
               limits:
-                cpu: 271m
-                memory: 381M
+                memory: 1Gi
     service:
       app:
         controller: mealie
