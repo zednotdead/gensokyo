@@ -40,8 +40,12 @@ spec:
               tag: stable-a9aa31a@sha256:0892ba5b574b24f12d396585bd124fce42cf88b45e1fb5cf03437fc223accd06
             env: &env
               AFFINE_SERVER_HOST: &host "notes.${SECRET_DOMAIN}"
+              AFFINE_SERVER_PORT: &port 3010
               NODE_ENV: production
-              PORT: &port 3010
+              REDIS_SERVER_ENABLED: "true"
+              REDIS_SERVER_HOST: dragonfly.database.svc.cluster.local
+              REDIS_SERVER_DATABASE: *app
+              MAILER_SENDER: 'affine@${SECRET_DOMAIN}'
             envFrom: &envFrom
               - secretRef:
                   name: affine-secret
@@ -54,7 +58,6 @@ spec:
           migrations:
             image: *appImage
             envFrom: *envFrom
-            env: *env
             command:
               - sh
               - -c
@@ -67,8 +70,9 @@ spec:
             port: *port
     ingress:
       app:
-        className: internal
+        className: external
         annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           gethomepage.dev/name: *app
           gethomepage.dev/enabled: 'true'
           gethomepage.dev/group: Personal

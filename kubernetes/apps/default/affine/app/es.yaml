@@ -3,26 +3,32 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: standard-notes
+  name: affine
 spec:
   target:
-    name: standard-notes-secret
+    name: affine-secret
     creationPolicy: Owner
     template:
       engineVersion: v2
       data:
         DATABASE_URL: '{{ index . "pgbouncer-uri" }}'
+        MAILER_HOST: '{{ .SMTP_HOST }}'
+        MAILER_PORT: '{{ .SMTP_PORT }}'
+        MAILER_USER: '{{ .SMTP_USERNAME }}'
+        MAILER_PASSWORD: '{{ .SMTP_PASSWORD }}'
   dataFrom:
-    # - extract:
-    #     key: kv/cluster/default/standard-notes
-    #   rewrite:
-    #     - regexp:
-    #         source: "(.*)"
-    #         target: "MEALIE_$1"
-    #   sourceRef:
-    #     storeRef:
-    #       kind: ClusterSecretStore
-    #       name: vault-backend
+    - extract:
+        key: kv/cluster/smtp
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/default/affine
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
     - extract:
         key: postgres-pguser-affine
       sourceRef:
