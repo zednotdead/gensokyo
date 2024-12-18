@@ -54,27 +54,27 @@ spec:
     customCA:
       secretName: ${APP}-volsync-secret
       key: ca.crt
-# ---
-# # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
-# apiVersion: volsync.backube/v1alpha1
-# kind: ReplicationDestination
-# metadata:
-#   name: "${APP}-dst"
-# spec:
-#   trigger:
-#     manual: restore-once
-#   restic:
-#     repository: "${APP}-volsync-secret"
-#     copyMethod: Snapshot # must be Snapshot
-#     volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
-#     storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-#     accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
-#     capacity: "${VOLSYNC_CAPACITY}"
-#     moverSecurityContext:
-#       runAsUser: 568
-#       runAsGroup: 568
-#       fsGroup: 568
-#     customCA:
-#       secretName: ${APP}-volsync-secret
-#       key: ca.crt
-#
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: "${APP}-dst"
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    repository: "${APP}-volsync-secret"
+    copyMethod: Snapshot # must be Snapshot
+    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
+    storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
+    accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
+    capacity: "${VOLSYNC_CAPACITY}"
+    moverSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+    customCA:
+      secretName: ${APP}-volsync-secret
+      key: ca.crt
+
