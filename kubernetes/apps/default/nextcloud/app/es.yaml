@@ -13,10 +13,10 @@ spec:
       data:
         nextcloud-username: '{{ .ADMIN_USERNAME }}'
         nextcloud-password: '{{ .ADMIN_PASSWORD }}'
+        DATABASE_HOST: '{{ index . "host" }}'
         DATABASE_USER: '{{ index . "user" }}'
         DATABASE_PASSWORD: '{{ index . "password" }}'
         DATABASE_DB: '{{ index . "dbname" }}'
-        DATABASE_HOST: '{{ index . "pgbouncer-host" }}'
         smtp-host: '{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
         smtp-username: '{{ .SMTP_USERNAME }}'
         smtp-password: '{{ .SMTP_PASSWORD }}'
