@@ -105,10 +105,10 @@ spec:
       databases: ["affine"]
       password:
         type: AlphaNumeric
-    # - name: "synapse"
-    #   databases: ["synapse"]
-    #   password:
-    #     type: AlphaNumeric
+    - name: "nextcloud"
+      databases: ["nextcloud"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       restore:

@@ -30,3 +30,4 @@ resources:
   - ./fairwinds.yaml
   - ./ananace.yaml
   - ./wrenix.yaml
+  - ./nextcloud.yaml

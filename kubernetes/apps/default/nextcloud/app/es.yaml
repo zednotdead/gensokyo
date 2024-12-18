@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: nextcloud
+spec:
+  target:
+    name: nextcloud-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        nextcloud-username: '{{ .ADMIN_USERNAME }}'
+        nextcloud-password: '{{ .ADMIN_PASSWORD }}'
+        DATABASE_USER: '{{ index . "user" }}'
+        DATABASE_PASSWORD: '{{ index . "password" }}'
+        DATABASE_DB: '{{ index . "dbname" }}'
+        DATABASE_HOST: '{{ index . "pgbouncer-host" }}'
+        smtp-host: '{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
+        smtp-username: '{{ .SMTP_USERNAME }}'
+        smtp-password: '{{ .SMTP_PASSWORD }}'
+        S3_ACCESS_KEY: "{{ .ACCESS_KEY }}"
+        S3_SECRET_KEY: "{{ .SECRET_KEY }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/smtp
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/default/nextcloud
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: postgres-pguser-nextcloud
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets
+    - extract:
+        key: kv/cluster/volsync/s3
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
