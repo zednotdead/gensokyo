@@ -44,9 +44,9 @@ spec:
     accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
     cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-1Gi}"
     moverSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
+      fsGroup: ${VOLSYNC_BACKUP_MOVER_FS_GROUP:-${VOLSYNC_MOVER_FS_GROUP:-568}}
+      runAsGroup: ${VOLSYNC_BACKUP_MOVER_GROUP:-${VOLSYNC_MOVER_GROUP:-568}}
+      runAsUser: ${VOLSYNC_BACKUP_MOVER_USER:-${VOLSYNC_MOVER_USER:-568}}
     retain:
       hourly: 24
       daily: 7
@@ -71,9 +71,9 @@ spec:
     accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
     capacity: "${VOLSYNC_CAPACITY}"
     moverSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
+      fsGroup: ${VOLSYNC_RESTORE_MOVER_FS_GROUP:-${VOLSYNC_MOVER_FS_GROUP:-568}}
+      runAsGroup: ${VOLSYNC_RESTORE_MOVER_GROUP:-${VOLSYNC_MOVER_GROUP:-568}}
+      runAsUser: ${VOLSYNC_RESTORE_MOVER_USER:-${VOLSYNC_MOVER_USER:-568}}
     customCA:
       secretName: ${APP}-volsync-secret
       key: ca.crt

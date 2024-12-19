@@ -11,15 +11,15 @@ spec:
     template:
       engineVersion: v2
       data:
-        nextcloud-username: '{{ .ADMIN_USERNAME }}'
-        nextcloud-password: '{{ .ADMIN_PASSWORD }}'
+        ADMIN_USERNAME: '{{ .ADMIN_USERNAME }}'
+        ADMIN_PASSWORD: '{{ .ADMIN_PASSWORD }}'
         DATABASE_HOST: '{{ index . "host" }}'
         DATABASE_USER: '{{ index . "user" }}'
         DATABASE_PASSWORD: '{{ index . "password" }}'
         DATABASE_DB: '{{ index . "dbname" }}'
-        smtp-host: '{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
-        smtp-username: '{{ .SMTP_USERNAME }}'
-        smtp-password: '{{ .SMTP_PASSWORD }}'
+        SMTP_HOST: '{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
+        SMTP_USERNAME: '{{ .SMTP_USERNAME }}'
+        SMTP_PASSWORD: '{{ .SMTP_PASSWORD }}'
         S3_ACCESS_KEY: "{{ .ACCESS_KEY }}"
         S3_SECRET_KEY: "{{ .SECRET_KEY }}"
   dataFrom:
@@ -47,3 +47,30 @@ spec:
         storeRef:
           kind: ClusterSecretStore
           name: vault-backend
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: "nextcloud-data-volsync"
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-backend
+  target:
+    name: "nextcloud-data-volsync-secret"
+    template:
+      engineVersion: v2
+      data:
+        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/nextcloud-data"
+        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        AWS_ACCESS_KEY_ID: "{{ .ACCESS_KEY }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .SECRET_KEY }}"
+        ca.crt: "{{ .SIGNING_CERTIFICATE }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/volsync/s3
+    - extract:
+        key: kv/cluster/volsync/restic
+    - extract:
+        key: kv/cluster/truenas
