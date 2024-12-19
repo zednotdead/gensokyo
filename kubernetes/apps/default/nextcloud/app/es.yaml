@@ -22,6 +22,7 @@ spec:
         SMTP_PASSWORD: '{{ .SMTP_PASSWORD }}'
         S3_ACCESS_KEY: "{{ .ACCESS_KEY }}"
         S3_SECRET_KEY: "{{ .SECRET_KEY }}"
+        ca.crt: "{{ .SIGNING_CERTIFICATE }}"
   dataFrom:
     - extract:
         key: kv/cluster/smtp
@@ -43,6 +44,12 @@ spec:
           name: crunchy-pgo-secrets
     - extract:
         key: kv/cluster/volsync/s3
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/truenas
       sourceRef:
         storeRef:
           kind: ClusterSecretStore
