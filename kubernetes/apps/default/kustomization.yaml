@@ -5,4 +5,4 @@ resources:
   - ./namespace.yaml
   - ./homepage/ks.yaml
   - ./mealie/ks.yaml
-  - ./nextcloud/ks.yaml
+  # - ./nextcloud/ks.yaml
