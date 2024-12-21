@@ -1,0 +1,69 @@
+---
+# yaml-language-server: $schema=https://kochhaus-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: authelia
+spec:
+  target:
+    name: authelia-secret
+    template:
+      data:
+        AUTHELIA_AUTHENTICATION_BACKEND_LDAP_USER: "uid={{ .LLDAP_READONLY_ADMIN_USERNAME }},ou=people,DC=zed,DC=gay"
+        AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD: "{{ .LLDAP_READONLY_ADMIN_PASSWORD }}"
+        AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET: "{{ .AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET }}"
+        AUTHELIA_IDENTITY_PROVIDERS_OIDC_ISSUER_PRIVATE_KEY: "{{ .AUTHELIA_JWKS_PRIVATE_KEY }}"
+        AUTHELIA_SESSION_SECRET: "{{ .AUTHELIA_SESSION_SECRET }}"
+        AUTHELIA_STORAGE_ENCRYPTION_KEY: "{{ .AUTHELIA_STORAGE_ENCRYPTION_KEY }}"
+        AUTHELIA_STORAGE_POSTGRES_DATABASE: "{{ .dbname }}"
+        AUTHELIA_STORAGE_POSTGRES_ADDRESS: '{{ index . "host" }}'
+        AUTHELIA_STORAGE_POSTGRES_USERNAME: '{{ index . "user" }}'
+        AUTHELIA_STORAGE_POSTGRES_PASSWORD: '{{ index . "password" }}'
+        AUTHELIA_NOTIFIER_SMTP_ADDRESS: 'smtp://{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
+        AUTHELIA_NOTIFIER_SMTP_USERNAME: "{{ .SMTP_USERNAME }}"
+        AUTHELIA_NOTIFIER_SMTP_PASSWORD: "{{ .SMTP_PASSWORD }}"
+        MEALIE_CLIENT_ID: "{{ .MEALIE_CLIENT_ID }}"
+        MEALIE_CLIENT_SECRET_DIGEST: "{{ .MEALIE_CLIENT_SECRET_DIGEST }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/security/authelia
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "AUTHELIA_$1"
+    - extract:
+        key: kv/cluster/smtp
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/security/lldap
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "LLDAP_$1"
+    - extract:
+        key: postgres-pguser-authelia
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets
+    - extract:
+        key: kv/cluster/default/mealie
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "MEALIE_$1"
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
