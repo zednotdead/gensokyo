@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://kochhaus-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ocis
+spec:
+  target:
+    name: ocis-secret
+    template:
+      data:
+        OCIS_JWT_SECRET: "{{ .OCIS_JWT_SECRET }}"
+        NOTIFICATIONS_SMTP_HOST: "{{ .SMTP_HOST }}"
+        NOTIFICATIONS_SMTP_PORT: "{{ .SMTP_PORT }}"
+        STORAGE_USERS_S3NG_ACCESS_KEY: "{{ .ACCESS_KEY }}"
+        STORAGE_USERS_S3NG_SECRET_KEY: "{{ .SECRET_KEY }}"
+        # OCIS_LDAP_BIND_DN: "uid={{ .LLDAP_READONLY_ADMIN_USERNAME }},ou=people,DC=zed,DC=gay"
+        # OCIS_LDAP_BIND_PASSWORD: "{{ .LLDAP_READONLY_ADMIN_PASSWORD }}"
+        # OCIS_ADMIN_USER_ID: "{{ .LLDAP_READONLY_ADMIN_UUID }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/default/ocis
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "OCIS_$1"
+    - extract:
+        key: kv/cluster/smtp
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/volsync/s3
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/security/lldap
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "LLDAP_$1"

@@ -26,6 +26,16 @@ access_control:
 
 identity_providers:
   oidc:
+    lifespans:
+      access_token: 30m
+      refresh_token: 30m
+    cors:
+      endpoints:
+        - 'authorization'
+        - 'token'
+        - 'revocation'
+        - 'introspection'
+        - 'userinfo'
     clients:
       - client_id: $${MEALIE_CLIENT_ID}
         client_name: Mealie
@@ -43,15 +53,53 @@ identity_providers:
       - client_id: ocis
         client_name: ownCloud
         public: true
-        authorization_policy: two_factor
-        pre_configured_consent_duration: 1y
+        redirect_uris:
+          - "https://files.${SECRET_DOMAIN}/"
+          - "https://files.${SECRET_DOMAIN}/oidc-callback.html"
+          - "https://files.${SECRET_DOMAIN}/oidc-silent-redirect.html"
         scopes:
           - openid
           - profile
           - groups
           - email
-        redirect_uris: ["https://cloud.${SECRET_DOMAIN}/", "https://cloud.${SECRET_DOMAIN}/oidc-callback.html", "https://cloud.${SECRET_DOMAIN}/oidc-silent-redirect.html"]
-        userinfo_signed_response_alg: none
+      - client_id: 'xdXOt13JKxym1B1QcEncf2XDkLAexMBFwiT9j6EfhhHFJhs2KM9jbjTmf8JBXE69'
+        client_name: 'ownCloud desktop client'
+        client_secret: $${OWNCLOUD_CLIENT_SECRET_DESKTOP_DIGEST}
+        public: false
+        scopes:
+          - 'openid'
+          - 'groups'
+          - 'profile'
+          - 'email'
+          - 'offline_access'
+        redirect_uris:
+          - 'http://127.0.0.1'
+          - 'http://localhost'
+      - client_id: 'e4rAsNUSIUs0lF4nbv9FmCeUkTlV9GdgTLDH1b5uie7syb90SzEVrbN7HIpmWJeD'
+        client_name: 'ownCloud Android app'
+        client_secret: $${OWNCLOUD_CLIENT_SECRET_ANDROID_DIGEST}
+        public: false
+        scopes:
+          - 'openid'
+          - 'groups'
+          - 'profile'
+          - 'email'
+          - 'offline_access'
+        redirect_uris:
+          - 'oc://android.owncloud.com'
+      - client_id: 'mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1'
+        client_name: 'ownCloud iOS app'
+        client_secret: $${OWNCLOUD_CLIENT_SECRET_IOS_DIGEST}
+        public: false
+        scopes:
+          - 'openid'
+          - 'groups'
+          - 'profile'
+          - 'email'
+          - 'offline_access'
+        redirect_uris:
+          - 'oc://ios.owncloud.com'
+          - 'oc.ios://ios.owncloud.com'
 session:
   same_site: lax
   inactivity: 5m

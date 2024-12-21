@@ -24,6 +24,9 @@ spec:
         AUTHELIA_NOTIFIER_SMTP_PASSWORD: "{{ .SMTP_PASSWORD }}"
         MEALIE_CLIENT_ID: "{{ .MEALIE_CLIENT_ID }}"
         MEALIE_CLIENT_SECRET_DIGEST: "{{ .MEALIE_CLIENT_SECRET_DIGEST }}"
+        OWNCLOUD_CLIENT_SECRET_ANDROID_DIGEST: "{{ .OWNCLOUD_CLIENT_SECRET_ANDROID_DIGEST }}"
+        OWNCLOUD_CLIENT_SECRET_IOS_DIGEST: "{{ .OWNCLOUD_CLIENT_SECRET_IOS_DIGEST }}"
+        OWNCLOUD_CLIENT_SECRET_DESKTOP_DIGEST: "{{ .OWNCLOUD_CLIENT_SECRET_DESKTOP_DIGEST }}"
   dataFrom:
     - extract:
         key: kv/cluster/security/authelia
@@ -63,6 +66,16 @@ spec:
         - regexp:
             source: "(.*)"
             target: "MEALIE_$1"
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/default/ocis
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "OWNCLOUD_$1"
       sourceRef:
         storeRef:
           kind: ClusterSecretStore
