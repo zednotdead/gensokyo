@@ -11,6 +11,30 @@ spec:
       app.kubernetes.io/name: trust-manager
   path: ./kubernetes/apps/cert-manager/trust-manager/app
   prune: true
+  dependsOn:
+    - name: cert-manager
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: trust-manager-bundles
+  namespace: flux-system
+spec:
+  targetNamespace: cert-manager
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: trust-manager
+  path: ./kubernetes/apps/cert-manager/trust-manager/bundles
+  dependsOn:
+    - name: trust-manager
+  prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
