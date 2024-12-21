@@ -38,8 +38,20 @@ identity_providers:
           - email
         userinfo_signed_response_alg: none
         redirect_uris:
-         - "https://mealie.${SECRET_DOMAIN}/login"
-         - "https://mealie.${SECRET_DOMAIN}/login?direct=1"
+          - "https://mealie.${SECRET_DOMAIN}/login"
+          - "https://mealie.${SECRET_DOMAIN}/login?direct=1"
+      - client_id: ocis
+        client_name: ownCloud
+        public: true
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes:
+          - openid
+          - profile
+          - groups
+          - email
+        redirect_uris: ["https://cloud.${SECRET_DOMAIN}/", "https://cloud.${SECRET_DOMAIN}/oidc-callback.html", "https://cloud.${SECRET_DOMAIN}/oidc-silent-redirect.html"]
+        userinfo_signed_response_alg: none
 session:
   same_site: lax
   inactivity: 5m
