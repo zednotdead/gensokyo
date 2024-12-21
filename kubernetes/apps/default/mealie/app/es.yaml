@@ -16,17 +16,17 @@ spec:
         SMTP_USER: "{{ .SMTP_USERNAME }}"
         SMTP_PASSWORD: "{{ .SMTP_PASSWORD }}"
         SMTP_AUTH_STRATEGY: "TLS"
-        SMTP_FROM_EMAIL: cluster+recipes@${SECRET_DOMAIN}
+        SMTP_FROM_EMAIL: mealie@${SECRET_DOMAIN}
         SMTP_FROM_NAME: Mealie
         OIDC_AUTH_ENABLED: "true"
         OIDC_SIGNUP_ENABLED: "true"
-        OIDC_CONFIGURATION_URL: "https://sso.${SECRET_DOMAIN}/application/o/mealie/.well-known/openid-configuration"
+        OIDC_CONFIGURATION_URL: "https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration"
         OIDC_CLIENT_ID: "{{ .MEALIE_CLIENT_ID }}"
         OIDC_CLIENT_SECRET: "{{ .MEALIE_CLIENT_SECRET }}"
         OIDC_AUTO_REDIRECT: "false"
         OIDC_REMEMBER_ME: "true"
-        OIDC_USER_GROUP: users
-        OIDC_ADMIN_GROUP: Mealie Admins
+        OIDC_USER_GROUP: mealie-users
+        OIDC_ADMIN_GROUP: mealie-admins
         POSTGRES_USER: '{{ .user }}'
         POSTGRES_PASSWORD: '{{ .password }}'
         POSTGRES_SERVER: '{{ index . "pgbouncer-host" }}'
