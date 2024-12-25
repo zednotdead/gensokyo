@@ -34,20 +34,63 @@ spec:
       className: external
       annotations:
         external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+          rewrite ^/.well-known/webfinger /index.php/.well-known/webfinger last;
+          rewrite ^/.well-known/nodeinfo /index.php/.well-known/nodeinfo last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
     nextcloud:
       host: cloud.${SECRET_DOMAIN}
-      configs:
-        logging.config.php: |-
-          <?php
-          $CONFIG = array (
-            'log_type' => 'file',
-            'logfile' => 'nextcloud.log',
-            'loglevel' => 0,
-            'logdateformat' => 'F d, Y H:i:s'
-            );
       extraEnv:
         - name: HOME
           value: "/var/www"
+        - name: REDIS_HOST
+          value: dragonfly.database.svc.cluster.local.
+        - name: REDIS_HOST_PORT
+          value: "6379"
+      objectStore:
+        s3:
+          enabled: true
+          host: ${NAS_ADDRESS}
+          port: 9000
+          bucket: nextcloud
+          usePathStyle: true
+          existingSecret: &secret nextcloud-secret
+          secretKeys:
+            accessKey: S3_ACCESS_KEY
+            secretKey: S3_SECRET_KEY
+      extraVolumes:
+        - name: ca-certificates
+          configMap:
+            name: public-bundle
+            defaultMode: 0644
+            optional: false
+            items:
+            - key: ca-certificates.crt
+              path: ca-certificates.crt
+      extraVolumeMounts:
+        - mountPath: /etc/ssl/certs/
+          name: ca-certificates
+          readOnly: true
     internalDatabase:
       enabled: false
     externalDatabase:
@@ -55,7 +98,7 @@ spec:
       type: postgresql
       existingSecret:
         enabled: true
-        secretName: nextcloud-secret
+        secretName: *secret
         usernameKey: POSTGRES_USER
         passwordKey: POSTGRES_PASSWORD
         hostKey: POSTGRES_HOST
