@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: nextcloud
+spec:
+  target:
+    name: nextcloud-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        POSTGRES_USER: '{{ .user }}'
+        POSTGRES_PASSWORD: '{{ .password }}'
+        POSTGRES_HOST: '{{ index . "host" }}:{{ index . "port" }};sslcertmode=disable'
+        POSTGRES_DB: '{{ .dbname }}'
+  dataFrom:
+    # - extract:
+    #     key: kv/cluster/default/nextcloud
+    #   rewrite:
+    #     - regexp:
+    #         source: "(.*)"
+    #         target: "NEXTCLOUD_$1"
+    #   sourceRef:
+    #     storeRef:
+    #       kind: ClusterSecretStore
+    #       name: vault-backend
+    - extract:
+        key: kv/cluster/smtp
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: postgres-pguser-nextcloud
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets

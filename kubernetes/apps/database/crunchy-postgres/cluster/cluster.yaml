@@ -29,7 +29,6 @@ spec:
         synchronous_commit: "on"
         pg_hba:
           - hostnossl all all 10.244.0.0/16 md5 # Needed because dbman does not support SSL yet
-          - hostnossl all all 10.69.0.60/16 md5
           - hostssl all all all md5
         parameters:
           shared_preload_libraries: "vectors.so"
@@ -177,6 +176,8 @@ spec:
         global:
           pool_mode: "session" # pgBouncer is set to transaction for Authentik. Grafana requires session https://github.com/grafana/grafana/issues/74260#issuecomment-1702795311. Everything else is happy with transaction
           client_tls_sslmode: prefer
+          max_client_conn: "500"
+          default_pool_size: "100"
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: "kubernetes.io/hostname"

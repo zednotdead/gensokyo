@@ -36,3 +36,34 @@ spec:
         external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
     nextcloud:
       host: cloud.${SECRET_DOMAIN}
+      configs:
+        logging.config.php: |-
+          <?php
+          $CONFIG = array (
+            'log_type' => 'file',
+            'logfile' => 'nextcloud.log',
+            'loglevel' => 0,
+            'logdateformat' => 'F d, Y H:i:s'
+            );
+      extraEnv:
+        - name: HOME
+          value: "/var/www"
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-secret
+        usernameKey: POSTGRES_USER
+        passwordKey: POSTGRES_PASSWORD
+        hostKey: POSTGRES_HOST
+        databaseKey: POSTGRES_DB
+    livenessProbe:
+      enabled: false
+    readinessProbe:
+      enabled: false
+    persistence:
+      enabled: true
+      existingClaim: nextcloud
