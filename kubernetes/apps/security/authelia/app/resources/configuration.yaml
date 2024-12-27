@@ -53,6 +53,20 @@ identity_providers:
         token_endpoint_auth_method: client_secret_post
         redirect_uris:
           - https://cloud.${SECRET_DOMAIN}/apps/sociallogin/custom_oidc/Authelia
+      - client_id: $${LINKWARDEN_CLIENT_ID}
+        client_name: Linkwarden
+        client_secret: $${LINKWARDEN_CLIENT_SECRET_DIGEST}
+        public: false
+        authorization_policy: one_factor
+        consent_mode: implicit
+        scopes:
+          - openid
+          - groups
+          - email
+          - profile
+        redirect_uris:
+          - https://linkwarden.${SECRET_DOMAIN}/api/v1/auth/callback/authelia
+        userinfo_signed_response_alg: none
 session:
   same_site: lax
   inactivity: 5m

@@ -113,6 +113,10 @@ spec:
       databases: ["authelia"]
       password:
         type: AlphaNumeric
+    - name: "linkwarden"
+      databases: ["linkwarden"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       restore:

@@ -6,3 +6,4 @@ resources:
   - ./homepage/ks.yaml
   - ./mealie/ks.yaml
   - ./nextcloud/ks.yaml
+  - ./linkwarden/ks.yaml
