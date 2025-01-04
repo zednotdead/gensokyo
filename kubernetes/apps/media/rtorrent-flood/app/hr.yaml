@@ -41,7 +41,7 @@ spec:
           main:
             image:
               repository: jesec/flood
-              tag: master@sha256:ef517c49a4914b605e71811fe301220ba2d40461bc2b7fa3b3bb129c0c2ca70b
+              tag: master@sha256:920f77f999b55e6cd042016ab23ce2ad985280b3f5633e125a6ded2c865ec861
             env:
               FLOOD_OPTION_auth: "none"
               FLOOD_OPTION_allowedpath: "/config,/sock,/rc,/media,/download"
