@@ -46,6 +46,12 @@ spec:
             envFrom:
               - secretRef:
                   name: prowlarr-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 250Mi
+              limits:
+                memory: 500Mi
     service:
       main:
         controller: prowlarr

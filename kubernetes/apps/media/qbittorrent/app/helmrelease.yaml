@@ -38,6 +38,13 @@ spec:
               QBITTORRENT__BT_PORT: &bittorrentPort 50413
               QBT_Preferences__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__LocalHostAuth: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1024Mi
+
     service:
       main:
         controller: qbittorrent
