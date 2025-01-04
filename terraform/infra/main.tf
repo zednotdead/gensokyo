@@ -110,7 +110,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   }
 
   dynamic "hostpci" {
-    for_each = each.value.node_name == "thinkcentre" ? [] : [each.value.node_name]
+    for_each = each.value.node_name == "marisa" ? [] : [each.value.node_name]
     content {
       pcie   = true
       device = "hostpci0"

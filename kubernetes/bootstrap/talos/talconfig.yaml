@@ -53,28 +53,28 @@ nodes:
             gateway: "10.0.0.1"
         vip:
           ip: "10.0.255.254"
-  # - hostname: "talos-03"
-  #   ipAddress: "10.0.10.3"
-  #   installDisk: "/dev/sda"
-  #   talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
-  #   controlPlane: true
-  #   networkInterfaces:
-  #     - deviceSelector:
-  #         hardwareAddr: "bc:24:11:64:45:2c"
-  #       dhcp: false
-  #       addresses:
-  #         - "10.0.10.3/16"
-  #       mtu: 1500
-  #       routes:
-  #         - network: 0.0.0.0/0
-  #           gateway: "10.0.0.1"
-  #       vip:
-  #         ip: "10.0.255.254"
+  - hostname: "talos-03"
+    ipAddress: "10.0.10.3"
+    installDisk: "/dev/sda"
+    talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:64:45:2c"
+        dhcp: false
+        addresses:
+          - "10.0.10.3/16"
+        mtu: 1500
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "10.0.0.1"
+        vip:
+          ip: "10.0.255.254"
   - hostname: "talos-04"
     ipAddress: "10.0.10.4"
     installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
-    controlPlane: true
+    controlPlane: false
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "BC:24:11:52:A9:E5"

@@ -39,23 +39,3 @@ endpoints:
       dns-resolver: tcp://1.1.1.1:53
     conditions: ["[STATUS] == 404"]
     alerts: [{ type: discord }]
-  - name: Asterix
-    group: proxmox
-    interval: 10m
-    url: icmp://10.0.1.1
-    conditions: ["[CONNECTED] == true"]
-  - name: Tiny HP
-    group: proxmox
-    interval: 10m
-    url: icmp://10.0.1.2
-    conditions: ["[CONNECTED] == true"]
-  - name: Thinkcentre
-    group: proxmox
-    interval: 10m
-    url: icmp://10.0.1.3
-    conditions: ["[CONNECTED] == true"]
-  - name: Reimu
-    group: proxmox
-    interval: 10m
-    url: icmp://10.0.1.4
-    conditions: ["[CONNECTED] == true"]
