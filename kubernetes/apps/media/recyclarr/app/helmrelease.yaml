@@ -39,9 +39,9 @@ spec:
         pod:
           enableServiceLinks: true
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
+            runAsUser: ${NAS_UID}
+            runAsGroup: ${NAS_GID}
+            fsGroup: ${NAS_GID}
             fsGroupChangePolicy: OnRootMismatch
         initContainers:
           init-config:
