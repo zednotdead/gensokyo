@@ -92,9 +92,9 @@ spec:
     defaultPodOptions:
       enableServiceLinks: true
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
         fsGroupChangePolicy: OnRootMismatch
         supplementalGroups: [10000]
     persistence:
@@ -106,8 +106,8 @@ spec:
         type: nfs
         globalMounts:
           - path: /media
-        server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media"
+        server: "10.0.2.3"
+        path: "/mnt/core/media"
     resources:
       limits:
         memory: 1Gi
