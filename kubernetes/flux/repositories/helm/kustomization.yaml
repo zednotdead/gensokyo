@@ -31,3 +31,4 @@ resources:
   - ./ananace.yaml
   - ./wrenix.yaml
   - ./nextcloud.yaml
+  - ./onlyoffice.yaml

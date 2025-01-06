@@ -7,3 +7,4 @@ resources:
   - ./mealie/ks.yaml
   - ./linkwarden/ks.yaml
   - ./ocis/ks.yaml
+  - ./onlyoffice/ks.yaml

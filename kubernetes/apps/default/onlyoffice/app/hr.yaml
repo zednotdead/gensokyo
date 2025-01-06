@@ -1,0 +1,55 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app onlyoffice
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: docs
+      version: 4.4.1
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: onlyoffice
+        namespace: flux-system
+  values:
+    metrics:
+      enabled: true
+    connections:
+      dbType: postgres
+      dbHost: postgres-pgbouncer.database.svc.cluster.local
+      dbUser: onlyoffice
+      dbPort: "5432"
+      dbName: onlyoffice
+      dbExistingSecret: &secret onlyoffice-secret
+      dbSecretKeyName: POSTGRES_PASSWORD
+      redisConnectorName: redis
+      redisHost: dragonfly.database.svc.cluster.local
+      redisPort: "6379"
+      redisDBNum: "onlyoffice"
+      redisNoPass: true
+      amqpType: rabbitmq
+      amqpHost: rabbitmq.database.svc.cluster.local
+      amqpUser: user
+      amqpExistingSecret: *secret
+      amqpSecretKeyName: RABBITMQ_PASSWORD
+    persistence:
+      existingClaim: *app
+    wopi:
+      enabled: true
+    jwt:
+      existingSecret: *secret
+    controller:
+      publishService:
+        enabled: true
+    ingress:
+      enabled: true
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+      ingressClassName: external
+      ssl:
+        enabled: false
+      host: "onlyoffice.${SECRET_DOMAIN}"
+      path: "/"
