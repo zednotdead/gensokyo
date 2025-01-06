@@ -6,3 +6,4 @@ resources:
   - ./homepage/ks.yaml
   - ./mealie/ks.yaml
   - ./linkwarden/ks.yaml
+  - ./ocis/ks.yaml
