@@ -45,7 +45,7 @@ spec:
               NATS_NATS_HOST: 0.0.0.0
               NATS_NATS_PORT: 9233
               PROXY_CSP_CONFIG_FILE_LOCATION: /etc/ocis/csp.yaml
-              COLLABORA_DOMAIN: collabora.${SECRET_DOMAIN}
+              ONLYOFFICE_DOMAIN: onlyoffice.${SECRET_DOMAIN}
             envFrom:
               - secretRef:
                   name: ocis-secret

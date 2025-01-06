@@ -18,7 +18,7 @@ directives:
     - 'blob:'
     - 'https://embed.diagrams.net/'
     # In contrary to bash and docker the default is given after the | character
-    # - 'https://$${ONLYOFFICE_DOMAIN|onlyoffice.owncloud.test}/'
+    - 'https://$${ONLYOFFICE_DOMAIN|onlyoffice.owncloud.test}/'
     - 'https://$${COLLABORA_DOMAIN|collabora.owncloud.test}/'
     # This is needed for the external-sites web extension when embedding sites
     - 'https://owncloud.dev'
@@ -28,7 +28,7 @@ directives:
     - 'blob:'
     - 'https://raw.githubusercontent.com/owncloud/awesome-ocis/'
     # In contrary to bash and docker the default is given after the | character
-    # - 'https://$${ONLYOFFICE_DOMAIN|onlyoffice.owncloud.test}/'
+    - 'https://$${ONLYOFFICE_DOMAIN|onlyoffice.owncloud.test}/'
     - 'https://$${COLLABORA_DOMAIN|collabora.owncloud.test}/'
   manifest-src:
     - '''self'''
