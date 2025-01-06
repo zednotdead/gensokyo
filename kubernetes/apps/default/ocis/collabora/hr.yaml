@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app collabora
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.0
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+
+  values:
+    controllers:
+      collabora:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          collabora:
+            image:
+              repository: docker.io/collabora/code
+              tag: 24.04.10.2.1
+            env:
+              aliasgroup1: https://wopi.${SECRET_DOMAIN}:443
+              DONT_GEN_SSL_CERT: "YES"
+              extra_params: |
+                --o:ssl.enable=false \
+                --o:ssl.ssl_verification=false \
+                --o:ssl.termination=true \
+                --o:welcome.enable=false \
+                --o:net.frame_ancestors=files.${SECRET_DOMAIN}
+            envFrom:
+              - secretRef:
+                  name: collabora-secret
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+            resources:
+              requests:
+                cpu: 50m
+                memory: 1Gi
+              limits:
+                memory: 4Gi
+    service:
+      app:
+        controller: collabora
+        ports:
+          http:
+            port: 9980
+
+    ingress:
+      app:
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/upstream-hash-by: "$arg_WOPISrc"
+        hosts:
+          - host: collabora.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http

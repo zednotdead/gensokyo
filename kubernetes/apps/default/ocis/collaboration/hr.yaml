@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app ocis
+  name: ocis-collaboration
 spec:
   interval: 30m
   chart:
@@ -18,7 +18,7 @@ spec:
 
   values:
     controllers:
-      ocis:
+      collab:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -29,31 +29,30 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
         containers:
-          ocis:
+          collab:
             image:
               repository: docker.io/owncloud/ocis
               tag: 7.0.0
+            command: ["bash", "-c", "ocis collaboration server"]
             env:
-              DEMO_USERS: false
-              OCIS_LOG_COLOR: true
-              OCIS_LOG_LEVEL: info
-              OCIS_LOG_PRETTY: true
+              COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
+              COLLABORATION_HTTP_ADDR: 0.0.0.0:9300
+              MICRO_REGISTRY: "nats-js-kv"
+              MICRO_REGISTRY_ADDRESS: "ocis:9233"
+              COLLABORATION_WOPI_SRC: https://wopi.${SECRET_DOMAIN}
+              COLLABORATION_APP_NAME: "CollaboraOnline"
+              COLLABORATION_APP_PRODUCT: "Collabora"
+              COLLABORATION_APP_ADDR: https://collabora.${SECRET_DOMAIN}
+              COLLABORATION_APP_ICON: https://collabora.${SECRET_DOMAIN}/favicon.ico
+              COLLABORATION_APP_INSECURE: "true"
+              COLLABORATION_CS3API_DATAGATEWAY_INSECURE: "true"
+              COLLABORATION_LOG_LEVEL: info
               OCIS_URL: https://files.${SECRET_DOMAIN}
-              PROXY_TLS: false
-              MICRO_REGISTRY_ADDRESS: 127.0.0.1:9233
-              GATEWAY_GRPC_ADDR: 0.0.0.0:9142
-              NATS_NATS_HOST: 0.0.0.0
-              NATS_NATS_PORT: 9233
-              PROXY_CSP_CONFIG_FILE_LOCATION: /etc/ocis/csp.yaml
-              COLLABORA_DOMAIN: collabora.${SECRET_DOMAIN}
-            envFrom:
-              - secretRef:
-                  name: ocis-secret
             probes:
               liveness:
-                enabled: true
+                enabled: false
               readiness:
-                enabled: true
+                enabled: false
             resources:
               requests:
                 cpu: 50m
@@ -62,21 +61,14 @@ spec:
                 memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-
     service:
       app:
-        controller: ocis
+        controller: collab
         ports:
           http:
-            port: 9200
-          nats:
-            port: 9233
+            port: 9300
           grpc:
-            port: 9142
+            port: 9301
 
     ingress:
       app:
@@ -84,7 +76,7 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: files.${SECRET_DOMAIN}
+          - host: wopi.${SECRET_DOMAIN}
             paths:
               - path: /
                 service:
@@ -92,25 +84,8 @@ spec:
                   port: http
 
     persistence:
-      config:
-        type: configMap
-        name: ocis-configmap
-        globalMounts:
-          - path: /etc/ocis/web.yaml
-            subPath: web.yaml
-            readOnly: true
-          - path: /etc/ocis/csp.yaml
-            subPath: csp.yaml
-            readOnly: true
       data:
-        existingClaim: *app
+        existingClaim: ocis
         globalMounts:
-          - path: /var/lib/ocis
-            subPath: data
           - path: /etc/ocis
             subPath: config
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
