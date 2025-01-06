@@ -32,3 +32,4 @@ resources:
   - ./wrenix.yaml
   - ./nextcloud.yaml
   - ./onlyoffice.yaml
+  - ./collabora.yaml

@@ -13,6 +13,7 @@ directives:
     - '''self'''
   frame-ancestors:
     - '''self'''
+    - 'https://files.${SECRET_DOMAIN}'
   frame-src:
     - '''self'''
     - 'blob:'
