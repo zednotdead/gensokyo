@@ -34,9 +34,9 @@ spec:
       jellyfin:
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
+            runAsUser: ${NAS_UID}
+            runAsGroup: ${NAS_GID}
+            fsGroup: ${NAS_GID}
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups:
               - 44
@@ -146,8 +146,8 @@ spec:
       media:
         enabled: true
         type: nfs
-        server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media"
+        server: "10.0.2.3"
+        path: "/mnt/core/media"
         globalMounts:
           - path: /media
       transcode:
