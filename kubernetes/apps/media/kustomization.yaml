@@ -15,4 +15,4 @@ resources:
   - ./unpackerr/ks.yaml
   - ./cross-seed/ks.yaml
   - ./autobrr/ks.yaml
-  # - ./ersatztv/ks.yaml
+  - ./ersatztv/ks.yaml

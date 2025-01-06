@@ -28,6 +28,14 @@ spec:
     keepHistory: false
 
   values:
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
     controllers:
       immich-server:
         annotations:
