@@ -117,6 +117,10 @@ spec:
       databases: ["linkwarden"]
       password:
         type: AlphaNumeric
+    - name: "onlyoffice"
+      databases: ["onlyoffice"]
+      password:
+        type: AlphaNumeric
   backups:
     pgbackrest:
       restore:
