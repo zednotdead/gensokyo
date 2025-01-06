@@ -96,13 +96,13 @@ spec:
                   port: http
 
     persistence:
-      # config:
-      #   type: configMap
-      #   name: ocis-configmap
-      #   globalMounts:
-      #     - path: /etc/ocis/web.yaml
-      #       subPath: web.yaml
-      #       readOnly: true
+      config:
+        type: configMap
+        name: ocis-configmap
+        globalMounts:
+          - path: /etc/ocis/web.yaml
+            subPath: web.yaml
+            readOnly: true
       data:
         existingClaim: *app
         globalMounts:

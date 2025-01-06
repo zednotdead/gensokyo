@@ -6,9 +6,6 @@ metadata:
   name: ocis
 spec:
   refreshInterval: 5m
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: onepassword-connect
   target:
     name: ocis-secret
     creationPolicy: Owner
@@ -16,6 +13,47 @@ spec:
       engineVersion: v2
       data:
         OCIS_JWT_SECRET: "{{ .OCIS_JWT_SECRET }}"
+        # Basic Auth is required for WebDAV clients that don't support OIDC
+        PROXY_ENABLE_BASIC_AUTH: "false"
+        IDM_ADMIN_PASSWORD: "{{ .OCIS_ADMIN_PASSWORD }}" # Not needed if admin user is in LDAP (?)
+        #OCIS_PASSWORD_POLICY_BANNED_PASSWORDS_LIST: "banned-password-list.txt"
+
+        # Assumes your LLDAP container is named `lldap`
+        OCIS_LDAP_URI: ldap://lldap.security.svc.cluster.local:3890
+        OCIS_LDAP_INSECURE: "true"
+        OCIS_LDAP_BIND_DN: "uid={{ .LLDAP_READWRITE_ADMIN_USERNAME }},ou=people,{{ .LLDAP_LDAP_BASE_DN }}"
+        OCIS_LDAP_BIND_PASSWORD: "{{ .LLDAP_READWRITE_ADMIN_PASSWORD }}"
+        OCIS_ADMIN_USER_ID: "{{ .LLDAP_READWRITE_ADMIN_UUID }}"
+
+        OCIS_LDAP_USER_ENABLED_ATTRIBUTE: uid
+        GRAPH_LDAP_SERVER_WRITE_ENABLED: "false" # Does your LLDAP bind user have write access?
+        GRAPH_LDAP_REFINT_ENABLED: "false"
+        # Disable the built in LDAP server
+        OCIS_EXCLUDE_RUN_SERVICES: idm
+        # both text and binary cause errors in LLDAP, seems harmless though (?)
+        #IDP_LDAP_UUID_ATTRIBUTE_TYPE: 'text'
+
+        LDAP_LOGIN_ATTRIBUTES: "uid"
+        IDP_LDAP_LOGIN_ATTRIBUTE: "uid"
+        IDP_LDAP_UUID_ATTRIBUTE: "entryuuid"
+        OCIS_LDAP_USER_SCHEMA_ID: "entryuuid"
+        OCIS_LDAP_GROUP_SCHEMA_ID: "uid"
+        OCIS_LDAP_GROUP_SCHEMA_GROUPNAME: "uid"
+
+        OCIS_LDAP_GROUP_BASE_DN: "ou=groups,{{ .LLDAP_LDAP_BASE_DN }}"
+        OCIS_LDAP_GROUP_OBJECTCLASS: "groupOfUniqueNames"
+        # can filter which groups are imported, eg: `(&(objectclass=groupOfUniqueNames)(uid=ocis_*))`
+        OCIS_LDAP_GROUP_FILTER: "(objectclass=groupOfUniqueNames)"
+
+        OCIS_LDAP_USER_BASE_DN: "ou=people,{{ .LLDAP_LDAP_BASE_DN }}"
+        OCIS_LDAP_USER_OBJECTCLASS: "inetOrgPerson"
+        # Allows all users
+        OCIS_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
+        # Allows users who are in the LLDAP group `ocis_users`
+        # OCIS_LDAP_USER_FILTER: "(&(objectclass=person)(memberOf=cn=ocis_users,ou=groups,${LDAP_BASE_DN}))"
+        # NOT WORKING: Used instead of restricting users with OCIS_LDAP_USER_FILTER
+        #OCIS_LDAP_DISABLE_USER_MECHANISM: "group"
+        #OCIS_LDAP_DISABLED_USERS_GROUP_DN: "uid=ocis_disabled,ou=groups,${LDAP_BASE_DN}"
   dataFrom:
     - extract:
         key: kv/cluster/default/ocis
@@ -27,3 +65,13 @@ spec:
         - regexp:
             source: "(.*)"
             target: "OCIS_$1"
+    - extract:
+        key: kv/cluster/security/lldap
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "LLDAP_$1"
