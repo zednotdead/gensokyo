@@ -8,3 +8,4 @@ resources:
   - ./linkwarden/ks.yaml
   - ./ocis/ks.yaml
   - ./collabora/ks.yaml
+  - ./hoarder/ks.yaml

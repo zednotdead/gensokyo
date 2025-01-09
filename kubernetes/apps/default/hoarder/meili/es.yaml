@@ -1,0 +1,26 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: hoarder-meili
+  namespace: default
+spec:
+  refreshInterval: 5m
+  target:
+    name: hoarder-meili-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        MEILI_MASTER_KEY: "{{ .HOARDER_MEILI_MASTER_KEY }}"
+  dataFrom:
+    - extract:
+        key: kv/cluster/default/hoarder
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "HOARDER_$1"
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
