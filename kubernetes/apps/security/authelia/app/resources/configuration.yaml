@@ -67,6 +67,20 @@ identity_providers:
         redirect_uris:
           - https://linkwarden.${SECRET_DOMAIN}/api/v1/auth/callback/authelia
         userinfo_signed_response_alg: none
+      - client_id: $${HOARDER_CLIENT_ID}
+        client_name: Hoarder
+        client_secret: $${HOARDER_CLIENT_SECRET_DIGEST}
+        public: false
+        authorization_policy: one_factor
+        consent_mode: implicit
+        scopes:
+          - openid
+          - groups
+          - email
+          - profile
+        redirect_uris:
+          - https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom
+        userinfo_signed_response_alg: none
 session:
   same_site: lax
   inactivity: 5m

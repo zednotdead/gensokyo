@@ -28,6 +28,8 @@ spec:
         NEXTCLOUD_CLIENT_SECRET_DIGEST: "{{ .NEXTCLOUD_CLIENT_SECRET_DIGEST }}"
         LINKWARDEN_CLIENT_ID: "{{ .LINKWARDEN_CLIENT_ID }}"
         LINKWARDEN_CLIENT_SECRET_DIGEST: "{{ .LINKWARDEN_CLIENT_SECRET_DIGEST }}"
+        HOARDER_CLIENT_ID: "{{ .HOARDER_CLIENT_ID }}"
+        HOARDER_CLIENT_SECRET_DIGEST: "{{ .HOARDER_CLIENT_SECRET_DIGEST }}"
   dataFrom:
     - extract:
         key: kv/cluster/security/authelia
@@ -87,6 +89,16 @@ spec:
         - regexp:
             source: "(.*)"
             target: "LINKWARDEN_$1"
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: vault-backend
+    - extract:
+        key: kv/cluster/default/hoarder
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "HOARDER_$1"
       sourceRef:
         storeRef:
           kind: ClusterSecretStore

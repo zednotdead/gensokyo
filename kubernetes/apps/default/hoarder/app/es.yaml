@@ -15,6 +15,8 @@ spec:
         NEXTAUTH_SECRET: "{{ .HOARDER_NEXTAUTH_SECRET }}"
         MEILI_MASTER_KEY: "{{ .HOARDER_MEILI_MASTER_KEY }}"
         NEXT_PUBLIC_SECRET: "{{ .HOARDER_NEXT_PUBLIC_SECRET }}"
+        OAUTH_CLIENT_ID: "{{ .HOARDER_CLIENT_ID }}"
+        OAUTH_CLIENT_SECRET: "{{ .HOARDER_CLIENT_SECRET }}"
   dataFrom:
     - extract:
         key: kv/cluster/default/hoarder
