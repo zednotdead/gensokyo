@@ -33,3 +33,4 @@ resources:
   - ./nextcloud.yaml
   - ./onlyoffice.yaml
   - ./collabora.yaml
+  - ./itzg.yaml
