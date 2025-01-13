@@ -27,5 +27,5 @@ spec:
       minecraft:
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: ${SVC_MINECRAFT_ADDR}
+          lbipam.cilium.io/ips: ${MINECRAFT_ADDRESS}
           external-dns.alpha.kubernetes.io/hostname: minecraft.${SECRET_DOMAIN}
