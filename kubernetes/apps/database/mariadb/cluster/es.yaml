@@ -1,0 +1,26 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: mariadb
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: mariadb-secret
+    creationPolicy: Owner
+    template:
+      data:
+        root_password: '{{ .password }}'
+        access_key: '{{ .ACCESS_KEY }}'
+        secret_key: '{{ .SECRET_KEY }}'
+        ca.crt: '{{ index . "ca.crt" }}'
+  dataFrom:
+    - extract:
+        key: MariaDB
+    - extract:
+        key: S3
+    - extract:
+        key: TrueNAS

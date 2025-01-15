@@ -34,3 +34,4 @@ resources:
   - ./onlyoffice.yaml
   - ./collabora.yaml
   - ./itzg.yaml
+  - ./mariadb.yaml
