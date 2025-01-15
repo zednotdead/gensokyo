@@ -5,22 +5,17 @@ kind: ExternalSecret
 metadata:
   name: slskd
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   refreshInterval: 15m
   target:
     name: slskd-secret
     template:
       engineVersion: v2
       data:
-        SLSKD_SLSK_USERNAME: "{{ .SLSKD_SLSK_USERNAME }}"
-        SLSKD_SLSK_PASSWORD: "{{ .SLSKD_SLSK_PASSWORD }}"
+        SLSKD_SLSK_USERNAME: "{{ .username }}"
+        SLSKD_SLSK_PASSWORD: "{{ .password }}"
   dataFrom:
     - extract:
-        key: kv/cluster/media/slskd
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "SLSKD_$1"
+        key: Soulseek
