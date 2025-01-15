@@ -7,13 +7,13 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: vault-backend
+    name: onepassword-connect
   target:
     name: "truenas-ca-secret"
     template:
       engineVersion: v2
       data:
-        ca.crt: "{{ .SIGNING_CERTIFICATE }}"
+        ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
-        key: kv/cluster/truenas
+        key: TrueNAS
