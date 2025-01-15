@@ -7,7 +7,7 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: vault-backend
+    name: onepassword-connect
   target:
     name: lldap-secret
     creationPolicy: Owner
@@ -19,11 +19,7 @@ spec:
         LLDAP_DATABASE_URL: '{{ .uri }}'
   dataFrom:
     - extract:
-        key: kv/cluster/security/lldap
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: LLDAP
     - extract:
         key: postgres-pguser-authentik
       sourceRef:
