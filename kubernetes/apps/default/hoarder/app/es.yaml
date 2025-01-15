@@ -5,6 +5,9 @@ metadata:
   name: hoarder
   namespace: default
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   refreshInterval: 5m
   target:
     name: hoarder-secret
@@ -19,12 +22,8 @@ spec:
         OAUTH_CLIENT_SECRET: "{{ .HOARDER_CLIENT_SECRET }}"
   dataFrom:
     - extract:
-        key: kv/cluster/default/hoarder
+        key: Hoarder
       rewrite:
         - regexp:
             source: "(.*)"
             target: "HOARDER_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend

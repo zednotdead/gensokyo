@@ -5,6 +5,9 @@ metadata:
   name: hoarder-meili
   namespace: default
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   refreshInterval: 5m
   target:
     name: hoarder-meili-secret
@@ -15,12 +18,8 @@ spec:
         MEILI_MASTER_KEY: "{{ .HOARDER_MEILI_MASTER_KEY }}"
   dataFrom:
     - extract:
-        key: kv/cluster/default/hoarder
+        key: Hoarder
       rewrite:
         - regexp:
             source: "(.*)"
             target: "HOARDER_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend

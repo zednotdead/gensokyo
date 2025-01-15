@@ -6,6 +6,9 @@ metadata:
   name: linkwarden
   namespace: default
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   refreshInterval: 5m
   target:
     name: linkwarden-secret
@@ -21,15 +24,11 @@ spec:
         AUTHELIA_CLIENT_SECRET_DIGEST: "{{ .LINKWARDEN_CLIENT_SECRET_DIGEST }}"
   dataFrom:
     - extract:
-        key: kv/cluster/default/linkwarden
+        key: Linkwarden
       rewrite:
         - regexp:
             source: "(.*)"
             target: "LINKWARDEN_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
     - extract:
         key: postgres-pguser-linkwarden
       sourceRef:

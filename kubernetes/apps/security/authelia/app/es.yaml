@@ -49,24 +49,20 @@ spec:
             source: "(.*)"
             target: "LLDAP_$1"
     - extract:
-        key: postgres-pguser-authelia
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
-    - extract:
         key: Mealie
       rewrite:
         - regexp:
             source: "(.*)"
             target: "MEALIE_$1"
     - extract:
-        key: kv/cluster/default/hoarder
+        key: Hoarder
       rewrite:
         - regexp:
             source: "(.*)"
             target: "HOARDER_$1"
+    - extract:
+        key: postgres-pguser-authelia
       sourceRef:
         storeRef:
           kind: ClusterSecretStore
-          name: vault-backend
+          name: crunchy-pgo-secrets
