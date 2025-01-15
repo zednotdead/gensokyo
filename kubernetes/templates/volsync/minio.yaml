@@ -7,24 +7,28 @@ metadata:
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
-    name: vault-backend
+    name: onepassword-connect
   target:
     name: "${APP}-volsync-secret"
     template:
       engineVersion: v2
       data:
-        RESTIC_REPOSITORY: "{{ .REPOSITORY_TEMPLATE }}/${APP}"
-        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        RESTIC_REPOSITORY: "{{ .RESTIC_REPOSITORY_TEMPLATE }}/${APP}"
+        RESTIC_PASSWORD: "{{ .RESTIC_password }}"
         AWS_ACCESS_KEY_ID: "{{ .ACCESS_KEY }}"
         AWS_SECRET_ACCESS_KEY: "{{ .SECRET_KEY }}"
-        ca.crt: "{{ .SIGNING_CERTIFICATE }}"
+        ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
-        key: kv/cluster/volsync/s3
+        key: S3
     - extract:
-        key: kv/cluster/volsync/restic
+        key: Restic
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "RESTIC_$1"
     - extract:
-        key: kv/cluster/truenas
+        key: TrueNAS
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
