@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./ns.yaml
   - ./mc-router/ks.yaml
-  # - ./minecraft/ks.yaml
+  - ./minecraft/ks.yaml

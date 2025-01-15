@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/itzg/minecraft-server
-      tag: stable@sha256:9a6e89f544eb44675a97bda7285f13a72794624e0b448a93b6b6058d0713323a
+      tag: java11
     resources:
       requests:
         cpu: 1000m
@@ -61,7 +61,7 @@ spec:
     extraEnv:
       TZ: ${TIMEZONE}
       ENABLE_AUTOPAUSE: TRUE # Doesn't work in Kubes
-      PAPER_CHANNEL: experimental
+      # PAPER_CHANNEL: experimental
     persistence:
       dataDir:
         enabled: true
@@ -70,7 +70,7 @@ spec:
       mc-router.itzg.me/externalServerName: &host minecraft.${SECRET_DOMAIN}
     minecraftServer:
       eula: true
-      version: "1.21.4"
+      version: "1.14.4"
       type: PAPER
       overrideServerProperties: true
       jvmXXOpts: "-XX:MaxRAMPercentage=75"
@@ -81,8 +81,8 @@ spec:
       pvp: false
       onlineMode: true
       ops: "SW33"
-      motd: "Mini Parkour"
-      downloadWorldUrl: https://mediafilez.forgecdn.net/files/5819/510/Mini%20Parkour%20Paradise%20v1.2.zip
+      motd: "Diversity 3"
+      downloadWorldUrl: https://mediafilez.forgecdn.net/files/2914/377/DIVERSITY%203%20PACKAGE%20v1.6.6.zip
       viewDistance: 12
       enableCommandBlock: true
       rcon:
