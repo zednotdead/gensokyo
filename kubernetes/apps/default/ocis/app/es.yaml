@@ -6,6 +6,9 @@ metadata:
   name: ocis
 spec:
   refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   target:
     name: ocis-secret
     creationPolicy: Owner
@@ -15,7 +18,7 @@ spec:
         OCIS_JWT_SECRET: "{{ .OCIS_JWT_SECRET }}"
         # Basic Auth is required for WebDAV clients that don't support OIDC
         PROXY_ENABLE_BASIC_AUTH: "false"
-        IDM_ADMIN_PASSWORD: "{{ .OCIS_ADMIN_PASSWORD }}" # Not needed if admin user is in LDAP (?)
+        IDM_ADMIN_PASSWORD: "{{ .OCIS_password }}" # Not needed if admin user is in LDAP (?)
         #OCIS_PASSWORD_POLICY_BANNED_PASSWORDS_LIST: "banned-password-list.txt"
 
         # Assumes your LLDAP container is named `lldap`
@@ -56,21 +59,13 @@ spec:
         #OCIS_LDAP_DISABLED_USERS_GROUP_DN: "uid=ocis_disabled,ou=groups,${LDAP_BASE_DN}"
   dataFrom:
     - extract:
-        key: kv/cluster/default/ocis
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: OCIS
       rewrite:
         - regexp:
             source: "(.*)"
             target: "OCIS_$1"
     - extract:
-        key: kv/cluster/security/lldap
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: LLDAP
       rewrite:
         - regexp:
             source: "(.*)"

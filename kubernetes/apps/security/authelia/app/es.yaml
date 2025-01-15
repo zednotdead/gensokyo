@@ -27,10 +27,6 @@ spec:
         AUTHELIA_NOTIFIER_SMTP_PASSWORD: "{{ .SMTP_password }}"
         MEALIE_CLIENT_ID: "{{ .MEALIE_CLIENT_ID }}"
         MEALIE_CLIENT_SECRET_DIGEST: "{{ .MEALIE_CLIENT_SECRET_DIGEST }}"
-        NEXTCLOUD_CLIENT_ID: "{{ .NEXTCLOUD_CLIENT_ID }}"
-        NEXTCLOUD_CLIENT_SECRET_DIGEST: "{{ .NEXTCLOUD_CLIENT_SECRET_DIGEST }}"
-        LINKWARDEN_CLIENT_ID: "{{ .LINKWARDEN_CLIENT_ID }}"
-        LINKWARDEN_CLIENT_SECRET_DIGEST: "{{ .LINKWARDEN_CLIENT_SECRET_DIGEST }}"
         HOARDER_CLIENT_ID: "{{ .HOARDER_CLIENT_ID }}"
         HOARDER_CLIENT_SECRET_DIGEST: "{{ .HOARDER_CLIENT_SECRET_DIGEST }}"
   dataFrom:
@@ -59,35 +55,11 @@ spec:
           kind: ClusterSecretStore
           name: crunchy-pgo-secrets
     - extract:
-        key: kv/cluster/default/mealie
+        key: Mealie
       rewrite:
         - regexp:
             source: "(.*)"
             target: "MEALIE_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
-    - extract:
-        key: kv/cluster/default/nextcloud
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "NEXTCLOUD_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
-    - extract:
-        key: kv/cluster/default/linkwarden
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "LINKWARDEN_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
     - extract:
         key: kv/cluster/default/hoarder
       rewrite:

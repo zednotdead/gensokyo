@@ -40,33 +40,6 @@ identity_providers:
         redirect_uris:
           - "https://mealie.${SECRET_DOMAIN}/login"
           - "https://mealie.${SECRET_DOMAIN}/login?direct=1"
-      - client_id: $${NEXTCLOUD_CLIENT_ID}
-        client_name: Nextcloud
-        client_secret: $${NEXTCLOUD_CLIENT_SECRET_DIGEST}
-        public: false
-        scopes:
-          - openid
-          - profile
-          - groups
-          - email
-        userinfo_signed_response_alg: none
-        token_endpoint_auth_method: client_secret_post
-        redirect_uris:
-          - https://cloud.${SECRET_DOMAIN}/apps/sociallogin/custom_oidc/Authelia
-      - client_id: $${LINKWARDEN_CLIENT_ID}
-        client_name: Linkwarden
-        client_secret: $${LINKWARDEN_CLIENT_SECRET_DIGEST}
-        public: false
-        authorization_policy: one_factor
-        consent_mode: implicit
-        scopes:
-          - openid
-          - groups
-          - email
-          - profile
-        redirect_uris:
-          - https://linkwarden.${SECRET_DOMAIN}/api/v1/auth/callback/authelia
-        userinfo_signed_response_alg: none
       - client_id: $${HOARDER_CLIENT_ID}
         client_name: Hoarder
         client_secret: $${HOARDER_CLIENT_SECRET_DIGEST}
