@@ -9,5 +9,5 @@ spec:
   privileges:
     - "ALL PRIVILEGES"
   database: *db
-  table: *db
+  table: '*'
   username: *db

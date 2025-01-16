@@ -11,16 +11,15 @@ spec:
   maxRetention: 720h # 30 days
   storage:
     s3:
-      bucket: backups
-      prefix: mariadb
-      endpoint: minio.minio.svc.cluster.local:9000
+      bucket: mariadb-backups
+      endpoint: ${NAS_ADDRESS}:9000
       region: us-east-1
       accessKeyIdSecretKeyRef:
         name: mariadb-secret
-        key: access-key
+        key: access_key
       secretAccessKeySecretKeyRef:
         name: mariadb-secret
-        key: secret-key
+        key: secret_key
       tls:
         enabled: true
         caSecretKeyRef:

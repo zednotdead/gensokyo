@@ -1,34 +1,8 @@
----
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
-metadata:
-  name: mariadb-operator-crds
-spec:
-  chart:
-    spec:
-      chart: mariadb-operator-crds
-      sourceRef:
-        kind: HelmRepository
-        name: mariadb-operator
-        namespace: flux-system
-      version: "0.36.0"
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  interval: 30m
----
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: mariadb-operator
 spec:
-  dependsOn:
-    - name: mariadb-operator-crds
   chart:
     spec:
       chart: mariadb-operator
@@ -37,23 +11,19 @@ spec:
         name: mariadb-operator
         namespace: flux-system
       version: "0.36.0"
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  interval: 30m
+  interval: 1h0m0s
   values:
+    logLevel: debug
+    image:
+      repository: ghcr.io/mariadb-operator/mariadb-operator
+      pullPolicy: IfNotPresent
+      tag: 0.36.0
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
     webhook:
-      cert:
-        certManager:
-          enabled: true
+      certificate:
+        certManager: true
       serviceMonitor:
         enabled: true
