@@ -8,4 +8,5 @@ resources:
   - ./database.yaml
   - ./user.yaml
   - ./grant.yaml
+  - ./node.yaml
   - ../../../../templates/volsync/

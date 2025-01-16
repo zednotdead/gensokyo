@@ -46,6 +46,7 @@ spec:
               APP_ENVIRONMENT_ONLY: "false"
               APP_TIMEZONE: ${TIMEZONE}
               APP_SERVICE_AUTHOR: me@${SECRET_DOMAIN}
+              APP_CORS_ALLOWED_ORIGINS: "*.${SECRET_DOMAIN}"
               TRUSTED_PROXIES: "*"
             envFrom:
               - secretRef:

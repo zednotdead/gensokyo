@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.0/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: wing-reimu
+  namespace: games
+  annotations:
+    coredns.io/hostname: "wing-reimu.${SECRET_DOMAIN}"
+    io.cilium/lb-ipam-ips: "10.0.6.1"
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      name: daemon
+    - protocol: TCP
+      port: 2022
+      name: sftp
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.0/endpoints-v1.json
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: wing-reimu
+  namespace: games
+subsets:
+  - addresses:
+      - ip: 10.0.5.1
+    ports:
+      - port: 8080
+        name: daemon
+      - port: 2022
+        name: sftp
+# ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.32.0/ingress-networking-v1.json
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: wing-reimu
+#   namespace: games
+#   annotations:
+#     kubernetes.io/ingress.class: internal
+#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+# spec:
+#   ingressClassName: internal
+#   tls:
+#     - hosts:
+#         - wing-reimu.${SECRET_DOMAIN}
+#       secretName: zed-gay-production-tls
+#   rules:
+#     - host: wing-reimu.${SECRET_DOMAIN}
+#       http:
+#         paths:
+#           - backend:
+#               service:
+#                 name: wing-reimu
+#                 port:
+#                   name: daemon
+#             pathType: Prefix
+#             path: /
