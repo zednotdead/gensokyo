@@ -3,12 +3,17 @@ kind: MariaDB
 metadata:
   name: mariadb-galera
 spec:
-  maxScaleRef:
-    name: maxscale-galera
-    namespace: maxscale
+  maxScale:
+    enabled: true
+    auth:
+      adminUsername: root
+      adminPasswordSecretKeyRef:
+        name: mariadb-secret
+        key: root_password
+      deleteDefaultAdmin: true
 
   rootPasswordSecretKeyRef:
-    name: mariadb
+    name: mariadb-secret
     key: root_password
     generate: false
 

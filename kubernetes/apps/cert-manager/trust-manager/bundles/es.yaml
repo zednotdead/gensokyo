@@ -16,4 +16,4 @@ spec:
         ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
-        key: TrueNAS
+        key: TrueNAS CA

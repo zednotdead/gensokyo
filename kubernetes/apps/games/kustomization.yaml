@@ -5,3 +5,4 @@ resources:
   - ./ns.yaml
   - ./mc-router/ks.yaml
   - ./minecraft/ks.yaml
+  # - ./pterodactyl/ks.yaml

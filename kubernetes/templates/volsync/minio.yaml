@@ -28,7 +28,7 @@ spec:
             source: "(.*)"
             target: "RESTIC_$1"
     - extract:
-        key: TrueNAS
+        key: TrueNAS CA
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
