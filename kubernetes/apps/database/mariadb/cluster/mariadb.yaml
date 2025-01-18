@@ -11,7 +11,7 @@ spec:
     size: 5Gi
     storageClassName: ceph-block
   replicas: 1
-  image: "mariadb:11.4.3"
+  image: "mariadb:11.6.2"
   imagePullPolicy: IfNotPresent
   maxScale:
     enabled: true
