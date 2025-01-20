@@ -100,8 +100,8 @@ spec:
       config:
         existingClaim: *app
       config-file:
-        type: configMap
-        name: slskd-configmap
+        type: secret
+        name: slskd-secret
         globalMounts:
           - path: /config/slskd.yml
             subPath: slskd.yml

@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: soularr
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      autobrr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/mrusse08/soularr
+              tag: latest@sha256:58ce358a070648c05e40b8c29d49d38d6bc0b67c45f87befacaabca4f6a5d5e4
+            env:
+              PUID: ${NAS_UID}
+              PGID: ${NAS_GID}
+              TIMEZONE: ${TIMEZONE}
+              SCRIPT_INTERVAL: 300
+            envFrom:
+              - secretRef:
+                  name: soularr-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: "${NAS_UID}"
+        runAsGroup: "${NAS_GID}"
+        fsGroup: "${NAS_GID}"
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      config-file:
+        type: secret
+        name: soularr-secret
+        globalMounts:
+          - path: /data/config.ini
+            subPath: config.ini
+            readOnly: true
+      media:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /media
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media"
