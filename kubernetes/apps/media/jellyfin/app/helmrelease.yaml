@@ -65,7 +65,7 @@ spec:
           main:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 10.10.3
+              tag: 10.10.5
             resources:
               requests:
                 cpu: 100m
