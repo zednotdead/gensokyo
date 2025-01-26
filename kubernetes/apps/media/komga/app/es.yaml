@@ -24,8 +24,8 @@ spec:
                 client:
                   registration:
                     authelia:
-                      client-id: 'komga'
-                      client-secret: 'insecure_secret'
+                      client-id: "{{ .CLIENT_ID }}"
+                      client-secret: "{{ .CLIENT_SECRET }}"
                       client-name: 'Authelia'
                       scope: 'openid,profile,email'
                       authorization-grant-type: 'authorization_code'
