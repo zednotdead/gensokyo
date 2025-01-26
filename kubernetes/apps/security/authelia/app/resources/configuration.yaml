@@ -54,6 +54,20 @@ identity_providers:
         redirect_uris:
           - https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom
         userinfo_signed_response_alg: none
+      - client_id: $${KOMGA_CLIENT_ID}
+        client_name: 'Komga'
+        client_secret: $${KOMGA_CLIENT_SECRET_DIGEST}
+        public: false
+        authorization_policy: 'two_factor'
+        redirect_uris:
+          - 'https://komga.${SECRET_DOMAIN}/login/oauth2/code/authelia'
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'email'
+        grant_types:
+          - 'authorization_code'
+        userinfo_signed_response_alg: 'none'
 session:
   same_site: lax
   inactivity: 5m

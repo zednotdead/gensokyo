@@ -1,0 +1,39 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: komga
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: komga-secret
+    creationPolicy: Owner
+    template:
+      type: "Opaque"
+      data:
+        application.yml: |
+          komga:
+            ## Comment if you don't want automatic account creation.
+            oauth2-account-creation: true
+          spring:
+            security:
+              oauth2:
+                client:
+                  registration:
+                    authelia:
+                      client-id: 'komga'
+                      client-secret: 'insecure_secret'
+                      client-name: 'Authelia'
+                      scope: 'openid,profile,email'
+                      authorization-grant-type: 'authorization_code'
+                      redirect-uri: "{baseScheme}://{baseHost}{basePort}{basePath}/login/oauth2/code/authelia"
+                  provider:
+                    authelia:
+                      issuer-uri: 'https://auth.${SECRET_DOMAIN}'
+                      user-name-attribute: 'preferred_username'
+  dataFrom:
+    - extract:
+        key: Komga

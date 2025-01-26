@@ -45,6 +45,7 @@ spec:
               TZ: ${TIMEZONE}
               UID: ${NAS_UID}
               GID: ${NAS_GID}
+              KOMGA_CONFIGDIR: /config
               SERVER_PORT: &port 8080
             resources:
               requests:
@@ -79,8 +80,17 @@ spec:
                   identifier: app
                   port: http
     persistence:
-      config:
+      data:
         existingClaim: *app
+        globalMounts:
+          - path: /config
+      config:
+        type: secret
+        name: komga-secret
+        defaultMode: 0400
+        globalMounts:
+          - subPath: application.yml
+            path: /config/application.yml
       media:
         type: nfs
         server: "${NAS_ADDRESS}"
