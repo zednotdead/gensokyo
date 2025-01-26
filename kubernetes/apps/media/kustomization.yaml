@@ -18,3 +18,5 @@ resources:
   - ./ersatztv/ks.yaml
   - ./slskd/ks.yaml
   - ./gonic/ks.yaml
+  - ./kapowarr/ks.yaml
+  - ./komga/ks.yaml
