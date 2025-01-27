@@ -136,6 +136,8 @@ spec:
         repo1-retention-full-type: "time"
         repo1-storage-verify-tls: "n"
         repo1-s3-uri-style: path
+        log-level-console: info
+        log-level-file: debug
       manual:
         repoName: repo1
         options:

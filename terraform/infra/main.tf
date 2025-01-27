@@ -74,7 +74,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   }
 
   memory {
-    dedicated = 14336
+    dedicated = each.value.memory
   }
 
   cpu {
@@ -94,7 +94,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = each.value.node_name == "reimu" ? 50 : 100
+    size         = (each.value.node_name == "reimu" || each.value.node_name == "marisa") ? 50 : 100
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
   }
   #
