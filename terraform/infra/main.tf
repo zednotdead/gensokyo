@@ -36,7 +36,7 @@ locals {
 resource "proxmox_virtual_environment_file" "talos_iso" {
   for_each = {
     for index, node in local.hosts :
-    node.node_name => node
+    node.name => node
   }
   content_type = "iso"
   datastore_id = "local"
@@ -50,7 +50,7 @@ resource "proxmox_virtual_environment_file" "talos_iso" {
 resource "proxmox_virtual_environment_vm" "talos_vm" {
   for_each = {
     for index, node in local.hosts :
-    node.node_name => node
+    node.name => node
   }
   vm_id     = each.value.vmid
   name      = each.value.name
@@ -87,15 +87,15 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
     file_format  = "raw"
     interface    = "scsi0"
     size         = 40
-    file_id      = resource.proxmox_virtual_environment_file.talos_iso[each.value.node_name].id
+    file_id      = resource.proxmox_virtual_environment_file.talos_iso[each.value.name].id
     discard      = "on"
   }
 
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = (each.value.node_name == "reimu" || each.value.node_name == "marisa") ? 50 : 100
-    datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
+    size         = each.value.node_name == "reimu" ? 50 : 100
+    datastore_id = each.value.node_name == "asterix" ? "data-nvme" : each.value.node_name == "marisa" ? "data" : "local-lvm"
   }
   #
   # efi_disk {

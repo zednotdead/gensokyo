@@ -74,7 +74,7 @@ nodes:
     ipAddress: "10.0.10.4"
     installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
-    controlPlane: false
+    controlPlane: true
     networkInterfaces:
       - deviceSelector:
           hardwareAddr: "BC:24:11:52:A9:E5"
@@ -85,7 +85,21 @@ nodes:
         routes:
           - network: 0.0.0.0/0
             gateway: "10.0.0.1"
-
+  - hostname: "talos-05"
+    ipAddress: "10.0.10.5"
+    installDisk: "/dev/sda"
+    talosImageURL: factory.talos.dev/installer/08079c6f79b249205d2822eeb0f4dcc53c0e1481dd0d9cb29b6099a05ec45057
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "BC:24:11:A5:C2:76"
+        dhcp: false
+        addresses:
+          - "10.0.10.5/16"
+        mtu: 1500
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "10.0.0.1"
 patches:
   # Configure containerd
   - |-
