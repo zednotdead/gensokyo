@@ -27,8 +27,6 @@ spec:
       repository: ghcr.io/itzg/minecraft-server
       tag: java11
     resources:
-      requests:
-        cpu: 1000m
       limits:
         memory: 4Gi
     securityContext:
