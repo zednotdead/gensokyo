@@ -30,8 +30,8 @@ spec:
     defaultPodOptions:
       enableServiceLinks: false
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
     controllers:
       tandoor:
         annotations:

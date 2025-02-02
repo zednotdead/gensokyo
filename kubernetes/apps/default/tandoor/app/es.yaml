@@ -5,6 +5,9 @@ kind: ExternalSecret
 metadata:
   name: tandoor
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   target:
     name: tandoor-secret
     template:
@@ -32,21 +35,13 @@ spec:
         AUTH_LDAP_USER_SEARCH_BASE_DN: ou=people,dc=zed,dc=gay
   dataFrom:
     - extract:
-        key: kv/cluster/default/tandoor
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: Tandoor
       rewrite:
         - regexp:
             source: "(.*)"
             target: "TANDOOR_$1"
     - extract:
-        key: kv/cluster/security/lldap
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: LLDAP
       rewrite:
         - regexp:
             source: "(.*)"
