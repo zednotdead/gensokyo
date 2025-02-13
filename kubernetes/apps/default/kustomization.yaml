@@ -8,4 +8,3 @@ resources:
   # - ./ocis/ks.yaml
   # - ./collabora/ks.yaml
   - ./hoarder/ks.yaml
-  - ./tandoor/ks.yaml

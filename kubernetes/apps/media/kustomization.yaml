@@ -20,3 +20,4 @@ resources:
   - ./gonic/ks.yaml
   # - ./kapowarr/ks.yaml
   - ./komga/ks.yaml
+  - ./readarr/ks.yaml
