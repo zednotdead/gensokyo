@@ -44,8 +44,6 @@ spec:
               UPDATE_EXCLUDE_COMPLETED: "false"
               DOWNLOAD_AS_CBZ: "true"
               EXTENSION_REPOS: '["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]'
-              FLARESOLVERR_ENABLED: true
-              FLARESOLVERR_URL: http://flaresolverr.media
             resources:
               requests:
                 memory: 250Mi
