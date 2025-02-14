@@ -69,50 +69,45 @@ spec:
     - name: immich
       databases:
         - immich
-      password:
+      password: &password
         type: AlphaNumeric
     - name: authentik
       databases:
         - authentik
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: grafana
       databases:
         - grafana
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "gatus"
       databases: ["gatus"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "mealie"
       databases: ["mealie"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "autobrr"
       databases: ["autobrr"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "lldap"
       databases: ["lldap"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "affine"
       databases: ["affine"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "nextcloud"
       databases: ["nextcloud"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "authelia"
       databases: ["authelia"]
-      password:
-        type: AlphaNumeric
+      password: *password
     - name: "linkwarden"
       databases: ["linkwarden"]
-      password:
-        type: AlphaNumeric
+      password: *password
+    - name: sonarr
+      databases:
+        - sonarr_main
+        - sonarr_log
+      password: *password
   backups:
     pgbackrest:
       restore:

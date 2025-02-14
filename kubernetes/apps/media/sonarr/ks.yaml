@@ -9,6 +9,7 @@ spec:
   path: ./kubernetes/apps/media/sonarr/app
   dependsOn:
     - name: external-secrets-stores
+    - name: crunchy-postgres-operator-cluster
   prune: true
   sourceRef:
     kind: GitRepository
