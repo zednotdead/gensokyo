@@ -42,7 +42,7 @@ spec:
               - --hide-scrollbars
             image:
               repository: gcr.io/zenika-hub/alpine-chrome
-              tag: 123
+              tag: 124
             resources:
               requests:
                 memory: 512Mi
