@@ -1,15 +1,17 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app calibre
+  name: calibre-web-automated
+  namespace: media
 spec:
-  interval: 30m
+  interval: 5m
+  # renovate: registryUrl=http://bjw-s.github.io/helm-charts/
   chart:
     spec:
       chart: app-template
       version: 3.7.1
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -22,88 +24,73 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
   values:
     controllers:
-      calibre-web:
-        annotations:
-          reloader.stakater.com/auto: "true"
+      calibre-web-automated:
+        replicas: 1
+
         containers:
           app:
             image:
-              repository: ghcr.io/bjw-s-labs/calibre-web
-              tag: 0.6.24@sha256:81fd159f9bf661ae1579f4317a407aabee8257882bc2c261dc25e2e0d353dbd2
+              repository: docker.io/crocodilestick/calibre-web-automated
+              tag: V3.0.3@sha256:4e1a78ef73dd0a7d5542c660dad75f084251b4dd3d33f66791d8751838e9f6dd
             env:
-              CACHE_DIR: /cache
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            resources:
-              requests:
-                cpu: 5m
-                memory: 470M
-              limits:
-                memory: 470M
+              TZ: "Europe/Belgrade"
+              PUID: ${NAS_UID}
+              PGID: ${NAS_GID}
+
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   capabilities:
+            #     drop:
+            #       - ALL
         pod:
           securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
-            fsGroup: 2000
-            fsGroupChangePolicy: "OnRootMismatch"
+            runAsUser: 0
+            runAsGroup: ${NAS_GID}
+            runAsNonRoot: false
+            fsGroup: 0
+            fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
-        controller: calibre-web
-        ipFamilyPolicy: PreferDualStack
+        controller: calibre-web-automated
         ports:
           http:
             port: 8083
+
     ingress:
       app:
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
-          # hajimari.io/icon: mdi:chart-bar
-          # gethomepage.dev/enabled: "true"
-          # gethomepage.dev/group: Media
-          # gethomepage.dev/name: Calibre
-          # gethomepage.dev/icon: calibre.png
-          # gethomepage.dev/widget.type: calibreweb
-          # gethomepage.dev/widget.url: http://calibre-web.media:8083
-          # gethomepage.dev/widget.username: '{{`{{HOMEPAGE_VAR_CALIBRE_USERNAME}}`}}'
-          # gethomepage.dev/widget.password: '{{`{{HOMEPAGE_VAR_CALIBRE_PASSWORD}}`}}'
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            location /kobo {
-              set $upstream_calibreweb $forward_scheme://$server:$port;
-              proxy_set_header X-Forwarded-Host $http_host;
-              proxy_pass $upstream_calibreweb;
-              proxy_buffer_size 128k;
-              proxy_buffers 4 256k;
-              proxy_busy_buffers_size 256k;
-            }
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: ebooks.${SECRET_DOMAIN}
+          - host: &host ebooks.${SECRET_DOMAIN}
             paths:
               - path: /
+                pathType: Prefix
                 service:
                   identifier: app
                   port: http
+        tls:
+          - hosts:
+              - *host
     persistence:
-      cache:
-        type: emptyDir
-        globalMounts:
-          - path: /cache
       config:
-        existingClaim: *app
-      media:
-        enabled: true
+        existingClaim: calibre
+      calibre-library:
         type: nfs
         server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media"
-        globalMounts:
-          - path: /media
+        path: "${NAS_BASE_URL}/media/literature"
+        advancedMounts:
+          calibre-web-automated:
+            app:
+              - path: /calibre-library
+      cwa-book-ingest:
+        type: nfs
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media/downloads/cwa-book-ingest"
+        advancedMounts:
+          calibre-web-automated:
+            app:
+              - path: /cwa-book-ingest
