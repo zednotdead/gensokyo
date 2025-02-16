@@ -6,4 +6,3 @@ resources:
   - ./namespace.yaml
   - ./crunchy-postgres/ks.yaml
   - ./dragonfly/ks.yaml
-  - ./mariadb/ks.yaml
