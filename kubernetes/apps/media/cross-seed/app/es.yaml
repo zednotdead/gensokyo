@@ -33,7 +33,7 @@ spec:
             radarr: ["http://radarr.media.svc.cluster.local/?apikey={{ .RADARR_API_KEY }}"],
             skipRecheck: true,
             sonarr: ["http://sonarr.media.svc.cluster.local/?apikey={{ .SONARR_API_KEY }}"],
-            torrentDir: "/qbittorrent/qBittorrent/BT_backup",
+            useClientTorrents: true,
             torznab: [
               11, // AnimeTorrents
               6, // FearNoPeer
