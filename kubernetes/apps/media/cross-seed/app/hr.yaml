@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/cross-seed/cross-seed
-              tag: 6.0.0-34@sha256:f68f7fd7fa30bf45be844d7012d3b117841dea8fdfa0169d579e44698b041ae4
+              tag: 6.10.1@sha256:f8a1e9b66fab89198bf5ac6b242ba75873b9c8e8409107c6f9d455f1f8c10bba
             env:
               TZ: America/New_York
             args: ["daemon"]
@@ -69,6 +69,8 @@ spec:
     persistence:
       config:
         type: emptyDir
+      tmp:
+        type: emptyDir
       secret-file:
         type: secret
         name: cross-seed-secret
@@ -87,5 +89,5 @@ spec:
         type: nfs
         globalMounts:
           - path: /media/downloads
-        server: "10.0.2.3"
-        path: "/mnt/core/media/downloads"
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media/downloads"
