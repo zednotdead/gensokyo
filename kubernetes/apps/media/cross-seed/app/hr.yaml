@@ -87,5 +87,5 @@ spec:
         type: nfs
         globalMounts:
           - path: /media/downloads
-        server: "10.0.2.3"
-        path: "/mnt/core/media/downloads"
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media/downloads"

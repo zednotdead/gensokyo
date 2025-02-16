@@ -27,7 +27,7 @@ spec:
             linkCategory: "cross-seed",
             linkType: "hardlink",
             matchMode: "safe",
-            outputDir: "/config",
+            outputDir: "/tmp",
             port: 80,
             qbittorrentUrl: "http://{{ .QB_username }}:{{ .QB_password }}@qbittorrent-main.media.svc.cluster.local",
             radarr: ["http://radarr.media.svc.cluster.local/?apikey={{ .RADARR_API_KEY }}"],
