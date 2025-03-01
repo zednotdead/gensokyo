@@ -3,13 +3,13 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: authelia
+  name: ghost
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: onepassword-connect
   target:
-    name: authelia-secret
+    name: ghost-secret
     template:
       data:
         database__connection__password: "{{ .GHOST_DB_PASSWORD }}"

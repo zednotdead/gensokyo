@@ -55,5 +55,5 @@ spec:
   timeout: 5m
   postBuild:
     substitute:
-      APP: *appdb
+      APP: *app
       VOLSYNC_CAPACITY: 5Gi

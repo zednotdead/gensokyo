@@ -26,7 +26,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
-      namespace: volsync
+      namespace: volsync-system
     - name: ghost-mariadb
       namespace: default
   values:
@@ -38,7 +38,7 @@ spec:
               repository: ghost
               tag: 5.110.1
             env:
-              TZ: "Pacific/Auckland"
+              TZ: ${TIMEZONE}
               url: "https://ghost.${SECRET_DOMAIN}"
               database__client: mysql
               database__connection__host: ghost-mariadb.default.svc.cluster.local
