@@ -40,7 +40,7 @@ spec:
           app:
             image:
               repository: gotson/komga
-              tag: "1.19.1@sha256:8d8dfdae3e3d9defce99b4fbbb658561787f240c03efc057275b76c0f3d932ab"
+              tag: "1.21.0@sha256:2b903dc4f1a896b9b6c83de0306e87b0740778d43b4c906022965fdc2788fdb1"
             env:
               TZ: ${TIMEZONE}
               UID: ${NAS_UID}
