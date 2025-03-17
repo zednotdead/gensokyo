@@ -19,7 +19,7 @@ spec:
     image:
       registry: docker.io
       repository: bitnami/mariadb
-      tag: 11.4.5-debian-12-r4
+      tag: 11.7.2-debian-12-r0
     auth:
       existingSecret: ghost-secret
       username: ghost
