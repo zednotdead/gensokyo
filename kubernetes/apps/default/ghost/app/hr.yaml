@@ -58,6 +58,9 @@ spec:
       app:
         enabled: true
         className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTP
         hosts:
           - host: &host ghost.${SECRET_DOMAIN}
             paths:
