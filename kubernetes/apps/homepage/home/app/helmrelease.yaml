@@ -32,22 +32,21 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/zbigniewzolnierowicz/home
-              tag: v3.3.2
+              repository: ghcr.io/zednotdead/homepage-new
+              tag: 1.0.3
             resources:
               limits:
                 memory: 256M
             env:
-              HOST: 0.0.0.0
-              PORT: &port 80
-              PAYLOAD_URL: "http://payload-homepage"
-              S3_PUBLIC_URL: "https://s3.zed.gay"
+              GHOST_API_KEY: 25fa512f29169570f45aed2c09
+              GHOST_ENDPOINT: https://ghost.zed.gay
+              GHOST_HOSTNAME: ghost.zed.gay
     service:
       main:
         controller: homepage
         ports:
           http:
-            port: *port
+            port: 4321
     ingress:
       main:
         enabled: true
