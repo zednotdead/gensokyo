@@ -27,20 +27,19 @@ spec:
   values:
     controllers:
       homepage:
-        strategy: RollingUpdate
-        replicas: 2
         containers:
           main:
             image:
               repository: ghcr.io/zednotdead/homepage-new
-              tag: 1.1.0
+              tag: 1.3.1
             resources:
               limits:
-                memory: 256M
+                memory: 2Gi
             env:
               GHOST_API_KEY: 25fa512f29169570f45aed2c09
               GHOST_ENDPOINT: https://ghost.zed.gay
               GHOST_HOSTNAME: ghost.zed.gay
+              CACHE_LOCATION: &cache /cache
     service:
       main:
         controller: homepage
@@ -71,3 +70,9 @@ spec:
         - name: ghcr-secret
     podAnnotations:
       secret.reloader.stakater.com/reload: homepage
+    persistence:
+      cache:
+        enabled: true
+        existingClaim: homepage-cache
+        globalMounts:
+          - path: *cache
