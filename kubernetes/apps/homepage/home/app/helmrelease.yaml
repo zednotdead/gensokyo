@@ -33,7 +33,7 @@ spec:
           main:
             image:
               repository: ghcr.io/zednotdead/homepage-new
-              tag: 1.0.7
+              tag: 1.1.0
             resources:
               limits:
                 memory: 256M
