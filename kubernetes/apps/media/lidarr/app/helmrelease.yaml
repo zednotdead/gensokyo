@@ -31,8 +31,8 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/lidarr-develop
-              tag: 2.5.2.4316
+              repository: ghcr.io/zednotdead/lidarr
+              tag: 2.12.0.4634@sha256:b1bde8980a422c00012b90def3b533d1b6f3c4e164cfcc593fc3427300649c9a
             env:
               TZ: Europe/Warsaw
               LIDARR__APP__INSTANCENAME: Lidarr
@@ -40,9 +40,9 @@ spec:
               LIDARR__AUTH__METHOD: External
               LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
               LIDARR__LOG__DBENABLED: "False"
-              LIDARR__LOG__LEVEL: info
+              LIDARR__LOG__LEVEL: debug
               LIDARR__SERVER__PORT: &port 80
-              LIDARR__UPDATE__BRANCH: develop
+              LIDARR__UPDATE__BRANCH: plugins
             envFrom:
               - secretRef:
                   name: lidarr-secret

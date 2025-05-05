@@ -36,9 +36,10 @@ spec:
               TZ: ${TIMEZONE}
               SLSKD_APP_DIR: /config
               SLSKD_HTTP_PORT: &port 80
-              SLSKD_NO_AUTH: true
+              # SLSKD_NO_AUTH: true
               SLSKD_NO_HTTPS: true
               SLSKD_SLSK_LISTEN_PORT: &soulseekPort 50300
+              SLSKD_SLSK_DIAG_LEVEL: debug
             envFrom:
               - secretRef:
                   name: slskd-secret
