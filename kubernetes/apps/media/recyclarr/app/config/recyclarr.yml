@@ -125,7 +125,6 @@ sonarr:
           - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
           - e1a997ddb54e3ecbfe06341ad323c458 # Obfuscated
           - 06d66ab109d4d2eddb2794d21526d140 # Retags
-          - 9b64dff695c2115facf1b6ea59c9bd07 # x265 (HD, no HDR)
           - b4a1b3d705159cdca36d71e57ca86871 # Anime Raws
           - e3515e519f3b1360cbfc17651944354c # Anime LQ Groups
 
