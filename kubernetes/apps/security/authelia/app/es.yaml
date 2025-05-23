@@ -31,6 +31,8 @@ spec:
         HOARDER_CLIENT_SECRET_DIGEST: "{{ .HOARDER_CLIENT_SECRET_DIGEST }}"
         KOMGA_CLIENT_ID: "{{ .KOMGA_CLIENT_ID }}"
         KOMGA_CLIENT_SECRET_DIGEST: "{{ .KOMGA_CLIENT_SECRET_DIGEST }}"
+        GRAFANA_CLIENT_ID: "{{ .GRAFANA_CLIENT_ID }}"
+        GRAFANA_CLIENT_SECRET_DIGEST: "{{ .GRAFANA_CLIENT_SECRET_DIGEST }}"
   dataFrom:
     - extract:
         key: Authelia
@@ -70,6 +72,12 @@ spec:
         - regexp:
             source: "(.*)"
             target: "KOMGA_$1"
+    - extract:
+        key: Grafana
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "GRAFANA_$1"
     - extract:
         key: postgres-pguser-authelia
       sourceRef:
