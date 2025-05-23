@@ -44,23 +44,26 @@ spec:
       auth:
         oauth_auto_login: false
         oauth_allow_insecure_email_lookup: true
-      auth.anonymous:
-        enabled: true
-        org_name: Main Org.
-        org_role: Viewer
-        hide_version: true
+        signout_redirect_url: "https://auth.${SECRET_DOMAIN}/logout"
+      auth.basic:
+        disable_login_form: false
       auth.generic_oauth:
         enabled: true
-        name: authelia
-        icon: signin
-        client_id: ${GRAFANA_CLIENT_ID}
-        client_secret: ${GRAFANA_CLIENT_SECRET}
-        scopes: openid profile email groups
+        name: Authelia
+        client_id: "${GRAFANA_CLIENT_ID}"
+        client_secret: "${GRAFANA_CLIENT_SECRET}"
+        scopes: "openid profile email groups"
+        empty_scopes: false
         auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
         token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
         api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
-        # Optionally map user groups to Grafana roles
-        role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
+        login_attribute_path: preferred_username
+        groups_attribute_path: groups
+        name_attribute_path: name
+        org_attribute_path: '"1"'
+        use_pkce: true
+        role_attribute_path: |
+          contains(groups[*], 'grafana-admins') && 'Admin' || contains(groups[*], 'grafana-editors') && 'Editor' || contains(groups[*], 'grafana-viewers') && 'Viewer'
     deploymentStrategy:
       type: RollingUpdate
     admin:
@@ -261,7 +264,7 @@ spec:
         #   revision: 3
         #   datasource: Prometheus
         cert-manager:
-          url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
+          url: https://raw.githubusercontent.com/monitoring-mixins/website/refs/heads/master/assets/cert-manager/dashboards/overview.json
           datasource: Prometheus
         cloudflared:
           # renovate: depName="Cloudflare Tunnels (cloudflared)"
