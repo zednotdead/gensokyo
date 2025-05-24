@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/authelia/refs/heads/master/docs/static/schemas/v4.38/json-schema/configuration.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/authelia/refs/heads/master/docs/static/schemas/v4.39/json-schema/configuration.json
 # Note: Authelia vars should be escaped with $${VAR_NAME} to avoid interpolation by Flux
 authentication_backend:
   ldap:
@@ -103,3 +103,12 @@ notifier:
   smtp:
     sender: "Authelia <authelia@${SECRET_DOMAIN}>"
     disable_require_tls: false
+webauthn:
+  enable_passkey_login: true
+  attestation_conveyance_preference: 'direct'
+  metadata:
+    enabled: true
+    validate_trust_anchor: true
+    validate_entry: true
+    validate_status: true
+    validate_entry_permit_zero_aaguid: false
