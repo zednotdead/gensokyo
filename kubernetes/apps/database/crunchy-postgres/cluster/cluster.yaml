@@ -7,7 +7,7 @@ metadata:
 spec:
   postgresVersion: 16
   # image: ghcr.io/budimanjojo/cdpgvecto.rs:16@sha256:2a54142d7a2becd027025e95ac3e4542f7688621f3a63fe131a8fec6a65ccc49
-  image: ghcr.io/zednotdead/cdpgvectorchord:16@sha256:a82d78cb89a07bc0b2957254a94614c1797ba5901ac888e974fc7840e08da3e3
+  image: ghcr.io/zednotdead/cdpgvectorchord:16-0.3.0@sha256:99ffcbc9e887fa4a981f61ff68dcf59bf8bf611f688217ed5f8d0ba07a67eff1
   metadata:
     labels:
       crunchy-userinit.ramblurr.github.com/enabled: "true"
@@ -33,7 +33,7 @@ spec:
           - hostnossl all all 10.69.0.0/16 md5
           - hostssl all all all md5
         parameters:
-          shared_preload_libraries: "vectors.so"
+          shared_preload_libraries: "vchord.so"
   databaseInitSQL:
     name: immich-db-init-sql
     key: init.sql
