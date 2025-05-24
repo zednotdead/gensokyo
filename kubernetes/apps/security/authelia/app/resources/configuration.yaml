@@ -1,6 +1,5 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/authelia/refs/heads/master/docs/static/schemas/v4.39/json-schema/configuration.json
-# Note: Authelia vars should be escaped with $${VAR_NAME} to avoid interpolation by Flux
 authentication_backend:
   ldap:
     implementation: custom
@@ -27,9 +26,9 @@ access_control:
 identity_providers:
   oidc:
     clients:
-      - client_id: $${MEALIE_CLIENT_ID}
+      - client_id: '{{ env "MEALIE_CLIENT_ID" }}'
+        client_secret: '{{ env "MEALIE_CLIENT_SECRET_DIGEST" }}'
         client_name: Mealie
-        client_secret: $${MEALIE_CLIENT_SECRET_DIGEST}
         public: false
         scopes:
           - openid
@@ -40,9 +39,9 @@ identity_providers:
         redirect_uris:
           - "https://mealie.${SECRET_DOMAIN}/login"
           - "https://mealie.${SECRET_DOMAIN}/login?direct=1"
-      - client_id: $${HOARDER_CLIENT_ID}
+      - client_id: '{{ env "HOARDER_CLIENT_ID" }}'
+        client_secret: '{{ env "HOARDER_CLIENT_SECRET_DIGEST" }}'
         client_name: Hoarder
-        client_secret: $${HOARDER_CLIENT_SECRET_DIGEST}
         public: false
         authorization_policy: one_factor
         consent_mode: implicit
@@ -54,9 +53,9 @@ identity_providers:
         redirect_uris:
           - https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom
         userinfo_signed_response_alg: none
-      - client_id: $${KOMGA_CLIENT_ID}
+      - client_id: '{{ env "KOMGA_CLIENT_ID" }}'
         client_name: 'Komga'
-        client_secret: $${KOMGA_CLIENT_SECRET_DIGEST}
+        client_secret: '{{ env "KOMGA_CLIENT_SECRET_DIGEST" }}'
         public: false
         authorization_policy: 'two_factor'
         redirect_uris:
@@ -68,9 +67,9 @@ identity_providers:
         grant_types:
           - 'authorization_code'
         userinfo_signed_response_alg: 'none'
-      - client_id: "$${GRAFANA_CLIENT_ID}"
+      - client_id: '{{ env "GRAFANA_CLIENT_ID" }}'
+        client_secret: '{{ env "GRAFANA_CLIENT_SECRET_DIGEST" }}'
         client_name: 'Grafana'
-        client_secret: '$${GRAFANA_CLIENT_SECRET_DIGEST}'
         public: false
         authorization_policy: 'two_factor'
         require_pkce: true
@@ -108,7 +107,4 @@ webauthn:
   attestation_conveyance_preference: 'direct'
   metadata:
     enabled: true
-    validate_trust_anchor: true
-    validate_entry: true
-    validate_status: true
     validate_entry_permit_zero_aaguid: false
