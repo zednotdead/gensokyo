@@ -75,10 +75,10 @@ spec:
       databases:
         - authentik
       password: *password
-    - name: grafana
-      databases:
-        - grafana
-      password: *password
+    # - name: grafana
+    #   databases:
+    #     - grafana
+    #   password: *password
     - name: "gatus"
       databases: ["gatus"]
       password: *password
