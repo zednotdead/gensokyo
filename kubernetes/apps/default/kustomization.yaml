@@ -5,7 +5,5 @@ resources:
   - ./namespace.yaml
   - ./homepage/ks.yaml
   - ./mealie/ks.yaml
-  # - ./ocis/ks.yaml
-  # - ./collabora/ks.yaml
   - ./hoarder/ks.yaml
   - ./ghost/ks.yaml
