@@ -25,6 +25,10 @@ access_control:
 
 identity_providers:
   oidc:
+    claims_policies:
+      karakeep:
+        id_token:
+          - email
     clients:
       - client_id: '{{ env "MEALIE_CLIENT_ID" }}'
         client_secret: '{{ env "MEALIE_CLIENT_SECRET_DIGEST" }}'
@@ -42,12 +46,13 @@ identity_providers:
       - client_id: '{{ env "HOARDER_CLIENT_ID" }}'
         client_secret: '{{ env "HOARDER_CLIENT_SECRET_DIGEST" }}'
         client_name: Hoarder
+        claims_policy: karakeep
         public: false
         authorization_policy: 'two_factor'
         require_pkce: false
-        pkce_challenge_method: 'plain'
+        pkce_challenge_method: S256
         redirect_uris:
-          - 'https://karakeep.${SECRET_DOMAIN}/api/auth/callback/custom'
+          - 'https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom'
         scopes:
           - 'openid'
           - 'profile'
