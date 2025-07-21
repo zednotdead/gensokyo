@@ -19,6 +19,8 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
+      - kind: ConfigMap
+        name: cluster-settings
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
@@ -52,6 +54,8 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
+      - kind: ConfigMap
+        name: cluster-settings
   dependsOn:
     - name: crunchy-postgres-operator
       namespace: *namespace
