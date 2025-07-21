@@ -13,7 +13,7 @@ instance:
   sync:
     kind: GitRepository
     url: "https://github.com/zednotdead/gensokyo.git"
-    ref: "refs/heads/updated"
+    ref: "refs/heads/main"
     path: kubernetes/flux/cluster
   commonMetadata:
     labels:
