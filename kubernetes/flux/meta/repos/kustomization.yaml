@@ -11,3 +11,4 @@ resources:
   - ./crunchy-userinit.yaml
   - ./node-feature-discovery.yaml
   - ./intel.yaml
+  - ./bitnami.yaml
