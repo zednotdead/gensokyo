@@ -23,6 +23,7 @@ includes:
   talos: .taskfiles/talos
   template: .taskfiles/template
   tf: .taskfiles/terraform
+  volsync: .taskfiles/volsync
 
 tasks:
 
