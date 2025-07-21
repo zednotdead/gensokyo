@@ -22,7 +22,7 @@ provider "proxmox" {
   insecure = true
 
   ssh {
-    agent       = true
+    agent       = false
     username    = "root"
     private_key = file(local.ssh_path)
   }
