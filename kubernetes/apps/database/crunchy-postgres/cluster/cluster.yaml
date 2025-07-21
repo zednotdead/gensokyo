@@ -17,7 +17,6 @@ spec:
     metadata:
       annotations:
         external-dns.alpha.kubernetes.io/hostname: postgres.${SECRET_DOMAIN}
-        io.cilium/lb-ipam-ips: ${CRUNCHY_PGO_ADDRESS}
   patroni: # turn on sync writes to at least 1 other replica
     dynamicConfiguration:
       bootstrap:

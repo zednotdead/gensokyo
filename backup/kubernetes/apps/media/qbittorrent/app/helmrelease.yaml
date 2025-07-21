@@ -55,8 +55,6 @@ spec:
         enabled: true
         type: LoadBalancer
         controller: qbittorrent
-        annotations:
-          io.cilium/lb-ipam-ips: ${QBIT_ADDRESS}
         ports:
           bittorrent:
             enabled: true
