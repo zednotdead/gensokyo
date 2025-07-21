@@ -22,6 +22,7 @@ spec:
         AUTHELIA_STORAGE_POSTGRES_ADDRESS: '{{ index . "host" }}'
         AUTHELIA_STORAGE_POSTGRES_USERNAME: '{{ index . "user" }}'
         AUTHELIA_STORAGE_POSTGRES_PASSWORD: '{{ index . "password" }}'
+        AUTHELIA_STORAGE_POSTGRES_TLS_SKIP_VERIFY: 'true'
         AUTHELIA_NOTIFIER_SMTP_ADDRESS: 'smtp://{{ .SMTP_HOST }}:{{ .SMTP_PORT }}'
         AUTHELIA_NOTIFIER_SMTP_USERNAME: "{{ .SMTP_username }}"
         AUTHELIA_NOTIFIER_SMTP_PASSWORD: "{{ .SMTP_password }}"

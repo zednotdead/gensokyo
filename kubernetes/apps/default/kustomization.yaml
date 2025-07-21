@@ -1,9 +1,12 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: default
+components:
+  - ../../components/common
 resources:
-  - ./namespace.yaml
-  - ./homepage/ks.yaml
-  - ./mealie/ks.yaml
-  - ./hoarder/ks.yaml
+  - ./echo/ks.yaml
   - ./ghost/ks.yaml
+  - ./hoarder/ks.yaml
+  - ./mealie/ks.yaml

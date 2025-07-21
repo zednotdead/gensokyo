@@ -1,30 +1,46 @@
 ---
-# yaml-language-server: $schema=https://kube-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app authelia
-  namespace: flux-system
+  namespace: &namespace security
 spec:
-  targetNamespace: security
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: crunchy-postgres-operator-cluster
-    - name: crunchy-postgres-stores
-    - name: dragonfly-cluster
-    - name: external-secrets-stores
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   path: ./kubernetes/apps/security/authelia/app
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: false # no flux ks dependents
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: auth
+  dependsOn:
+    - name: lldap
+      namespace: *namespace
+    - name: crunchy-postgres-cluster
+      namespace: database
+    - name: crunchy-postgres-stores
+      namespace: database
+    - name: dragonfly-cluster
+      namespace: database
+    - name: external-secrets-stores
+      namespace: external-secrets
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

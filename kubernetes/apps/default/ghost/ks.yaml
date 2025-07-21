@@ -3,57 +3,80 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &appdb ghost-mariadb
-  namespace: flux-system
+  name: &app ghost-mariadb
+  namespace: &namespace default
 spec:
-  targetNamespace: default
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *appdb
-  dependsOn:
-    - name: external-secrets-stores
-    - name: rook-ceph-cluster
-    - name: volsync
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   path: ./kubernetes/apps/default/ghost/mariadb
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
-  wait: false
-  interval: 30m
-  retryInterval: 1m
+    name: flux-system
+    namespace: flux-system
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: external-secrets
+    - name: crunchy-postgres-cluster
+      namespace: database
+  targetNamespace: *namespace
   timeout: 5m
-  postBuild:
-    substitute:
-      APP: *appdb
-      VOLSYNC_CAPACITY: 5Gi
+  wait: false
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app ghost
-  namespace: flux-system
+  namespace: &namespace default
 spec:
-  targetNamespace: default
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: external-secrets-stores
-    - name: rook-ceph-cluster
-    - name: volsync
-    - name: ghost-mariadb
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   path: ./kubernetes/apps/default/ghost/app
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: false
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: external-secrets
+    - name: crunchy-postgres-cluster
+      namespace: database
+    - name: ghost-mariadb
+      namespace: *namespace
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

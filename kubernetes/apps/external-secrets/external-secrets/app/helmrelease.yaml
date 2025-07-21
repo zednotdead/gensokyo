@@ -14,6 +14,9 @@ spec:
         kind: HelmRepository
         name: external-secrets
         namespace: flux-system
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
   maxHistory: 2
   install:
     remediation:

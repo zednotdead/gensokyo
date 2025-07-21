@@ -1,24 +1,40 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app immich
-  namespace: flux-system
+  namespace: &namespace media
 spec:
-  targetNamespace: media
-  interval: 10m
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  interval: 1h
   path: ./kubernetes/apps/media/immich/app
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: false # no flux ks dependents
-  dependsOn:
-    - name: external-secrets-stores
-    - name: rook-ceph-cluster
-    - name: crunchy-postgres-operator-cluster
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: img
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: external-secrets
+    - name: crunchy-postgres-cluster
+      namespace: database
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false

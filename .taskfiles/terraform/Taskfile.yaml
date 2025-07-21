@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  TALHELPER_SECRET_FILE: "{{.TALOS_DIR}}/talsecret.sops.yaml"
+  TALHELPER_CONFIG_FILE: "{{.TALOS_DIR}}/talconfig.yaml"
+  REMOTE_PROXMOX: "root@10.0.1.1"
+env:
+  TALOSCONFIG: "{{.TALOS_DIR}}/talosconfig.yaml"
+  PROXMOX_VE_USERNAME: "terraform-prov@pve"
+  PROXMOX_VE_PASSWORD: "terraformpass"
+
+tasks:
+  init:
+    desc: "Initialize necessary things for terraform"
+    cmds:
+      - ssh "{{.REMOTE_PROXMOX}}" 'bash -s' < ./scripts/remote-create-terraform-user.sh {{.PROXMOX_VE_USERNAME}} {{.PROXMOX_VE_PASSWORD}}
+      - cd ./terraform/infra && tofu init
+    silent: true
+  upgrade:
+    desc: "Upgrade terraform providers"
+    dir: ./terraform/infra
+    cmd: tofu init -upgrade
+    silent: true
+  plan:
+    desc: "Plan the infrastructure"
+    dir: ./terraform/infra
+    cmd: tofu plan
+    silent: true
+  apply:
+    aliases:
+      - up
+    desc: "Run the infrastructure"
+    dir: ./terraform/infra
+    cmd: tofu apply
+    silent: true
+  show:
+    desc: "Show the infrastructure"
+    dir: ./terraform/infra
+    cmd: tofu show
+    silent: true
+  destroy:
+    aliases:
+      - down
+    desc: "Destroy the infrastructure"
+    dir: ./terraform/infra
+    cmd: tofu destroy
+    silent: true

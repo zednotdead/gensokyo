@@ -1,6 +1,0 @@
-brew "cloudflared"
-brew "helmfile"
-brew "kubeconform"
-brew "stern"
-brew "talhelper"
-brew "yq"
