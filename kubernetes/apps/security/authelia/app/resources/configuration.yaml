@@ -113,9 +113,3 @@ notifier:
   smtp:
     sender: "Authelia <authelia@${SECRET_DOMAIN}>"
     disable_require_tls: false
-webauthn:
-  enable_passkey_login: true
-  attestation_conveyance_preference: 'direct'
-  metadata:
-    enabled: true
-    validate_entry_permit_zero_aaguid: false

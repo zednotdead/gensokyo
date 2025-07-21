@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
-  - ../../../../templates/gatus/guarded
-  - ../../../../templates/volsync
+  - ../../../../components/volsync
