@@ -41,6 +41,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph
+      namespace: *namespace
+    - name: snapshot-controller
+      namespace: kube-system
   decryption:
     provider: sops
     secretRef:
