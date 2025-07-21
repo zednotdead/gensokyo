@@ -22,15 +22,15 @@ provider "proxmox" {
   insecure = true
 
   ssh {
-    agent       = false
+    agent       = true
     username    = "root"
     private_key = file(local.ssh_path)
   }
 }
 
 locals {
-  config = yamldecode(file("../../config.yaml"))
-  hosts  = local.config.bootstrap_node_inventory
+  config = yamldecode(file("../../nodes.yaml"))
+  hosts  = local.config.nodes
 }
 
 resource "proxmox_virtual_environment_file" "talos_iso" {
@@ -106,11 +106,11 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   #
   network_device {
     bridge      = "vmbr0"
-    mac_address = upper(each.value.talos_nic)
+    mac_address = upper(each.value.mac_addr)
   }
 
   dynamic "hostpci" {
-    for_each = each.value.node_name == "marisa" ? [] : [each.value.node_name]
+    for_each = try(each.value.gpu_address, null) == null ? [] : [each.value.node_name]
     content {
       pcie   = true
       device = "hostpci0"
