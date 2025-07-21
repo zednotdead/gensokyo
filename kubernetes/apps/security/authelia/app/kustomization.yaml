@@ -5,5 +5,9 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
-  - ../../../../templates/gatus/guarded/
-  - ../../../../templates/volsync/
+configMapGenerator:
+  - name: authelia-configmap
+    files:
+      - configuration.yaml=./resources/configuration.yaml
+generatorOptions:
+  disableNameSuffixHash: true

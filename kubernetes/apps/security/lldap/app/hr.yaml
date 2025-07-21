@@ -6,15 +6,9 @@ metadata:
   name: lldap
 spec:
   interval: 15m
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
-      interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   install:
     createNamespace: true
     remediation:
@@ -56,21 +50,17 @@ spec:
             enabled: true
             protocol: TCP
             port: 17170
-    ingress:
+    route:
       main:
-        enabled: true
-        className: internal
-        hosts:
-          - host: &host ldap.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: main
-                  port: web
-        tls:
-          - hosts:
-              - *host
+        hostnames: ["ldap.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
     persistence:
       config:
         enabled: true
