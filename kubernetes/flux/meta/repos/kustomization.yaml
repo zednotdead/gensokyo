@@ -9,3 +9,5 @@ resources:
   - ./piraeus.yaml
   - ./backube.yaml
   - ./crunchy-userinit.yaml
+  - ./node-feature-discovery.yaml
+  - ./intel.yaml
