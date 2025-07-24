@@ -40,18 +40,25 @@ spec:
         controller: homepage
         ports:
           http:
-            port: &port 4321
-    route:
+            port: 4321
+    ingress:
       main:
-        hostnames: ["${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: main
-                port: *port
+        enabled: true
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTP
+        hosts:
+          - host: &host "${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
     defaultPodOptions:
       enableServiceLinks: true
       imagePullSecrets:
