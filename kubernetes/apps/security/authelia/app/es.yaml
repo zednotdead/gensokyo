@@ -34,6 +34,8 @@ spec:
         KOMGA_CLIENT_SECRET_DIGEST: "{{ .KOMGA_CLIENT_SECRET_DIGEST }}"
         GRAFANA_CLIENT_ID: "{{ .GRAFANA_CLIENT_ID }}"
         GRAFANA_CLIENT_SECRET_DIGEST: "{{ .GRAFANA_CLIENT_SECRET_DIGEST }}"
+        MINIFLUX_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
+        MINIFLUX_CLIENT_SECRET_DIGEST: "{{ .MINIFLUX_CLIENT_SECRET_DIGEST }}"
   dataFrom:
     - extract:
         key: Authelia
@@ -79,6 +81,12 @@ spec:
         - regexp:
             source: "(.*)"
             target: "GRAFANA_$1"
+    - extract:
+        key: Miniflux
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "MINIFLUX_$1"
     - extract:
         key: postgres-pguser-authelia
       sourceRef:

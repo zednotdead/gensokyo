@@ -11,3 +11,4 @@ resources:
   - ./hoarder/ks.yaml
   - ./mealie/ks.yaml
   - ./rsshub/ks.yaml
+  - ./miniflux/ks.yaml

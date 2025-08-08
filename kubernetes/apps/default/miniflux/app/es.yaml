@@ -1,0 +1,33 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: miniflux
+  namespace: selfhosted
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: miniflux-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        OAUTH2_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
+        OAUTH2_CLIENT_SECRET: "{{ .MINIFLUX_CLIENT_SECRET }}"
+        DATABASE_URL: >-
+          password={{ .password }} dbname={{ .dbname }} host={{ index . "pgbouncer-host" }}.cluster.local sslmode=disable user={{ .user }}
+  dataFrom:
+    - extract:
+        key: Miniflux
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "MINIFLUX_$1"
+    - extract:
+        key: postgres-pguser-minifluxuser
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets
