@@ -56,25 +56,18 @@ spec:
         controller: mealie
         ports:
           http:
-            port: 9000
-    ingress:
-      app:
-        className: internal
-        annotations:
-          gethomepage.dev/name: *app
-          gethomepage.dev/enabled: 'true'
-          gethomepage.dev/group: Personal
-          gethomepage.dev/icon: mealie.png
-        hosts:
-          - host: *host
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+            port: &port 9000
+    route:
+      main:
+        hostnames: [*host]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
     persistence:
       data:
         existingClaim: *app

@@ -10,3 +10,4 @@ resources:
   - ./ghost/ks.yaml
   - ./hoarder/ks.yaml
   - ./mealie/ks.yaml
+  - ./rsshub/ks.yaml
