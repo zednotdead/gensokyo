@@ -70,7 +70,7 @@ spec:
           http:
             port: *port
     route:
-      main:
+      app:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal
@@ -78,5 +78,5 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - identifier: main
+              - identifier: app
                 port: *port

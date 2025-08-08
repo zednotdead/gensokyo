@@ -17,6 +17,7 @@ spec:
         TWITTER_USERNAME: "{{ .TWITTER_username }}"
         TWITTER_PASSWORD: "{{ .TWITTER_password }}"
         PIXIV_REFRESHTOKEN: "{{ .PIXIV_REFRESHTOKEN }}"
+        GITHUB_ACCESS_TOKEN: "{{ .GITHUB_ACCESS_TOKEN }}"
   dataFrom:
     - extract:
         key: Twitter
@@ -30,3 +31,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "PIXIV_$1"
+    - extract:
+        key: Github
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "GITHUB_$1"
