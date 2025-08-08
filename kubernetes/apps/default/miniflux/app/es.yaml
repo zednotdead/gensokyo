@@ -26,7 +26,7 @@ spec:
             source: "(.*)"
             target: "MINIFLUX_$1"
     - extract:
-        key: postgres-pguser-minifluxuser
+        key: postgres-pguser-miniflux
       sourceRef:
         storeRef:
           kind: ClusterSecretStore

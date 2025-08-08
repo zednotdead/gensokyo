@@ -14,10 +14,10 @@ spec:
     template:
       engineVersion: v2
       data:
-        TWITTER_USERNAME: "{{ .TWITTER_username }}"
-        TWITTER_PASSWORD: "{{ .TWITTER_password }}"
-        PIXIV_REFRESHTOKEN: "{{ .PIXIV_REFRESHTOKEN }}"
-        GITHUB_ACCESS_TOKEN: "{{ .GITHUB_ACCESS_TOKEN }}"
+        GITHUB_ACCESS_TOKEN: '{{ .GITHUB_ACCESS_TOKEN }}'
+        PIXIV_REFRESHTOKEN: '{{ .PIXIV_REFRESHTOKEN }}'
+        TWITTER_PASSWORD: '{{ .TWITTER_password }}'
+        TWITTER_USERNAME: '{{ .TWITTER_username }}'
   dataFrom:
     - extract:
         key: Twitter
