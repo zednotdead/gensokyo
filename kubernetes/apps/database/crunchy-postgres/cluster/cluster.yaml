@@ -103,8 +103,11 @@ spec:
     - name: "linkwarden"
       databases: ["linkwarden"]
       password: *password
-    - name: "minifluxuser"
+    - name: "miniflux"
       databases: ["miniflux"]
+      password: *password
+    - name: "freshrss"
+      databases: ["freshrss"]
       password: *password
     - name: sonarr
       databases:
