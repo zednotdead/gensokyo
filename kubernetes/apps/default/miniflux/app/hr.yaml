@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: ghcr.io/miniflux/miniflux
-              tag: 2.2.3-distroless@sha256:6b778e125817592cf67b7eaf4a2fbb7a269d59ea82c82bfaae0c7daee4bc4ef6
+              tag: 2.2.11-distroless@sha256:0b6acdc4d535f793009844423dfcb997047e1fc420be47a3f5ab2602c6581a1e
             env:
               BASE_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
               # DEBUG: "1"
