@@ -12,3 +12,4 @@ resources:
   - ./mealie/ks.yaml
   - ./rsshub/ks.yaml
   - ./miniflux/ks.yaml
+  - ./ocis/ks.yaml
