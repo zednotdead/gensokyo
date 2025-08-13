@@ -15,6 +15,7 @@ spec:
       engineVersion: v2
       data:
         OCIS_JWT_SECRET: "{{ .OCIS_JWT_SECRET }}"
+        IDM_ADMIN_PASSWORD: "{{ .OCIS_password }}"
   dataFrom:
     - extract:
         key: OCIS
