@@ -5,12 +5,4 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
-configMapGenerator:
-  - name: ocis
-    files:
-      - web.yaml=./config/web.yaml
-  - name: ocis-csp
-    files:
-      - csp.yaml=./config/csp.yaml
-generatorOptions:
-  disableNameSuffixHash: true
+  - ../../../../components/volsync/

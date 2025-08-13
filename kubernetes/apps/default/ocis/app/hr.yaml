@@ -59,6 +59,7 @@ spec:
               ONLYOFFICE_DOMAIN: onlyoffice.${SECRET_DOMAIN}
               GATEWAY_GRPC_ADDR: 0.0.0.0:9142
               PROXY_CSP_CONFIG_FILE_LOCATION: /etc/ocis/csp.yaml
+              PROXY_ENABLE_BASIC_AUTH: true
             envFrom:
               - secretRef:
                   name: ocis-secret
