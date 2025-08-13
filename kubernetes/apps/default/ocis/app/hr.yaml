@@ -44,12 +44,15 @@ spec:
               repository: docker.io/owncloud/ocis
               tag: 7.2.0
             env:
+              OCIS_INSECURE: false
               DEMO_USERS: false
               OCIS_LOG_COLOR: true
               OCIS_LOG_LEVEL: info
               OCIS_LOG_PRETTY: true
               OCIS_URL: https://files.${SECRET_DOMAIN}
               PROXY_TLS: false
+              OCIS_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: false
+              STORAGE_USERS_OCIS_ROOT: &storagePath /data
             envFrom:
               - secretRef:
                   name: ocis-secret
@@ -83,13 +86,22 @@ spec:
           - path: /etc/ocis/web.yaml
             subPath: web.yaml
             readOnly: true
-      data:
-        existingClaim: ocis
+      storage-users:
+        type: nfs
+        server: &nfsServer "${NAS_ADDRESS}"
+        path: &nfsPath "${NAS_BASE_URL}/media/software/applications/owncloud"
         globalMounts:
-          - path: /var/lib/ocis
-            subPath: data
+          - path: *storagePath
+            subPath: storage-users
+      data:
+        type: nfs
+        server: *nfsServer
+        path: *nfsPath
+        globalMounts:
           - path: /etc/ocis
             subPath: config
+          - path: /var/lib/ocis
+            subPath: data
       tmpfs:
         type: emptyDir
         globalMounts:
