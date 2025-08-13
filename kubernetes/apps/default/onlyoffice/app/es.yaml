@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ocis
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: ocis-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        DB_TYPE: postgres
+        DB_HOST: "{{ .host }}"
+        DB_PORT: "5432"
+        DB_NAME: "{{ .dbname }}"
+        DB_USER: "{{ .user }}"
+        DB_PASS: "{{ .password }}"
+  dataFrom:
+    - extract:
+        key: postgres-pguser-onlyoffice
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets

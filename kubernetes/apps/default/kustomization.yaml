@@ -13,3 +13,4 @@ resources:
   - ./rsshub/ks.yaml
   - ./miniflux/ks.yaml
   - ./ocis/ks.yaml
+  - ./onlyoffice/ks.yaml

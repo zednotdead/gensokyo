@@ -37,6 +37,8 @@ spec:
       namespace: volsync-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: onlyoffice
+      namespace: *namespace
   targetNamespace: *namespace
   timeout: 5m
   wait: false
