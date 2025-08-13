@@ -114,6 +114,9 @@ spec:
         - sonarr_main
         - sonarr_log
       password: *password
+    - name: "onlyoffice"
+      databases: ["onlyoffice"]
+      password: *password
   backups:
     pgbackrest:
       restore:
