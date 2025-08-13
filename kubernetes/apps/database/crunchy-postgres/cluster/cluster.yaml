@@ -117,6 +117,9 @@ spec:
     - name: "onlyoffice"
       databases: ["onlyoffice"]
       password: *password
+    - name: "affine"
+      databases: ["affine"]
+      password: *password
   backups:
     pgbackrest:
       restore:

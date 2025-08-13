@@ -14,53 +14,11 @@ spec:
     template:
       engineVersion: v2
       data:
-        OCIS_JWT_SECRET: "{{ .OCIS_JWT_SECRET }}"
-        IDM_ADMIN_PASSWORD: "{{ .OCIS_password }}"
-
-        OCIS_LDAP_URI: 'ldap://lldap.security.svc.cluster.local:3890'
-        OCIS_LDAP_INSECURE: "true"
-        OCIS_LDAP_BIND_DN: uid={{ .LLDAP_READWRITE_ADMIN_USERNAME }},ou=people,dc=zed,dc=gay
-        OCIS_LDAP_BIND_PASSWORD: '{{ .LLDAP_READWRITE_ADMIN_PASSWORD }}'
-        OCIS_ADMIN_USER_ID: "{{ .LLDAP_READWRITE_ADMIN_UUID }}"
-
-        OCIS_LDAP_USER_ENABLED_ATTRIBUTE: uid
-        GRAPH_LDAP_SERVER_WRITE_ENABLED: "true"
-        GRAPH_LDAP_REFINT_ENABLED: "false"
-        OCIS_EXCLUDE_RUN_SERVICES: idm
-        IDP_LDAP_UUID_ATTRIBUTE_TYPE: 'text'
-
-        LDAP_LOGIN_ATTRIBUTES: "uid"
-        IDP_LDAP_LOGIN_ATTRIBUTE: "uid"
-        IDP_LDAP_UUID_ATTRIBUTE: "entryuuid"
-        OCIS_LDAP_USER_SCHEMA_ID: "entryuuid"
-        OCIS_LDAP_GROUP_SCHEMA_ID: "uid"
-        OCIS_LDAP_GROUP_SCHEMA_GROUPNAME: "uid"
-
-        OCIS_LDAP_GROUP_BASE_DN: "ou=groups,dc=zed,dc=gay"
-        OCIS_LDAP_GROUP_OBJECTCLASS: "groupOfUniqueNames"
-        OCIS_LDAP_GROUP_FILTER: "(objectclass=groupOfUniqueNames)"
-
-        OCIS_LDAP_USER_BASE_DN: "ou=people,dc=zed,dc=gay"
-        OCIS_LDAP_USER_OBJECTCLASS: "inetOrgPerson"
-        OCIS_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
-
-        COLLABORATION_WOPI_SECRET: "{{ .ONLYOFFICE_JWT_SECRET }}"
+        DATABASE_URL: "{{ .uri }}"
   dataFrom:
     - extract:
-        key: OCIS
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "OCIS_$1"
-    - extract:
-        key: OnlyOffice
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "ONLYOFFICE_$1"
-    - extract:
-        key: LLDAP
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "LLDAP_$1"
+        key: postgres-pguser-onlyoffice
+      sourceRef:
+        storeRef:
+          kind: ClusterSecretStore
+          name: crunchy-pgo-secrets
