@@ -19,7 +19,7 @@ spec:
         DB_PORT: "5432"
         DB_NAME: "{{ .dbname }}"
         DB_USER: "{{ .user }}"
-        DB_PASS: "{{ .password }}"
+        DB_PWD: "{{ .password }}"
         JWT_SECRET: "{{ .ONLYOFFICE_JWT_SECRET }}"
   dataFrom:
     - extract:

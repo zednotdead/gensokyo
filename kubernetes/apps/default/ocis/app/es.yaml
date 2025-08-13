@@ -43,6 +43,8 @@ spec:
         OCIS_LDAP_USER_BASE_DN: "ou=people,dc=zed,dc=gay"
         OCIS_LDAP_USER_OBJECTCLASS: "inetOrgPerson"
         OCIS_LDAP_USER_FILTER: "(objectclass=inetOrgPerson)"
+
+        COLLABORATION_WOPI_SECRET: "{{ .ONLYOFFICE_JWT_SECRET }}"
   dataFrom:
     - extract:
         key: OCIS
@@ -50,6 +52,12 @@ spec:
         - regexp:
             source: "(.*)"
             target: "OCIS_$1"
+    - extract:
+        key: OnlyOffice
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "ONLYOFFICE_$1"
     - extract:
         key: LLDAP
       rewrite:

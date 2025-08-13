@@ -51,6 +51,7 @@ spec:
       data:
         existingClaim: onlyoffice
         globalMounts:
+          - path: /var/www/onlyoffice/Data/certs
           - path: /var/www/onlyoffice/Data
           - path: /var/log/onlyoffice
           - path: /var/lib/onlyoffice/documentserver/App_Data/cache/files
