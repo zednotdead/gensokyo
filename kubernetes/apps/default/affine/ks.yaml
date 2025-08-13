@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app rsshub
+  name: &app affine
   namespace: &namespace default
 spec:
   commonMetadata:
@@ -14,7 +14,7 @@ spec:
     secretRef:
       name: sops-age
   interval: 1h
-  path: ./kubernetes/apps/default/rsshub/app
+  path: ./kubernetes/apps/default/affine/app
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -23,6 +23,7 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -34,6 +35,10 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
+    - name: crunchy-postgres-cluster
+      namespace: database
+    - name: dragonfly-cluster
+      namespace: database
   targetNamespace: *namespace
   timeout: 5m
   wait: false
