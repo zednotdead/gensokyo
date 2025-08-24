@@ -24,20 +24,22 @@ spec:
       retries: 5
   values:
     fullnameOverride: *app
+    provider:
+      name: rfc2136
     policy: sync
     env:
       - name: "EXTERNAL_DNS_RFC2136_TSIG_SECRET"
         valueFrom:
           secretKeyRef:
-            name: rfc2136-secret
+            name: &secret rfc2136-secret
             key: rfc2136-tsig-secret
       - name: "EXTERNAL_DNS_RFC2136_TSIG_KEYNAME"
         valueFrom:
           secretKeyRef:
-            name: rfc2136-secret
+            name: *secret
             key: rfc2136-tsig-keyname
     extraArgs:
-      - --rfc2136-host="10.0.0.1"
+      - --rfc2136-host=10.0.0.1
       - --rfc2136-port=53
       - --rfc2136-zone="${SECRET_DOMAIN}"
       - --rfc2136-tsig-secret-alg=hmac-sha256
