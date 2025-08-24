@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app pihole-exporter
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      pihole-exporter:
+        containers:
+          pihole-exporter:
+            image:
+              repository: ekofr/pihole-exporter
+              tag: latest@sha256:36dab68a7e4b2750802e2326d9340201dc498ac429cbd89cdfb45cbab3fef081
+            env:
+              PORT: &port 9617
+            envFrom:
+              - secretRef:
+                  name: *app
+            resources:
+              requests:
+                cpu: 15m
+              limits:
+                memory: 60M
+    service:
+      pihole-exporter:
+        controller: pihole-exporter
+        ports:
+          http:
+            port: *port
+    serviceMonitor:
+      pihole-exporter:
+        serviceName: pihole-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 2m
+            scrapeTimeout: 1m
