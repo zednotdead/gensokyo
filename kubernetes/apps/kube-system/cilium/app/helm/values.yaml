@@ -1,10 +1,12 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/refs/tags/v1.17.6/install/kubernetes/cilium/values.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/refs/tags/v1.18.1/install/kubernetes/cilium/values.schema.json
 autoDirectNodeRoutes: true
 bpf:
+  datapathMode: netkit
   masquerade: true
   # Ref: https://github.com/siderolabs/talos/issues/10002
   hostLegacyRouting: true
+bpfClockProbe: true
 cni:
   # Required for pairing with Multus CNI
   exclusive: false
@@ -20,11 +22,15 @@ endpointRoutes:
   enabled: true
 envoy:
   rollOutPods: true
+  log:
+    defaultLevel: debug
   prometheus:
      serviceMonitor:
        enabled: true
 gatewayAPI:
   enabled: true
+  enableAlpn: true
+  xffNumTrustedHops: 1
 hubble:
   enabled: false
 ipam:
