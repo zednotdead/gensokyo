@@ -24,68 +24,24 @@ spec:
       retries: 5
   values:
     fullnameOverride: *app
-    policy: upsert-only
-    provider:
-      name: webhook
-      webhook:
-        image:
-          repository: renanqts/external-dns-openwrt-webhook
-          tag: v0.1.0
-        env:
-          - name: SHUTDOWN_TIMEOUT_SECONDS
-            value: "5"
-          - name: LOG_LEVEL
-            value: info
-          - name: LOG_STACK_TRACE
-            value: "false"
-          - name: LOG_ENCODING
-            value: json
-          - name: ROUTER_HEALTHCHECK_INTERVAL
-            value: /ping
-          - name: ROUTER_HEALTHCHECK_PORT
-            value: "8888"
-          - name: ROUTER_GIN_RELEASE_MODE
-            value: "true"
-          - name: PROVIDER_OPENWRT_LUCIRPC_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                name: &secret openwrt-secret
-                key: url
-          - name: PROVIDER_OPENWRT_LUCIRPC_PORT
-            value: "443"
-          - name: PROVIDER_OPENWRT_LUCIRPC_SSL
-            value: "true"
-          - name: PROVIDER_OPENWRT_LUCIRPC_RPC_ID
-            value: "1"
-          - name: PROVIDER_OPENWRT_LUCIRPC_TIMEOUT
-            value: "15"
-          - name: PROVIDER_OPENWRT_LUCIRPC_INSECURE_SKIP_VERIFY
-            value: "true"
-          - name: PROVIDER_OPENWRT_LUCIRPC_AUTH_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: *secret
-                key: user
-          - name: PROVIDER_OPENWRT_LUCIRPC_AUTH_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: *secret
-                key: password
-          - name: DRY_RUN
-            value: "false"
-        livenessProbe:
-          httpGet:
-            path: /ping
-            port: 8888
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ping
-            port: 8888
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
+    policy: sync
+    env:
+      - name: "EXTERNAL_DNS_RFC2136_TSIG_SECRET"
+        valueFrom:
+          secretKeyRef:
+            name: rfc2136-secret
+            key: rfc2136-tsig-secret
+      - name: "EXTERNAL_DNS_RFC2136_TSIG_KEYNAME"
+        valueFrom:
+          secretKeyRef:
+            name: rfc2136-secret
+            key: rfc2136-tsig-keyname
     extraArgs:
+      - --rfc2136-host="10.0.0.1"
+      - --rfc2136-port=53
+      - --rfc2136-zone="${SECRET_DOMAIN}"
+      - --rfc2136-tsig-secret-alg=hmac-sha256
+      - --rfc2136-tsig-axfr
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=internal
