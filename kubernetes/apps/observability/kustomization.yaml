@@ -9,3 +9,4 @@ resources:
   - ./kps/ks.yaml
   - ./grafana/ks.yaml
   - ./pihole-exporter/ks.yaml
+  - ./speedtest-exporter/ks.yaml

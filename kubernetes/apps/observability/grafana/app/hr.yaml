@@ -162,6 +162,11 @@ spec:
           gnetId: 10176
           revision: 3
           datasource: *DSP
+        speedtest:
+          # renovate: depName="Speedtest-Exporter Dashboard"
+          gnetId: 13665
+          revision: 4
+          datasource: *DSP
       cilium:
         hubble-dashboard:
           url: https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/cilium/files/hubble/dashboards/hubble-dashboard.json
