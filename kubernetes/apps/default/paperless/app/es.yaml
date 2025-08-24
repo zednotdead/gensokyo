@@ -1,0 +1,40 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: paperless
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: paperless-secret
+    creationPolicy: Owner
+    template:
+      data:
+        PAPERLESS_ADMIN_USER: "{{ .username }}"
+        PAPERLESS_ADMIN_PASSWORD: "{{ .password }}"
+        PAPERLESS_SECRET_KEY: "{{ .SECRET_KEY }}"
+        PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+        PAPERLESS_SOCIALACCOUNT_PROVIDERS: >-
+          {
+            "openid_connect": {
+              "SCOPE": ["openid","profile","email"],
+              "OAUTH_PKCE_ENABLED": true,
+              "APPS": [
+                {
+                  "provider_id": "authelia",
+                  "name": "Authelia",
+                  "client_id": "{{ .CLIENT_ID }}",
+                  "secret": "{{ .CLIENT_SECRET }}",
+                  "settings": {
+                    "server_url": "https://auth.${SECRET_DOMAIN}",
+                    "token_auth_method": "client_secret_basic"
+                  }
+                }
+              ]
+            }
+          }
+  dataFrom:
+    - extract:
+        key: Paperless
