@@ -41,6 +41,7 @@ spec:
               LOG_LEVEL: warning
               NO_LOGFILES: true
               SENTRY: false
+              PIXIV_IMG_PROXY: "https://i.yuki.sh"
             envFrom:
               - secretRef:
                   name: rsshub-secret
