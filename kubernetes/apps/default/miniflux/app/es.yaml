@@ -17,7 +17,7 @@ spec:
         OAUTH2_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
         OAUTH2_CLIENT_SECRET: "{{ .MINIFLUX_CLIENT_SECRET }}"
         DATABASE_URL: >-
-          password={{ .password }} dbname={{ .dbname }} host={{ index . "pgbouncer-host" }}.cluster.local sslmode=disable user={{ .user }}
+          password={{ .db_password }} dbname={{ .db_dbname }} host={{ index . "db_pgbouncer-host" }}.cluster.local sslmode=disable user={{ .db_user }}
   dataFrom:
     - extract:
         key: Miniflux
@@ -27,6 +27,10 @@ spec:
             target: "MINIFLUX_$1"
     - extract:
         key: postgres-pguser-miniflux
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "db_$1"
       sourceRef:
         storeRef:
           kind: ClusterSecretStore

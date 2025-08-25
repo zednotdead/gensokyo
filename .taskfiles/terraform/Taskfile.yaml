@@ -15,7 +15,6 @@ tasks:
   init:
     desc: "Initialize necessary things for terraform"
     cmds:
-      - ssh "{{.REMOTE_PROXMOX}}" 'bash -s' < ./scripts/remote-create-terraform-user.sh {{.PROXMOX_VE_USERNAME}} {{.PROXMOX_VE_PASSWORD}}
       - cd ./terraform/infra && tofu init
     silent: true
   upgrade:

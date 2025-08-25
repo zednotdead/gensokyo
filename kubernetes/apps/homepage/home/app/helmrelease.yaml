@@ -43,7 +43,7 @@ spec:
             port: &port 4321
     route:
       main:
-        hostnames: ["me.${SECRET_DOMAIN}"]
+        hostnames: ["${SECRET_DOMAIN}"]
         parentRefs:
           - name: external
             namespace: kube-system
