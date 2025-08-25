@@ -21,6 +21,17 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
+    - name: https-root
+      protocol: HTTPS
+      port: 443
+      hostname: "${SECRET_DOMAIN}"
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: ${SECRET_DOMAIN/./-}-production-tls
     - name: https
       protocol: HTTPS
       port: 443
