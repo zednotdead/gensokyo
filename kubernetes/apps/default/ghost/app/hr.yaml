@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghost
-              tag: 5.130.3
+              tag: 5.130.4
             env:
               TZ: ${TIMEZONE}
               url: "https://ghost.${SECRET_DOMAIN}"
