@@ -169,9 +169,6 @@ spec:
           reclaimPolicy: Delete
           allowVolumeExpansion: true
           volumeBindingMode: Immediate
-          mountOptions:
-            - ms_mode=prefer_crc
-            - _netdev
           parameters:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
@@ -180,6 +177,9 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
+          mountOptions:
+            - ms_mode=prefer-crc
+            - _netdev
     cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-filesystem

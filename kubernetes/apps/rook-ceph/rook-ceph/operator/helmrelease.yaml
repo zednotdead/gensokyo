@@ -26,7 +26,7 @@ spec:
   values:
     disableAdmissionController: true
     csi:
-      cephFSKernelMountOptions: ms_mode=prefer-crc
+      cephFSKernelMountOptions: ms_mode=prefer-crc,_netdev
       enableLiveness: true
       serviceMonitor:
         enabled: true
