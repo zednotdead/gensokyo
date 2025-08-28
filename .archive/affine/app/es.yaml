@@ -1,34 +1,32 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: affine
 spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
   target:
     name: affine-secret
     creationPolicy: Owner
     template:
       engineVersion: v2
       data:
-        DATABASE_URL: '{{ index . "pgbouncer-uri" }}'
-        MAILER_HOST: '{{ .SMTP_HOST }}'
-        MAILER_PORT: '{{ .SMTP_PORT }}'
-        MAILER_USER: '{{ .SMTP_USERNAME }}'
-        MAILER_PASSWORD: '{{ .SMTP_PASSWORD }}'
+        DATABASE_URL: "{{ .uri }}"
+        MAILER_HOST: "{{ .SMTP_HOST }}"
+        MAILER_PORT: "{{ .SMTP_PORT }}"
+        MAILER_USER: "{{ .SMTP_username }}"
+        MAILER_PASSWORD: "{{ .SMTP_password }}"
+        MAILER_SENDER: "cluster@${SECRET_DOMAIN}"
   dataFrom:
     - extract:
-        key: kv/cluster/smtp
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
-    - extract:
-        key: kv/cluster/default/affine
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: vault-backend
+        key: SMTP
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "SMTP_$1"
     - extract:
         key: postgres-pguser-affine
       sourceRef:

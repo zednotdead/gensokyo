@@ -18,3 +18,4 @@ resources:
   - ./sonarr/ks.yaml
   - ./unpackerr/ks.yaml
   - ./immich/ks.yaml
+  - ./autobrr/ks.yaml

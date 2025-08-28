@@ -1,5 +1,5 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -7,14 +7,9 @@ metadata:
 spec:
   interval: 30m
   maxHistory: 3
-  chart:
-    spec:
-      chart: app-template
-      version: 3.5.1
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   install:
     remediation:
       retries: 3
@@ -25,70 +20,77 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: crunchy-postgres-operator
+      namespace: database
+    - name: dragonfly-operator
+      namespace: database
   values:
-    defaultPodOptions:
-      automountServiceAccountToken: false
     controllers:
       affine:
         annotations:
           reloader.stakater.com/auto: 'true'
         strategy: Recreate
-        containers:
-          app:
-            image: &appImage
-              repository: ghcr.io/toeverything/affine-graphql
-              tag: stable-a9aa31a@sha256:0892ba5b574b24f12d396585bd124fce42cf88b45e1fb5cf03437fc223accd06
+        initContainers:
+          migration:
+            image: &image
+              repository: ghcr.io/toeverything/affine
+              tag: 0.24.1@sha256:ab87d68f6809a8318e3f30b6ea0006a25a6221933f03a210b2b9b6bfa42c1231
+            command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
             env: &env
-              AFFINE_SERVER_HOST: &host "notes.${SECRET_DOMAIN}"
-              AFFINE_SERVER_PORT: &port 3010
-              NODE_ENV: production
-              REDIS_SERVER_ENABLED: "true"
-              REDIS_SERVER_HOST: dragonfly.database.svc.cluster.local
-              REDIS_SERVER_DATABASE: *app
-              MAILER_SENDER: 'affine@${SECRET_DOMAIN}'
+              PORT: &port 3010
+              REDIS_SERVER_HOST: "dragonfly.database.svc.cluster.local"
+              AFFINE_SERVER_HOST: &host affine.${SECRET_DOMAIN}
+              AFFINE_INDEXER_ENABLED: false
+              DB_DATA_LOCATION: /data/database
+              UPLOAD_LOCATION: /data/uploads
+              CONFIG_LOCATION: /data/config
             envFrom: &envFrom
               - secretRef:
                   name: affine-secret
+        containers:
+          app:
+            image: *image
+            env: *env
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             resources:
               requests:
-                memory: 1Gi
+                cpu: 10m
+                memory: 512Mi
               limits:
-                memory: 1Gi
-        initContainers:
-          migrations:
-            image: *appImage
-            envFrom: *envFrom
-            command:
-              - sh
-              - -c
-              - "node ./scripts/self-host-predeploy.js"
+                memory: 2048Mi
     service:
       app:
-        controller: affine
+        controller: *app
         ports:
           http:
             port: *port
-    ingress:
+    route:
       app:
-        className: external
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          gethomepage.dev/name: *app
-          gethomepage.dev/enabled: 'true'
-          gethomepage.dev/group: Personal
-          gethomepage.dev/icon: affine.png
-        hosts:
-          - host: *host
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames: [*host]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       data:
         existingClaim: *app
         globalMounts:
-          - path: /root/.affine
+          - path: /data

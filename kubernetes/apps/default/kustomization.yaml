@@ -14,5 +14,4 @@ resources:
   - ./miniflux/ks.yaml
   - ./ocis/ks.yaml
   - ./onlyoffice/ks.yaml
-  - ./affine/ks.yaml
   - ./paperless/ks.yaml
