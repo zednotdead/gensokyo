@@ -15,12 +15,17 @@ spec:
       engineVersion: v2
       data:
         DB_TYPE: postgres
-        DB_HOST: "{{ .host }}"
+        DB_HOST: &dbHost postgres16-rw.database.svc
         DB_PORT: "5432"
-        DB_NAME: "{{ .dbname }}"
-        DB_USER: "{{ .user }}"
-        DB_PWD: "{{ .password }}"
+        DB_NAME: &dbName onlyoffice
+        DB_USER: &dbUser "{{ .ONLYOFFICE_DATABASE_USER }}"
+        DB_PWD: &dbPass "{{ .ONLYOFFICE_DATABASE_PASS }}"
         JWT_SECRET: "{{ .ONLYOFFICE_JWT_SECRET }}"
+        INIT_POSTGRES_DBNAME: *dbName
+        INIT_POSTGRES_HOST: *dbHost
+        INIT_POSTGRES_USER: *dbUser
+        INIT_POSTGRES_PASS: *dbPass
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
   dataFrom:
     - extract:
         key: OnlyOffice
@@ -29,8 +34,8 @@ spec:
             source: "(.*)"
             target: "ONLYOFFICE_$1"
     - extract:
-        key: postgres-pguser-onlyoffice
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

@@ -37,6 +37,8 @@ spec:
       namespace: volsync-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: cloudnative-pg-cluster
+      namespace: database
     - name: onlyoffice-rabbitmq
       namespace: *namespace
   targetNamespace: *namespace
