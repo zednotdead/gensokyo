@@ -35,7 +35,7 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: crunchy-postgres-cluster
+    - name: cloudnative-pg-cluster
       namespace: database
   targetNamespace: *namespace
   timeout: 5m

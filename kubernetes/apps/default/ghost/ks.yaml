@@ -33,8 +33,6 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: crunchy-postgres-cluster
-      namespace: database
   targetNamespace: *namespace
   timeout: 5m
   wait: false
@@ -73,8 +71,6 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: crunchy-postgres-cluster
-      namespace: database
     - name: ghost-mariadb
       namespace: *namespace
   targetNamespace: *namespace

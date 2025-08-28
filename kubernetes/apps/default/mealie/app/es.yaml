@@ -30,11 +30,16 @@ spec:
         OIDC_REMEMBER_ME: "true"
         OIDC_USER_GROUP: mealie-users
         OIDC_ADMIN_GROUP: mealie-admins
-        POSTGRES_USER: '{{ .user }}'
-        POSTGRES_PASSWORD: '{{ .password }}'
-        POSTGRES_SERVER: '{{ index . "pgbouncer-host" }}'
+        POSTGRES_USER: &dbUser "{{ .MEALIE_DATABASE_USER }}"
+        POSTGRES_PASSWORD: &dbPass "{{ .MEALIE_DATABASE_PASS }}"
+        POSTGRES_SERVER: &dbHost postgres16-rw.database.svc
         POSTGRES_PORT: '{{ index . "pgbouncer-port" }}'
-        POSTGRES_DB: '{{ .dbname }}'
+        POSTGRES_DB: &dbName miniflux
+        INIT_POSTGRES_DBNAME: *dbName
+        INIT_POSTGRES_HOST: *dbHost
+        INIT_POSTGRES_USER: *dbUser
+        INIT_POSTGRES_PASS: *dbPass
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
   dataFrom:
     - extract:
         key: Mealie
@@ -49,8 +54,8 @@ spec:
             source: "(.*)"
             target: "SMTP_$1"
     - extract:
-        key: postgres-pguser-mealie
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

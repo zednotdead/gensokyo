@@ -28,6 +28,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: 'true'
         strategy: Recreate
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: mealie-secret
         containers:
           app:
             image:
@@ -36,9 +44,7 @@ spec:
             env:
               BASE_URL: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
               DB_ENGINE: postgres
-            envFrom:
-              - secretRef:
-                  name: mealie-secret
+            envFrom: *env
             probes:
               liveness:
                 enabled: false
