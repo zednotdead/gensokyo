@@ -33,7 +33,7 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: crunchy-postgres-cluster
+    - name: cloudnative-pg-cluster
       namespace: database
   targetNamespace: *namespace
   timeout: 5m

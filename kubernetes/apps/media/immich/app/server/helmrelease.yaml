@@ -32,9 +32,18 @@ spec:
         supplementalGroups: [10000]
     controllers:
       immich-server:
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: immich-secret
+              - configMapRef:
+                  name: immich-configmap
         annotations:
           reloader.stakater.com/auto: "true"
-
         pod:
           enableServiceLinks: false
           topologySpreadConstraints:
@@ -44,7 +53,6 @@ spec:
               labelSelector:
                 matchLabels:
                   app.kubernetes.io/name: immich-server
-
         containers:
           main:
             image:
@@ -55,11 +63,7 @@ spec:
               LOG_LEVEL: verbose
               IMMICH_MEDIA_LOCATION: &mediaLocation /usr/src/app/upload
               IMMICH_PORT: &port 2283
-            envFrom:
-              - secretRef:
-                  name: immich-secret
-              - configMapRef:
-                  name: immich-configmap
+            envFrom: *env
             resources:
               requests:
                 cpu: 15m
