@@ -9,7 +9,6 @@ resources:
   - ./echo/ks.yaml
   - ./ghost/ks.yaml
   - ./hoarder/ks.yaml
-  - ./mealie/ks.yaml
   - ./rsshub/ks.yaml
   - ./miniflux/ks.yaml
   - ./ocis/ks.yaml

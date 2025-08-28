@@ -19,7 +19,7 @@ spec:
         password: "{{ .CNPG_password }}"
         aws-access-key-id: "{{ .ACCESS_KEY }}"
         aws-secret-access-key: "{{ .SECRET_KEY }}"
-        crunchy-password: "{{ .CRUNCHY_password }}"
+        ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
         key: cloudnative-pg
@@ -30,12 +30,4 @@ spec:
     - extract:
         key: S3
     - extract:
-        key: postgres-pguser-postgres
-      rewrite:
-        - regexp:
-            source: "(.*)"
-            target: "CRUNCHY_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
+        key: TrueNAS CA

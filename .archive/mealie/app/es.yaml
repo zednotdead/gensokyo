@@ -33,8 +33,8 @@ spec:
         POSTGRES_USER: &dbUser "{{ .MEALIE_DATABASE_USER }}"
         POSTGRES_PASSWORD: &dbPass "{{ .MEALIE_DATABASE_PASS }}"
         POSTGRES_SERVER: &dbHost postgres16-rw.database.svc
-        POSTGRES_PORT: '{{ index . "pgbouncer-port" }}'
-        POSTGRES_DB: &dbName miniflux
+        POSTGRES_PORT: "5432"
+        POSTGRES_DB: &dbName mealie
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser

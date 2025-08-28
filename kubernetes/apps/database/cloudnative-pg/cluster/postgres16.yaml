@@ -53,8 +53,11 @@ spec:
       wal:
         compression: bzip2
         maxParallel: 8
-      destinationPath: s3://cnpg/postgres16/
-      endpointURL: "http://${NAS_ADDRESS}:9000"
+      destinationPath: s3://cnpg
+      endpointURL: "https://${NAS_ADDRESS}:9000"
+      endpointCA:
+        key: ca.crt
+        name: cloudnative-pg-secret
       # Note: serverName version needs to be incremented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster postgres16-v1
@@ -74,25 +77,18 @@ spec:
     initdb:
       postInitSQL:
         - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
-      import:
-        type: monolith
-        databases:
-          - "*"
-        roles:
-          - "*"
-        source:
-          externalCluster: crunchy
+      # import:
+      #   type: monolith
+      #   databases:
+      #     - "*"
+      #   roles:
+      #     - "*"
+      #   source:
+      #     externalCluster: crunchy
+
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  externalClusters:
+  externalClusters: []
     # - name: *previousCluster
     #   barmanObjectStore:
     #     <<: *barmanObjectStore
     #     serverName: *previousCluster
-    - name: crunchy
-      connectionParameters:
-        host: postgres-primary.database.svc
-        user: postgres
-        dbname: postgres
-      password:
-        name: cloudnative-pg-secret
-        key: crunchy-password
