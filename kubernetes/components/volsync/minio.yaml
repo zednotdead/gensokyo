@@ -17,7 +17,6 @@ spec:
         RESTIC_PASSWORD: "{{ .RESTIC_password }}"
         AWS_ACCESS_KEY_ID: "{{ .ACCESS_KEY }}"
         AWS_SECRET_ACCESS_KEY: "{{ .SECRET_KEY }}"
-        ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
         key: S3
@@ -27,8 +26,6 @@ spec:
         - regexp:
             source: "(.*)"
             target: "RESTIC_$1"
-    - extract:
-        key: TrueNAS CA
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
@@ -55,9 +52,6 @@ spec:
       hourly: 24
       daily: 7
       weekly: 5
-    customCA:
-      secretName: ${APP}-volsync-secret
-      key: ca.crt
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
@@ -79,7 +73,3 @@ spec:
       fsGroup: ${VOLSYNC_RESTORE_MOVER_FS_GROUP:-${VOLSYNC_MOVER_FS_GROUP:-568}}
       runAsGroup: ${VOLSYNC_RESTORE_MOVER_GROUP:-${VOLSYNC_MOVER_GROUP:-568}}
       runAsUser: ${VOLSYNC_RESTORE_MOVER_USER:-${VOLSYNC_MOVER_USER:-568}}
-    customCA:
-      secretName: ${APP}-volsync-secret
-      key: ca.crt
-

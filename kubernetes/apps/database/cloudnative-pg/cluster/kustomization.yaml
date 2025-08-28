@@ -6,3 +6,4 @@ resources:
   - ./postgres16.yaml
   - ./backup.yaml
   - ./service.yaml
+  - ./objectstore.yaml

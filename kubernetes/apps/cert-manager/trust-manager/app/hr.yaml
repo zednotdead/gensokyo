@@ -54,6 +54,10 @@ spec:
     # -- For Private docker registries, authentication is needed. Registry secrets are applied to the service account
     imagePullSecrets: []
 
+    secretTargets:
+      enabled: true
+      authorizedSecretsAll: true
+
     image:
       # -- Kubernetes imagePullPolicy on Deployment.
       pullPolicy: IfNotPresent
