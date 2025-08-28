@@ -17,7 +17,12 @@ spec:
         OAUTH2_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
         OAUTH2_CLIENT_SECRET: "{{ .MINIFLUX_CLIENT_SECRET }}"
         DATABASE_URL: >-
-          password={{ .db_password }} dbname={{ .db_dbname }} host={{ index . "db_pgbouncer-host" }}.cluster.local sslmode=disable user={{ .db_user }}
+          password={{ .MINIFLUX_DATABASE_PASS }} dbname=miniflux host=postgres16-rw.database.svc sslmode=disable user={{ .MINIFLUX_DATABASE_USER }}
+        INIT_POSTGRES_DBNAME: miniflux
+        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_USER: "{{ .MINIFLUX_DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .MINIFLUX_DATABASE_PASS }}"
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
   dataFrom:
     - extract:
         key: Miniflux
@@ -26,12 +31,8 @@ spec:
             source: "(.*)"
             target: "MINIFLUX_$1"
     - extract:
-        key: postgres-pguser-miniflux
+        key: cloudnative-pg
       rewrite:
         - regexp:
             source: "(.*)"
-            target: "db_$1"
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
+            target: "CNPG_$1"

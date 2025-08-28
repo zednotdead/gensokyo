@@ -27,9 +27,7 @@ spec:
   dependsOn:
     - name: lldap
       namespace: *namespace
-    - name: crunchy-postgres-cluster
-      namespace: database
-    - name: crunchy-postgres-stores
+    - name: cloudnative-pg-cluster
       namespace: database
     - name: dragonfly-cluster
       namespace: database
