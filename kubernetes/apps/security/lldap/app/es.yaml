@@ -16,13 +16,18 @@ spec:
         LLDAP_JWT_SECRET: "{{ .JWT_SECRET }}"
         LLDAP_LDAP_USER_PASS: "{{ .LDAP_USER_PASS }}"
         LLDAP_LDAP_BASE_DN: "{{ .LDAP_BASE_DN }}"
-        LLDAP_DATABASE_URL: '{{ .uri }}'
+        LLDAP_DATABASE_URL: 'postgresql://{{ .DATABASE_USER }}:{{ .DATABASE_PASS }}@postgres16-rw.database.svc:5432/lldap'
+        INIT_POSTGRES_DBNAME: lldap
+        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_USER: "{{ .DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .DATABASE_PASS }}"
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
   dataFrom:
     - extract:
         key: LLDAP
     - extract:
-        key: postgres-pguser-authentik
-      sourceRef:
-        storeRef:
-          kind: ClusterSecretStore
-          name: crunchy-pgo-secrets
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
