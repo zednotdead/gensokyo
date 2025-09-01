@@ -14,4 +14,3 @@ resources:
   - ./ocis/ks.yaml
   - ./onlyoffice/ks.yaml
   - ./paperless/ks.yaml
-  - ./nextcloud/ks.yaml
