@@ -49,17 +49,17 @@ spec:
     isWALArchiver: true
     parameters: &parameters
       barmanObjectName: minio
-      serverName: postgres16-v1
+      serverName: postgres16-v2
 
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
-    # recovery:
-    #   source: source
+    recovery:
+      source: source
     # upgrade or recover from another running instance
-    initdb:
-      postInitSQL:
-        - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+    # initdb:
+    #   postInitSQL:
+    #     - CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
       # import:
       #   type: monolith
       #   databases:
@@ -74,7 +74,9 @@ spec:
     - name: source
       plugin:
         name: barman-cloud.cloudnative-pg.io
-        parameters: *parameters
+        parameters:
+          barmanObjectName: minio
+          serverName: postgres16-v1
     # - name: *previousCluster
     #   barmanObjectStore:
     #     <<: *barmanObjectStore
