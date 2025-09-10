@@ -33,8 +33,8 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.14.2938
+              repository: ghcr.io/home-operations/sonarr
+              tag: 4.0.15.2940
             env:
               TZ: Europe/Warsaw
               SONARR__APP__INSTANCENAME: Sonarr
