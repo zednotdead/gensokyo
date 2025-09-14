@@ -57,7 +57,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v1.140.1
+              tag: v1.142.0
 
             env:
               LOG_LEVEL: verbose
