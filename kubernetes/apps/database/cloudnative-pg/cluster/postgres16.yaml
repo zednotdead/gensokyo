@@ -45,11 +45,12 @@ spec:
       - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
       - { regex: cluster, action: labeldrop }
   plugins:
-  - name: barman-cloud.cloudnative-pg.io
-    isWALArchiver: true
-    parameters: &parameters
-      barmanObjectName: minio
-      serverName: postgres16-v3
+    - enabled: true
+      isWALArchiver: false
+      name: barman-cloud.cloudnative-pg.io
+      parameters: &barmanParameters
+        barmanObjectName: minio
+        serverName: postgres16-v3
 
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
@@ -74,9 +75,11 @@ spec:
     - name: source
       plugin:
         name: barman-cloud.cloudnative-pg.io
+        enabled: true
+        isWALArchiver: false
         parameters:
           barmanObjectName: minio
-          serverName: postgres16-v1
+          serverName: postgres16-v2
     # - name: *previousCluster
     #   barmanObjectStore:
     #     <<: *barmanObjectStore

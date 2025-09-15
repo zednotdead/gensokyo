@@ -38,8 +38,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cloudnative-pg
-      namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
   postBuild:
@@ -73,8 +71,12 @@ spec:
   dependsOn:
     - name: cloudnative-pg
       namespace: database
+    - name: cloudnative-pg-barman-cloud
+      namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: external-secrets
+      namespace: external-secrets
   postBuild:
     substituteFrom:
       - name: cluster-secrets
