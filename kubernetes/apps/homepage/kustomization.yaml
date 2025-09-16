@@ -6,5 +6,4 @@ components:
   - ../../components/common
 resources:
   - ./ghcr-secret.sops.yaml
-  - ./home/ks.yaml
   - ./homepage/ks.yaml
