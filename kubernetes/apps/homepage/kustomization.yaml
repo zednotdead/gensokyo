@@ -7,3 +7,4 @@ components:
 resources:
   - ./ghcr-secret.sops.yaml
   - ./home/ks.yaml
+  - ./homepage/ks.yaml
