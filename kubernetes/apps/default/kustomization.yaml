@@ -7,10 +7,9 @@ components:
   - ../../components/common
 resources:
   - ./echo/ks.yaml
-  - ./ghost/ks.yaml
   - ./hoarder/ks.yaml
-  - ./rsshub/ks.yaml
   - ./miniflux/ks.yaml
   - ./ocis/ks.yaml
   - ./onlyoffice/ks.yaml
   - ./paperless/ks.yaml
+  - ./rsshub/ks.yaml

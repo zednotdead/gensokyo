@@ -50,7 +50,7 @@ spec:
       name: barman-cloud.cloudnative-pg.io
       parameters: &barmanParameters
         barmanObjectName: minio
-        serverName: postgres16-v3
+        serverName: postgres16-v4
 
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
@@ -79,7 +79,7 @@ spec:
         isWALArchiver: false
         parameters:
           barmanObjectName: minio
-          serverName: postgres16-v2
+          serverName: postgres16-v3
     # - name: *previousCluster
     #   barmanObjectStore:
     #     <<: *barmanObjectStore
