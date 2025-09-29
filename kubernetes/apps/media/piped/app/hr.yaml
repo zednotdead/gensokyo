@@ -1,0 +1,235 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: piped
+  namespace: media
+spec:
+  interval: 30m
+  timeout: 15m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  driftDetection:
+    mode: enabled
+
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    controllers:
+      backend:
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secretRef:
+                  name: piped-secret
+
+        containers:
+          app:
+            image:
+              repository: 1337kavin/piped
+              tag: latest@sha256:1f38b992ce02a50afddbbf68be1ac11cff6953d36fd8fa2b98c08a19f8ef06e7
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+                memory: 500Mi
+              limits:
+                memory: 2000Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+
+      frontend:
+        strategy: RollingUpdate
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/piped-frontend
+              tag: 2025.3.17@sha256:8ed05c7df0bc8899e54a3952a99b63d55cdc7669d759beeb9370fbb32330468b
+            env:
+              BACKEND_HOSTNAME: piped-api.${SECRET_DOMAIN}
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
+
+      ytproxy:
+        strategy: RollingUpdate
+
+        containers:
+          app:
+            image:
+              repository: 1337kavin/piped-proxy
+              tag: latest@sha256:15069c4aa75d04b8cd8d1520b9a57d67750374ecff381cf7c436f37ae32c9efb
+            command:
+              - /app/piped-proxy
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 10m
+                memory: 500Mi
+              limits:
+                memory: 2000Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+
+      update-subscriptions:
+        type: cronjob
+
+        cronjob:
+          schedule: "@daily"
+          backoffLimit: 0
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 1
+          successfulJobsHistory: 0
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/piped-scripts
+              tag: 0.0.2@sha256:f954c8065473920415d316b16797f7c525838e629e8603bd227b33c671544149
+            env:
+              SCRIPT_NAME: update_subscriptions.sh
+              PIPED_BACKEND: http://piped-backend.media.svc.cluster.local:8080
+              MIN_SLEEP_BETWEEN_FEEDS: 30
+              MAX_SLEEP_BETWEEN_FEEDS: 120
+            envFrom:
+              - secretRef:
+                  name: piped-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              seccompProfile:
+                type: RuntimeDefault
+
+    service:
+      backend:
+        controller: backend
+        ports:
+          http:
+            port: 8080
+        ipFamilyPolicy: PreferDualStack
+      frontend:
+        controller: frontend
+        ports:
+          http:
+            port: 8080
+        ipFamilyPolicy: PreferDualStack
+      ytproxy:
+        controller: ytproxy
+        ports:
+          http:
+            port: 8080
+        ipFamilyPolicy: PreferDualStack
+
+    route:
+      backend:
+        hostnames:
+          - piped-api.${SECRET_DOMAIN}
+        rules:
+          - backendRefs:
+              - identifier: backend
+                port: 8080
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: "Access-Control-Allow-Origin"
+                      value: https://piped.${SECRET_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+      frontend:
+        hostnames:
+          - piped.${SECRET_DOMAIN}
+        rules:
+          - backendRefs:
+              - identifier: frontend
+                port: 8080
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+      ytproxy:
+        hostnames:
+          - piped-proxy.${SECRET_DOMAIN}
+        rules:
+          - backendRefs:
+              - identifier: ytproxy
+                port: 8080
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: "Access-Control-Allow-Origin"
+                      value: https://piped.${SECRET_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+
+    persistence:
+      config:
+        type: secret
+        name: piped-secret
+        advancedMounts:
+          backend:
+            app:
+              - path: /app/config.properties
+                subPath: config.properties
+                readOnly: true
