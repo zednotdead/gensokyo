@@ -1,0 +1,126 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &name invidious
+  namespace: flux-system
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  install:
+    createNamespace: true
+    remediation:
+      retries: 10
+  upgrade:
+    remediation:
+      retries: 10
+  values:
+    fullnameOverride: *name
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      invidious:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: invidious-secret
+        containers:
+          invidious:
+            envFrom: *env
+            image:
+              repository: quay.io/invidious/invidious
+              tag: 2.20250913.0
+            env:
+              TZ: "${TIMEZONE}"
+              INVIDIOUS_PORT: "3000" # https://github.com/iv-org/invidious/issues/2970
+              INVIDIOUS_REGISTRATION_ENABLED: false
+              INVIDIOUS_POPULAR_ENABLED: false
+              INVIDIOUS_QUALITY: dash
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/trending
+                    port: &port 3000
+                  initialDelaySeconds: 5
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 200Mi
+              limits:
+                memory: 400Mi
+      companion:
+        strategy: RollingUpdate
+        replicas: 1
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          companion:
+            envFrom: *env
+            image:
+              repository: quay.io/invidious/invidious-companion
+              tag: latest@sha256:18610b3a76ab009a271f85be01df5a19a5916409ba0f43998bb731b650f03ac3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 500Mi
+              limits:
+                memory: 700Mi
+    service:
+      invidious:
+        controller: *name
+        ports:
+          http:
+            port: &port 3000
+      companion:
+        controller: companion
+        ports:
+          http:
+            port: 8282
+    route:
+      invidious:
+        rules:
+          - backendRefs:
+              - identifier: invidious
+                port: *port
+        hostnames: ["youtube.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
