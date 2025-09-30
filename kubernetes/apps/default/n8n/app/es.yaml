@@ -1,0 +1,35 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: n8n
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: n8n-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        N8N_ENCRYPTION_KEY: "{{ .ENCRYPTION_KEY }}"
+        DB_POSTGRESDB_DATABASE: &dbname n8n
+        DB_POSTGRESDB_HOST: &host postgres16-rw.database.svc
+        DB_POSTGRESDB_USER: &user "{{ .DATABASE_USER }}"
+        DB_POSTGRESDB_PASSWORD: &pass "{{ .DATABASE_PASSWORD }}"
+
+        INIT_POSTGRES_DBNAME: *dbname
+        INIT_POSTGRES_HOST: *host
+        INIT_POSTGRES_USER: *user
+        INIT_POSTGRES_PASS: *pass
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
+  dataFrom:
+    - extract:
+        key: n8n
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

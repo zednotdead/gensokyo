@@ -15,3 +15,4 @@ resources:
   - ./rsshub/ks.yaml
   - ./s3/ks.yaml
   - ./signal-cli/ks.yaml
+  - ./n8n/ks.yaml
