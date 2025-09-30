@@ -14,3 +14,4 @@ resources:
   - ./paperless/ks.yaml
   - ./rsshub/ks.yaml
   - ./s3/ks.yaml
+  - ./signal-cli/ks.yaml
