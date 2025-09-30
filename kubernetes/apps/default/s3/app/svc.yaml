@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.30.1-standalone-strict/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  ports:
+  - name: s3
+    protocol: TCP
+    port: 9000
+    targetPort: 9000
+  - name: http
+    protocol: TCP
+    port: 9002
+    targetPort: 9002
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.30.1-standalone-strict/endpointslice-discovery-v1.json
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: minio-1
+  labels:
+    kubernetes.io/service-name: minio
+addressType: IPv4
+ports:
+  - name: s3
+    protocol: TCP
+    port: 9000
+  - name: http
+    protocol: TCP
+    port: 9002
+endpoints:
+  - addresses:
+      - "${NAS_ADDRESS}"
