@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: memos
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: memos-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        MEMOS_DRIVER: postgres
+        MEMOS_DSN: postgresql://{{ .DATABASE_USER }}:{{ .DATABASE_PASSWORD }}@postgres16-rw.database.svc:5432/memos
+        INIT_POSTGRES_DBNAME: memos
+        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_USER: "{{ .DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
+        MEMOS_S3_ACCESS_KEY: "{{ .ACCESS_KEY }}"
+        MEMOS_S3_SECRET_KEY: "{{ .SECRET_KEY }}"
+  dataFrom:
+    - extract:
+        key: usememos
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
+    - extract:
+        key: S3
