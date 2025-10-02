@@ -40,6 +40,8 @@ spec:
         PAPERLESS_CLIENT_SECRET_DIGEST: "{{ .PAPERLESS_CLIENT_SECRET_DIGEST }}"
         NEXTCLOUD_CLIENT_ID: "{{ .NEXTCLOUD_CLIENT_ID }}"
         NEXTCLOUD_CLIENT_SECRET_DIGEST: "{{ .NEXTCLOUD_CLIENT_SECRET_DIGEST }}"
+        HASS_CLIENT_ID: "{{ .HASS_CLIENT_ID }}"
+        HASS_CLIENT_SECRET_DIGEST: "{{ .HASS_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -114,3 +116,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "NEXTCLOUD_$1"
+    - extract:
+        key: Home Assistant
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "HASS_$1"
