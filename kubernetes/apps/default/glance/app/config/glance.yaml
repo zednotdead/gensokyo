@@ -18,14 +18,31 @@ pages:
               - timezone: ${TIMEZONE}
                 label: CEST Time
           - type: calendar
-          - type: rss
-            limit: 10
-            collapse-after: 3
-            cache: 3h
-            feeds:
-              - url: https://flyingsaucervideo.com/comic/feed/
       - size: full
         widgets:
+          - type: search
+            search-engine: kagi
+            autofocus: true
+          - type: videos
+            channels:
+              - UCGI26U5TLCp43tMfX4y40BA # Bumbles McFumbles
+              - UCpFOj1CQMr9a3zaqEfhkTJw # grayfruit
+              - UCPd46rZJF4uDUfHWwxtlsQg # DaThings
+              - UCCSaQLMqanFT1GkHANX9w2w # cs188
+              - UCSOpcUkE-is7u7c4AkLgqTw # MrMobile
+          - type: split-column
+            widgets:
+              - type: hacker-news
+                collapse-after: 3
+              - type: lobsters
+                collapse-after: 3
+                sort-by: hot
+                tags:
+                  - linux
+                  - programming
+                  - rust
+                  - games
+                  - graphics
           - type: extension
             url: http://glance-k8s-extension:8080/extension/nodes
             allow-potentially-dangerous-html: true
@@ -35,14 +52,12 @@ pages:
               show-if: |
                 namespace != kube-system &&
                 ("glance/hide" not in annotations || annotations["glance/hide"] != "true")
-          - type: hacker-news
-          - type: videos
-            channels:
-              - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
-              - UCv6J_jJa8GJqFwQNgNrMuww # ServeTheHome
-              - UCOk-gHyjcWZNj3Br4oxwh0A # Techno Tim
       - size: small
         widgets:
+          - type: weather
+            units: metric
+            hour-format: 12h
+            location: Poznan, Poland
           - type: repository
             repository: zednotdead/gensokyo
             pull-requests-limit: 5
@@ -53,8 +68,6 @@ pages:
             style: compact
             sites:
               - title: Home Assistant
-                url: https://hass.ok8.sh
-              - title: Grafana
-                url: https://grafana.ok8.sh
-              - title: BlueMap
-                url: https://map.${SECRET_DOMAIN}
+                url: https://ha.${SECRET_DOMAIN}
+              - title: Minio
+                url: https://minio.${SECRET_DOMAIN}

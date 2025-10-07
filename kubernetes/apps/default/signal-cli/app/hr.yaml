@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app signal-cli
@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: docker.io/bbernhard/signal-cli-rest-api
-              tag: 0.92
+              tag: 0.95
             env:
               MODE: json-rpc
             resources:
