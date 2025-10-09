@@ -206,6 +206,8 @@ spec:
             namespace: kube-system
             sectionName: https
       ytproxy:
+        annotations:
+          gatus.home-operations.com/enabled: "false"
         hostnames:
           - piped-proxy.${SECRET_DOMAIN}
         rules:

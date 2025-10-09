@@ -1,0 +1,28 @@
+---
+connectivity:
+  checker:
+    target: 1.1.1.1:53
+    interval: 1m
+
+metrics: true
+
+storage:
+  type: sqlite
+  caching: true
+  path: ${GATUS_CONFIG_PATH}/gatus.db
+
+ui:
+  title: Health Status
+  header: Health Status
+  logo: https://avatars.githubusercontent.com/u/28439285
+  link: https://github.com/zednotdead
+  buttons:
+  - name: Github
+    link: https://github.com/zednotdead
+  - name: Homelab
+    link: https://github.com/zednotdead/gensokyo
+  - name: Status
+    link: https://status.zed.gay
+
+web:
+  port: ${GATUS_WEB_PORT}

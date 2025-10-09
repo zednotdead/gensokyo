@@ -10,3 +10,4 @@ resources:
   - ./grafana/ks.yaml
   - ./pihole-exporter/ks.yaml
   - ./speedtest-exporter/ks.yaml
+  - ./gatus/ks.yaml
