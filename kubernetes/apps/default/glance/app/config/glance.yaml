@@ -23,6 +23,7 @@ pages:
           - type: search
             search-engine: kagi
             autofocus: true
+          - $include: gatus.yml
           - type: videos
             channels:
               - UCGI26U5TLCp43tMfX4y40BA # Bumbles McFumbles

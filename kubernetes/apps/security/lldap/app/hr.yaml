@@ -58,6 +58,9 @@ spec:
             port: &port 17170
     route:
       main:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            name: LLDAP
         hostnames: ["ldap.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal

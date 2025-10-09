@@ -36,6 +36,8 @@ spec:
       route:
         main:
           enabled: true
+          annotations:
+            gatus.home-operations.com/enabled: "false"
           hostnames: ["alertmanager.${SECRET_DOMAIN}"]
           parentRefs:
             - name: internal

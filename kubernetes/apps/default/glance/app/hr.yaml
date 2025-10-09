@@ -104,6 +104,9 @@ spec:
           - path: /app/config/glance.yml
             subPath: glance.yml
             readOnly: true
+          - path: /app/config/gatus.yml
+            subPath: gatus.yml
+            readOnly: true
     serviceAccount:
       glance:
         enabled: true

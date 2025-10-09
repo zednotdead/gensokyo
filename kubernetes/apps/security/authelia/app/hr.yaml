@@ -101,6 +101,9 @@ spec:
           - port: metrics
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |
+            name: Authelia
         hostnames: ["auth.${SECRET_DOMAIN}"]
         parentRefs:
           - name: external
