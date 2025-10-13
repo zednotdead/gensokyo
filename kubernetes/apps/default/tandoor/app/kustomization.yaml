@@ -6,3 +6,9 @@ resources:
   - ./hr.yaml
   - ./es.yaml
   - ../../../../components/volsync/
+configMapGenerator:
+  - name: tandoor-configmap
+    files:
+      - ./config/nginx.conf
+generatorOptions:
+  disableNameSuffixHash: true

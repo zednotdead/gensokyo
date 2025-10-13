@@ -28,13 +28,18 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &envFrom
+              - secretRef:
+                  name: tandoor-secret
           migrations:
             image:
               repository: vabene1111/recipes
               tag: 2.2.7@sha256:bbafaa18a39292e3e2cf032e090d17d0fcc1deb71a2b98425fec99cb05e8532d
-            envFrom: &envFrom
-              - secretRef:
-                  name: tandoor-secret
+            envFrom: *envFrom
             command:
             - sh
             - -c
@@ -115,8 +120,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
-          - name: internal
-            namespace: network
+          - name: external
+            namespace: kube-system
             sectionName: https
         rules:
           - backendRefs:
@@ -138,7 +143,7 @@ spec:
           tandoor:
             nginx:
               - path: /etc/nginx/nginx.conf
-                subPath: nginx-config
+                subPath: nginx.conf
       django-js-reverse:
         type: emptyDir
         advancedMounts:

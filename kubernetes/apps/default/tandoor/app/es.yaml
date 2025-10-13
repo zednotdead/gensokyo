@@ -13,7 +13,7 @@ spec:
     template:
       data:
         DB_ENGINE: django.db.backends.postgresql
-        SECRET_KEY: "{{ .SECRET_KEY }}"
+        SECRET_KEY: "{{ .TANDOOR_SECRET_KEY }}"
         POSTGRES_DB: &dbName tandoor
         POSTGRES_HOST: &dbHost postgres16-rw.database.svc
         POSTGRES_USER: &dbUser "{{ .DATABASE_USER }}"
