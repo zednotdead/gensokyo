@@ -1,0 +1,54 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: tandoor
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: tandoor-secret
+    creationPolicy: Owner
+    template:
+      data:
+        DB_ENGINE: django.db.backends.postgresql
+        SECRET_KEY: "{{ .SECRET_KEY }}"
+        POSTGRES_DB: &dbName tandoor
+        POSTGRES_HOST: &dbHost postgres16-rw.database.svc
+        POSTGRES_USER: &dbUser "{{ .DATABASE_USER }}"
+        POSTGRES_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
+        INIT_POSTGRES_DBNAME: *dbName
+        INIT_POSTGRES_HOST: *dbHost
+        INIT_POSTGRES_USER: *dbUser
+        INIT_POSTGRES_PASS: *dbPass
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
+        SOCIAL_PROVIDERS: allauth.socialaccount.providers.openid_connect
+        SOCIALACCOUNT_PROVIDERS: >-
+          {
+            "openid_connect": {
+              "SCOPE": ["openid","profile","email"],
+              "OAUTH_PKCE_ENABLED": true,
+              "APPS": [
+                {
+                  "provider_id": "authelia",
+                  "name": "Authelia",
+                  "client_id": "{{ .CLIENT_ID }}",
+                  "secret": "{{ .CLIENT_SECRET }}",
+                  "settings": {
+                    "server_url": "https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration",
+                    "token_auth_method": "client_secret_basic"
+                  }
+                }
+              ]
+            }
+          }
+  dataFrom:
+    - extract:
+        key: Tandoor
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

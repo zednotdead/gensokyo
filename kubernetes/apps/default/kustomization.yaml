@@ -18,3 +18,4 @@ resources:
   - ./n8n/ks.yaml
   - ./home-assistant/ks.yaml
   - ./glance/ks.yaml
+  - ./tandoor/ks.yaml

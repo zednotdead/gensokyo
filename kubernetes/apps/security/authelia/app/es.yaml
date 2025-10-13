@@ -42,6 +42,8 @@ spec:
         NEXTCLOUD_CLIENT_SECRET_DIGEST: "{{ .NEXTCLOUD_CLIENT_SECRET_DIGEST }}"
         HASS_CLIENT_ID: "{{ .HASS_CLIENT_ID }}"
         HASS_CLIENT_SECRET_DIGEST: "{{ .HASS_CLIENT_SECRET_DIGEST }}"
+        TANDOOR_CLIENT_ID: "{{ .TANDOOR_CLIENT_ID }}"
+        TANDOOR_CLIENT_SECRET_DIGEST: "{{ .TANDOOR_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -122,3 +124,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "HASS_$1"
+    - extract:
+        key: Tandoor
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "TANDOOR_$1"
