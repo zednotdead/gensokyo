@@ -19,3 +19,4 @@ resources:
   - ./home-assistant/ks.yaml
   - ./glance/ks.yaml
   - ./tandoor/ks.yaml
+  - ./smtp-relay/ks.yaml
