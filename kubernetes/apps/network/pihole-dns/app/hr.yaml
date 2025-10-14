@@ -41,7 +41,7 @@ spec:
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=internal
     triggerLoopOnEvent: true
-    sources: ["crd", "gateway-httproute", "ingress"]
+    sources: ["crd", "gateway-httproute", "ingress", "service"]
     registry: noop
     domainFilters: ["${SECRET_DOMAIN}"]
     serviceMonitor:
