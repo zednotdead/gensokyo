@@ -35,7 +35,7 @@ spec:
               requests:
                 memory: 512Mi
               limits:
-                memory: 600Mi
+                memory: 2Gi
             env:
               DATA_DIR: /data
               MEILI_ADDR: http://hoarder-meili:7700
