@@ -1,0 +1,162 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+spec:
+  interval: 2h
+  chartRef:
+    kind: OCIRepository
+    name: forgejo
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    deployment:
+      annotations:
+        secret.reloader.stakater.com/reload: forgejo-secret
+    strategy:
+      type: Recreate
+    service:
+      http:
+        port: 3000
+      ssh:
+        type: LoadBalancer
+        port: 22
+        annotations:
+          io.cilium/lb-ipam-ips: ${FORGEJO_ADDRESS}
+          external-dns.alpha.kubernetes.io/hostname: &sshDomain "ssh.git.${SECRET_DOMAIN}"
+    ingress:
+      enabled: false
+    persistence:
+      enabled: true
+      create: false
+      claimName: forgejo
+    redis-cluster:
+      enabled: false
+    postgresql-ha:
+      enabled: false
+    postgresql:
+      enabled: false
+    valkey-cluster:
+      enabled: false
+
+    gitea:
+      admin:
+        existingSecret: &secret forgejo-secret
+      # See https://docs.gitea.io/en-us/config-cheat-sheet/
+      config:
+        APP_NAME: Forgejo
+        server:
+          ROOT_URL: https://git.${SECRET_DOMAIN}
+          SSH_PORT: 22
+          SSH_LISTEN_PORT: 22
+          SSH_DOMAIN: *sshDomain
+          OFFLINE_MODE: true
+        security:
+          existingSecret: *secret
+        service:
+          ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+          DISABLE_REGISTRATION: false
+          SHOW_REGISTRATION_BUTTON: false
+        database:
+          DB_TYPE: postgres
+        repository:
+          DEFAULT_PRIVATE: private
+        ui:
+          DEFAULT_THEME: gitea-dark
+        cache:
+          ENABLED: true
+          ADAPTER: redis
+          HOST: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+        openid:
+          ENABLE_OPENID_SIGNIN: false
+          ENABLE_OPENID_SIGNUP: true
+        mailer:
+          ENABLED: true
+          FROM: "Forgejo <cluster@${SECRET_DOMAIN}>"
+        migrations:
+          ALLOWED_DOMAINS: "*.${SECRET_DOMAIN}"
+        queue:
+          TYPE: redis
+          CONN_STR: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+        session:
+          PROVIDER: redis
+          PROVIDER_CONFIG: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+        storage:
+          STORAGE_TYPE: minio
+          MINIO_USE_SSL: false
+          MINIO_ENDPOINT: 10.0.2.3:9000
+          MINIO_BUCKET: forgejo
+          MINIO_LOCATION: us-east-1
+          MINIO_INSECURE_SKIP_VERIFY: false
+      oauth:
+        - name: Authelia
+          provider: openidConnect
+          scopes: email profile groups
+          autoDiscoverUrl: 'https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration'
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+  valuesFrom:
+    # OIDC
+    - kind: Secret
+      name: *secret
+      valuesKey: CLIENT_ID
+      targetPath: gitea.oauth[0].key
+    - kind: Secret
+      name: *secret
+      valuesKey: CLIENT_SECRET
+      targetPath: gitea.oauth[0].secret
+    # SMTP Secret
+    - kind: Secret
+      name: *secret
+      valuesKey: SMTP_HOST
+      targetPath: gitea.config.mailer.SMTP_ADDR
+    - kind: Secret
+      name: *secret
+      valuesKey: SMTP_PORT
+      targetPath: gitea.config.mailer.SMTP_PORT
+    - kind: Secret
+      name: *secret
+      valuesKey: SMTP_USER
+      targetPath: gitea.config.mailer.SMTP_USER
+    - kind: Secret
+      name: *secret
+      valuesKey: SMTP_PASSWORD
+      targetPath: gitea.config.mailer.SMTP_PASSWD
+
+    # Database Secret
+    - kind: Secret
+      name: *secret
+      valuesKey: POSTGRES_HOST
+      targetPath: gitea.config.database.HOST
+    - kind: Secret
+      name: *secret
+      valuesKey: POSTGRES_DBNAME
+      targetPath: gitea.config.database.NAME
+    - kind: Secret
+      name: *secret
+      valuesKey: POSTGRES_USER
+      targetPath: gitea.config.database.USER
+    - kind: Secret
+      name: *secret
+      valuesKey: POSTGRES_PASS
+      targetPath: gitea.config.database.PASSWD
+
+      # Storage
+    - kind: Secret
+      name: *secret
+      valuesKey: ACCESS_KEY
+      targetPath: gitea.config.storage.MINIO_ACCESS_KEY_ID
+    - kind: Secret
+      name: *secret
+      valuesKey: SECRET_KEY
+      targetPath: gitea.config.storage.MINIO_SECRET_ACCESS_KEY

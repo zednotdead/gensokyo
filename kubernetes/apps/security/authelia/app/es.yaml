@@ -44,6 +44,8 @@ spec:
         HASS_CLIENT_SECRET_DIGEST: "{{ .HASS_CLIENT_SECRET_DIGEST }}"
         TANDOOR_CLIENT_ID: "{{ .TANDOOR_CLIENT_ID }}"
         TANDOOR_CLIENT_SECRET_DIGEST: "{{ .TANDOOR_CLIENT_SECRET_DIGEST }}"
+        FORGEJO_CLIENT_ID: "{{ .FORGEJO_CLIENT_ID }}"
+        FORGEJO_CLIENT_SECRET_DIGEST: "{{ .FORGEJO_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -130,3 +132,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "TANDOOR_$1"
+    - extract:
+        key: Forgejo
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "FORGEJO_$1"

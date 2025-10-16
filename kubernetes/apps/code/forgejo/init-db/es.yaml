@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: forgejo-init-db
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: forgejo-init-db-secret
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+      data:
+        INIT_POSTGRES_DBNAME: forgejo
+        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_USER: "{{ .DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
+        INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
+  dataFrom:
+    - extract:
+        key: Forgejo
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: forgejo
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: forgejo-secret
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+      data:
+        username: "{{ .ADMIN_USERNAME }}"
+        password: "{{ .ADMIN_PASSWORD }}"
+        email: "me@${SECRET_DOMAIN}"
+        POSTGRES_DBNAME: forgejo
+        POSTGRES_HOST: postgres16-rw.database.svc
+        POSTGRES_USER: "{{ .DATABASE_USER }}"
+        POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
+        ACCESS_KEY: "{{ .ACCESS_KEY }}"
+        SECRET_KEY: "{{ .SECRET_KEY }}"
+        SMTP_HOST: "{{ .SMTP_HOST }}"
+        SMTP_PORT: "{{ .SMTP_PORT }}"
+        SMTP_USER: "{{ .SMTP_username }}"
+        SMTP_PASSWORD: "{{ .SMTP_password }}"
+        CLIENT_ID: "{{ .CLIENT_ID }}"
+        CLIENT_SECRET: "{{ .CLIENT_SECRET }}"
+  dataFrom:
+    - extract:
+        key: Forgejo
+    - extract:
+        key: S3
+    - extract:
+        key: SMTP
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "SMTP_$1"
