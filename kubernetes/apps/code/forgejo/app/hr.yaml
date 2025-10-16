@@ -22,7 +22,7 @@ spec:
       annotations:
         secret.reloader.stakater.com/reload: forgejo-secret
     strategy:
-      type: Recreate
+      type: RollingUpdate
     service:
       http:
         port: 3000
@@ -52,7 +52,8 @@ spec:
         existingSecret: &secret forgejo-secret
       # See https://docs.gitea.io/en-us/config-cheat-sheet/
       config:
-        APP_NAME: Forgejo
+        APP_NAME: Zed is not Git
+        APP_SLOGAN: ""
         server:
           ROOT_URL: https://git.${SECRET_DOMAIN}
           SSH_PORT: 22
@@ -67,6 +68,8 @@ spec:
           SHOW_REGISTRATION_BUTTON: false
         database:
           DB_TYPE: postgres
+        federation:
+          ENABLED: true
         repository:
           DEFAULT_PRIVATE: private
         ui:
