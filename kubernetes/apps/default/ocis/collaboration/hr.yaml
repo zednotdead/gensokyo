@@ -22,7 +22,7 @@ spec:
           ocis-collab:
             image:
               repository: docker.io/owncloud/ocis
-              tag: 7.2.0
+              tag: 7.3.0
             command: ["ocis", "collaboration", "server"]
             env:
               COLLABORATION_GRPC_ADDR: 0.0.0.0:9301
