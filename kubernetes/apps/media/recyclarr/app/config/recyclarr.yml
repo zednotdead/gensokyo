@@ -10,7 +10,7 @@ sonarr:
 
     # Media Naming Configuration
     media_naming:
-      series: plex
+      series: jellyfin-tvdb
       season: default
       episodes:
         rename: true
@@ -142,7 +142,7 @@ radarr:
     replace_existing_custom_formats: true
 
     media_naming:
-      folder: plex
+      folder: jellyfin-imdb
       movie:
         rename: true
         standard: default
