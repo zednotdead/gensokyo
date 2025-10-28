@@ -11,7 +11,7 @@ spec:
   - s3.${SECRET_DOMAIN}
   parentRefs:
     - name: envoy-internal
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - backendRefs:
@@ -29,7 +29,7 @@ spec:
   - minio.${SECRET_DOMAIN}
   parentRefs:
     - name: envoy-internal
-      namespace: kube-system
+      namespace: network
       sectionName: https
   rules:
     - backendRefs:
