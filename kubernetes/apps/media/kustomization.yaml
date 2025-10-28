@@ -22,3 +22,4 @@ resources:
   - ./piped/ks.yaml
   - ./komga/ks.yaml
   - ./komf/ks.yaml
+  - ./qui/ks.yaml
