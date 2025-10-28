@@ -192,7 +192,7 @@ spec:
                       value: https://piped.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
-            namespace: kube-system
+            namespace: network
             sectionName: https
       frontend:
         hostnames:
@@ -203,7 +203,7 @@ spec:
                 port: 8080
         parentRefs:
           - name: envoy-internal
-            namespace: kube-system
+            namespace: network
             sectionName: https
       ytproxy:
         annotations:
@@ -222,7 +222,7 @@ spec:
                       value: https://piped.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
-            namespace: kube-system
+            namespace: network
             sectionName: https
 
     persistence:

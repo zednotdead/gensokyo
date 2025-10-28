@@ -11,13 +11,13 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyDeployment:
-        replicas: 2
+        replicas: 1
         container:
           resources:
             requests:
               cpu: 100m
             limits:
-              memory: 1Gi
+              memory: 512M
       envoyService:
         externalTrafficPolicy: Cluster
   shutdown:

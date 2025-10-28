@@ -7,7 +7,7 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: cloudflare-tunnel
+    name: app-template
   interval: 1h
   values:
     controllers:
@@ -71,6 +71,11 @@ spec:
           config.yaml: |-
             ingress:
               - hostname: "*.${SECRET_DOMAIN}"
+                originRequest:
+                  http2Origin: true
+                  originServerName: external.${SECRET_DOMAIN}
+                service: https://envoy-external.{{ .Release.Namespace }}.svc.cluster.local:443
+              - hostname: "${SECRET_DOMAIN}"
                 originRequest:
                   http2Origin: true
                   originServerName: external.${SECRET_DOMAIN}

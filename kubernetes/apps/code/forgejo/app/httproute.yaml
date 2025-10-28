@@ -12,16 +12,6 @@ spec:
   hostnames:
     - git.${SECRET_DOMAIN}
   rules:
-    # Do not publicly expose /metrics endpoint.
-    - matches:
-        - path:
-            value: /metrics
-      filters:
-        - type: ExtensionRef
-          extensionRef:
-            group: gateway.envoyproxy.io
-            kind: HTTPRouteFilter
-            name: not-found
     - backendRefs:
         - name: forgejo-http
           port: 3000
