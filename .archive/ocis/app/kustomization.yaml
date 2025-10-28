@@ -5,12 +5,12 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
-  - ../../../../templates/gatus/external
-  - ../../../../templates/volsync/
 configMapGenerator:
-  - name: ocis-configmap
+  - name: ocis
     files:
-      - proxy.yaml=./resources/proxy.yaml
-      - csp.yaml=./resources/csp.yaml
+      - web.yaml=./config/web.yaml
+  - name: ocis-csp
+    files:
+      - csp.yaml=./config/csp.yaml
 generatorOptions:
   disableNameSuffixHash: true

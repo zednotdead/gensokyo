@@ -60,7 +60,7 @@ spec:
       main:
         hostnames: ["${SECRET_DOMAIN}"]
         parentRefs:
-          - name: external
+          - name: envoy-external
             namespace: kube-system
             sectionName: https
         rules:

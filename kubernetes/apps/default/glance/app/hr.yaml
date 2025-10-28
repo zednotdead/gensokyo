@@ -89,7 +89,7 @@ spec:
       glance:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}", "g.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https
         rules:

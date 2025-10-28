@@ -242,6 +242,6 @@ spec:
         enabled: true
         hostnames: ["grafana.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https

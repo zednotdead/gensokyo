@@ -191,7 +191,7 @@ spec:
                     - name: "Access-Control-Allow-Origin"
                       value: https://piped.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https
       frontend:
@@ -202,7 +202,7 @@ spec:
               - identifier: frontend
                 port: 8080
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https
       ytproxy:
@@ -221,7 +221,7 @@ spec:
                     - name: "Access-Control-Allow-Origin"
                       value: https://piped.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https
 

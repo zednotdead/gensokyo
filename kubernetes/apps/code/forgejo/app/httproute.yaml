@@ -6,7 +6,7 @@ metadata:
   name: forgejo
 spec:
   parentRefs:
-    - name: external
+    - name: envoy-external
       namespace: kube-system
       sectionName: https
   hostnames:

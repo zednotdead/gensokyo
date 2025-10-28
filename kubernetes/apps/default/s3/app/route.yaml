@@ -10,7 +10,7 @@ spec:
   hostnames:
   - s3.${SECRET_DOMAIN}
   parentRefs:
-    - name: internal
+    - name: envoy-internal
       namespace: kube-system
       sectionName: https
   rules:
@@ -28,7 +28,7 @@ spec:
   hostnames:
   - minio.${SECRET_DOMAIN}
   parentRefs:
-    - name: internal
+    - name: envoy-internal
       namespace: kube-system
       sectionName: https
   rules:

@@ -106,7 +106,7 @@ spec:
         hostnames:
           - paperless.${SECRET_DOMAIN}
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: kube-system
             sectionName: https
         rules:

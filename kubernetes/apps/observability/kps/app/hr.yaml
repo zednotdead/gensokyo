@@ -40,7 +40,7 @@ spec:
             gatus.home-operations.com/enabled: "false"
           hostnames: ["alertmanager.${SECRET_DOMAIN}"]
           parentRefs:
-            - name: internal
+            - name: envoy-internal
               namespace: kube-system
               sectionName: https
       alertmanagerSpec:
@@ -68,7 +68,7 @@ spec:
           enabled: true
           hostnames: ["prometheus.${SECRET_DOMAIN}"]
           parentRefs:
-            - name: internal
+            - name: envoy-internal
               namespace: kube-system
               sectionName: https
       prometheusSpec:
