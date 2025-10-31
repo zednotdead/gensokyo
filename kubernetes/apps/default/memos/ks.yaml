@@ -37,8 +37,6 @@ spec:
       namespace: volsync-system
     - name: authelia
       namespace: security
-  components:
-    - ../../../../components/volsync/
   targetNamespace: *namespace
   timeout: 5m
   wait: false
