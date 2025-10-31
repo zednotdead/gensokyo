@@ -178,7 +178,6 @@ identity_providers:
         public: false
         require_pkce: true
         pkce_challenge_method: 'S256'
-        authorization_policy: 'two_factor'
         redirect_uris:
           - 'https://ha.${SECRET_DOMAIN}/auth/oidc/callback'
         scopes:
@@ -251,7 +250,7 @@ identity_providers:
 session:
   same_site: lax
   inactivity: 5m
-  expiration: 1h
+  expiration: 6h
   remember_me: 1M
   cookies:
     - name: authelia_session
