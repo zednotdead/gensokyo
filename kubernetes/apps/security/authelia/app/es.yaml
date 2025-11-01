@@ -154,3 +154,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "MEMOS_$1"
+    - extract:
+        key: Jellyfin
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "JELLYFIN_$1"

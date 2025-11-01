@@ -247,7 +247,7 @@ identity_providers:
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_basic
-      - client_name:  '{{ env "MEMOS_CLIENT_ID" }}'
+      - client_name: '{{ env "MEMOS_CLIENT_ID" }}'
         client_id: memos
         client_secret: '{{ env "MEMOS_CLIENT_SECRET_DIGEST" }}'
         public: false
@@ -261,6 +261,26 @@ identity_providers:
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_post
+      - client_id: '{{ env "JELLYFIN_CLIENT_ID" }}'
+        client_name: 'Jellyfin'
+        client_secret: '{{ env "JELLYFIN_CLIENT_SECRET_DIGEST" }}'
+        public: false
+        authorization_policy: 'two_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://jellyfin.${SECRET_DOMAIN}/sso/OID/redirect/authelia'
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'groups'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
 session:
   same_site: lax
   inactivity: 5m
