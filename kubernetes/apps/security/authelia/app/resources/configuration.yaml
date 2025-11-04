@@ -153,7 +153,7 @@ identity_providers:
         client_name: 'Nextcloud'
         client_secret: '{{ env "NEXTCLOUD_CLIENT_SECRET_DIGEST" }}' # The digest of 'insecure_secret'.
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: 'one_factor'
         require_pkce: true
         pkce_challenge_method: 'S256'
         claims_policy: 'nextcloud_userinfo'
