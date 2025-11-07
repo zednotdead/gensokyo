@@ -31,7 +31,6 @@ spec:
         port: 22
         annotations:
           io.cilium/lb-ipam-ips: ${FORGEJO_ADDRESS}
-          external-dns.alpha.kubernetes.io/hostname: &sshDomain "ssh.git.${SECRET_DOMAIN}"
     ingress:
       enabled: false
     persistence:
@@ -57,8 +56,9 @@ spec:
         server:
           ROOT_URL: https://git.${SECRET_DOMAIN}
           SSH_PORT: 22
+          DOMAIN: git.${SECRET_DOMAIN}
+          SSH_DOMAIN: git.${SECRET_DOMAIN}
           SSH_LISTEN_PORT: 22
-          SSH_DOMAIN: *sshDomain
           OFFLINE_MODE: true
         security:
           existingSecret: *secret
