@@ -85,7 +85,7 @@ spec:
           ENABLED: true
           FROM: "Forgejo <cluster@${SECRET_DOMAIN}>"
         migrations:
-          ALLOWED_DOMAINS: "*.${SECRET_DOMAIN}"
+          ALLOWED_DOMAINS: "*"
         queue:
           TYPE: redis
           CONN_STR: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
