@@ -22,7 +22,18 @@ spec:
       flavor: fpm-alpine
     nginx:
       enabled: true
+    imaginary:
+      enabled: true
+    cronjob:
+      enabled: true
     nextcloud:
+      extraVolumes:
+        - name: nfs-media
+          persistentVolumeClaim:
+            claimName: nextcloud-media-nfs
+      extraVolumeMounts:
+        - name: nfs-media
+          mountPath: /nfs/media
       extraInitContainers:
         - name: init-db
           image: ghcr.io/home-operations/postgres-init:17@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
@@ -53,6 +64,8 @@ spec:
         runAsUser: 1022
         runAsGroup: 1022
         runAsNonRoot: true
+      defaultConfigs:
+        imaginary.config.php: true
       configs:
         proxy.config.php: |-
           <?php
