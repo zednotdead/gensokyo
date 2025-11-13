@@ -23,4 +23,3 @@ resources:
   - ./komga/ks.yaml
   - ./komf/ks.yaml
   - ./qui/ks.yaml
-  - ./jdownloader2/ks.yaml
