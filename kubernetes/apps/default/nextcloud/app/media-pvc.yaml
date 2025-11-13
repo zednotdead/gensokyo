@@ -12,7 +12,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: "${NAS_ADDRESS}"
-    path: "${NAS_BASE_URL}/media/software/applications/nextcloud"
+    path: "${NAS_BASE_URL}/media"
   mountOptions:
     - nfsvers=4.2
     - nconnect=8

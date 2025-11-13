@@ -26,6 +26,7 @@ spec:
       enabled: true
     cronjob:
       enabled: true
+      curlInsecure: true
     nextcloud:
       extraVolumes:
         - name: nfs-media
@@ -60,10 +61,6 @@ spec:
           authtype: NONE
           name: ""
           password: ""
-      securityContext:
-        runAsUser: 1022
-        runAsGroup: 1022
-        runAsNonRoot: true
       defaultConfigs:
         imaginary.config.php: true
       configs:
