@@ -50,7 +50,7 @@ spec:
             file: ./database.sqlite # database file location.
 
           metadataProviders:
-            malClientId: "{{ .MAL_CLIENT_SECRET }}" # required for mal provider. See https://myanimelist.net/forum/?topicid=1973077
+            malClientId: "{{ .MAL_CLIENT_ID }}" # required for mal provider. See https://myanimelist.net/forum/?topicid=1973077
             defaultProviders:
               mangaUpdates:
                 priority: 10
