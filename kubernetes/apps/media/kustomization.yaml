@@ -24,4 +24,3 @@ resources:
   - ./komf/ks.yaml
   - ./qui/ks.yaml
   - ./pyload/ks.yaml
-  - ./maloja/ks.yaml
