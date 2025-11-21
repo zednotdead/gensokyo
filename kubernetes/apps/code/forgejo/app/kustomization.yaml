@@ -8,4 +8,5 @@ resources:
   - ./oci.yaml
   - ./httproute.yaml
   - ./dns.yaml
+  - ./tcproute.yaml
   - ../../../../components/volsync/

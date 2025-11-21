@@ -22,8 +22,8 @@ spec:
         POSTGRES_HOST: postgres16-rw.database.svc
         POSTGRES_USER: "{{ .DATABASE_USER }}"
         POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
-        ACCESS_KEY: "{{ .ACCESS_KEY }}"
-        SECRET_KEY: "{{ .SECRET_KEY }}"
+        ACCESS_KEY: "{{ .S3_accessKey }}"
+        SECRET_KEY: "{{ .S3_secretKey }}"
         SMTP_HOST: "{{ .SMTP_HOST }}"
         SMTP_PORT: "{{ .SMTP_PORT }}"
         SMTP_USER: "{{ .SMTP_username }}"
@@ -34,7 +34,11 @@ spec:
     - extract:
         key: Forgejo
     - extract:
-        key: S3
+        key: Minio
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "S3_$1"
     - extract:
         key: SMTP
       rewrite:

@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 10.1.0
+      version: 10.2.0
       sourceRef:
         name: grafana
         kind: HelmRepository
@@ -242,6 +242,6 @@ spec:
         enabled: true
         hostnames: ["grafana.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: internal
-            namespace: kube-system
+          - name: envoy-internal
+            namespace: network
             sectionName: https

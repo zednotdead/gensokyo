@@ -6,17 +6,16 @@ namespace: default
 components:
   - ../../components/common
 resources:
-  - ./echo/ks.yaml
   - ./hoarder/ks.yaml
   - ./miniflux/ks.yaml
-  - ./ocis/ks.yaml
   - ./onlyoffice/ks.yaml
   - ./paperless/ks.yaml
   - ./rsshub/ks.yaml
-  - ./s3/ks.yaml
   - ./signal-cli/ks.yaml
   - ./n8n/ks.yaml
   - ./home-assistant/ks.yaml
   - ./glance/ks.yaml
   - ./tandoor/ks.yaml
   - ./nextcloud/ks.yaml
+  - ./memos/ks.yaml
+  - ./minio/ks.yaml

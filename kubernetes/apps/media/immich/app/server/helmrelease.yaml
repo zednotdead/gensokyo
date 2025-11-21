@@ -67,11 +67,11 @@ spec:
             resources:
               requests:
                 cpu: 15m
-                memory: 2Gi
+                memory: 1Gi
               limits:
                 gpu.intel.com/i915: 1
                 cpu: 1000m
-                memory: 4Gi
+                memory: 2Gi
             probes:
               liveness: &probes
                 enabled: true
@@ -107,8 +107,8 @@ spec:
       main:
         hostnames: ["img.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: external
-            namespace: kube-system
+          - name: envoy-external
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:

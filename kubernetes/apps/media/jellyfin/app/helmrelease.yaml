@@ -24,14 +24,17 @@ spec:
     - name: volsync
       namespace: volsync-system
   values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
     controllers:
       jellyfin:
         pod:
           securityContext:
-            runAsUser: ${NAS_UID}
-            runAsGroup: ${NAS_GID}
-            fsGroup: ${NAS_GID}
-            fsGroupChangePolicy: OnRootMismatch
             supplementalGroups:
               - 44
               - 109
@@ -91,14 +94,18 @@ spec:
       main:
         ports:
           http:
-            port: 8096
+            port: &port 8096
     route:
       app:
         hostnames: ["jf.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: external
-            namespace: kube-system
+          - name: envoy-external
+            namespace: network
             sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
     persistence:
       config:
         enabled: true
