@@ -31,7 +31,6 @@ spec:
         port: 22
         annotations:
           io.cilium/lb-ipam-ips: ${FORGEJO_ADDRESS}
-          external-dns.alpha.kubernetes.io/hostname: &sshDomain "ssh.git.${SECRET_DOMAIN}"
     ingress:
       enabled: false
     persistence:
@@ -57,8 +56,9 @@ spec:
         server:
           ROOT_URL: https://git.${SECRET_DOMAIN}
           SSH_PORT: 22
+          DOMAIN: git.${SECRET_DOMAIN}
+          SSH_DOMAIN: git.${SECRET_DOMAIN}
           SSH_LISTEN_PORT: 22
-          SSH_DOMAIN: *sshDomain
           OFFLINE_MODE: true
         security:
           existingSecret: *secret
@@ -85,7 +85,7 @@ spec:
           ENABLED: true
           FROM: "Forgejo <cluster@${SECRET_DOMAIN}>"
         migrations:
-          ALLOWED_DOMAINS: "*.${SECRET_DOMAIN}"
+          ALLOWED_DOMAINS: "*"
         queue:
           TYPE: redis
           CONN_STR: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
@@ -95,7 +95,7 @@ spec:
         storage:
           STORAGE_TYPE: minio
           MINIO_USE_SSL: false
-          MINIO_ENDPOINT: 10.0.2.3:9000
+          MINIO_ENDPOINT: minio.default.svc:9000
           MINIO_BUCKET: forgejo
           MINIO_LOCATION: us-east-1
           MINIO_INSECURE_SKIP_VERIFY: false

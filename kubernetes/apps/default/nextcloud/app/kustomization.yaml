@@ -3,7 +3,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./nfs-pvc.yaml
+  - ./config-pvc.yaml
+  - ./media-pvc.yaml
   - ./es.yaml
   - ./hr.yaml
   - ./httproute.yaml

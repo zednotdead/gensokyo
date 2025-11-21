@@ -38,7 +38,7 @@ spec:
           migrations:
             image:
               repository: vabene1111/recipes
-              tag: 2.2.7@sha256:bbafaa18a39292e3e2cf032e090d17d0fcc1deb71a2b98425fec99cb05e8532d
+              tag: 2.3.5@sha256:0f8d061895e9ba57a6d048d295af9d2fac1aa442a8d053d3d7f68ad78c4d1c17
             envFrom: *envFrom
             command:
             - sh
@@ -53,7 +53,7 @@ spec:
           app:
             image:
               repository: vabene1111/recipes
-              tag: 2.2.7@sha256:bbafaa18a39292e3e2cf032e090d17d0fcc1deb71a2b98425fec99cb05e8532d
+              tag: 2.3.5@sha256:0f8d061895e9ba57a6d048d295af9d2fac1aa442a8d053d3d7f68ad78c4d1c17
             envFrom: *envFrom
             env:
               DEBUG: "0"

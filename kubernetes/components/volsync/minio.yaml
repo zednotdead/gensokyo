@@ -15,11 +15,11 @@ spec:
       data:
         RESTIC_REPOSITORY: "{{ .RESTIC_REPOSITORY_TEMPLATE }}/${APP}"
         RESTIC_PASSWORD: "{{ .RESTIC_password }}"
-        AWS_ACCESS_KEY_ID: "{{ .ACCESS_KEY }}"
-        AWS_SECRET_ACCESS_KEY: "{{ .SECRET_KEY }}"
+        AWS_ACCESS_KEY_ID: "{{ .accessKey }}"
+        AWS_SECRET_ACCESS_KEY: "{{ .secretKey }}"
   dataFrom:
     - extract:
-        key: S3
+        key: Minio
     - extract:
         key: Restic
       rewrite:
