@@ -17,8 +17,8 @@ spec:
       data:
         username: "{{ .CNPG_username }}"
         password: "{{ .CNPG_password }}"
-        aws-access-key-id: "{{ .ACCESS_KEY }}"
-        aws-secret-access-key: "{{ .SECRET_KEY }}"
+        aws-access-key-id: "{{ .accessKey }}"
+        aws-secret-access-key: "{{ .secretKey }}"
         ca.crt: '{{ index . "ca.crt" }}'
   dataFrom:
     - extract:
@@ -28,6 +28,6 @@ spec:
             source: "(.*)"
             target: "CNPG_$1"
     - extract:
-        key: S3
+        key: Minio
     - extract:
         key: TrueNAS CA
