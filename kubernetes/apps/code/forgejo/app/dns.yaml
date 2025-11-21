@@ -6,6 +6,6 @@ metadata:
   name: forgejo-ssh
 spec:
   endpoints:
-    - dnsName: "ssh.git.${SECRET_DOMAIN}"
+    - dnsName: "git.${SECRET_DOMAIN}"
       recordType: CNAME
       targets: ["external.${SECRET_DOMAIN}"]
