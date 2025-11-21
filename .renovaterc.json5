@@ -91,16 +91,22 @@
     {
       matchUpdateTypes: ["minor"],
       semanticCommitType: "feat",
+      automerge: true,
+      automergeType: "branch",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
     {
       matchUpdateTypes: ["patch"],
       semanticCommitType: "fix",
+      automerge: true,
+      automergeType: "branch",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
     {
       matchUpdateTypes: ["digest"],
       semanticCommitType: "chore",
+      automerge: true,
+      automergeType: "branch",
       commitMessageExtra: "( {{currentDigestShort}} → {{newDigestShort}} )",
     },
     {
