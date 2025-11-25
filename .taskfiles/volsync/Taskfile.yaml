@@ -48,7 +48,7 @@ tasks:
         vars:
           ns: '{{ splitList " " .selected | first }}'
           app: '{{ splitList " " .selected | last }}'
-          cluster: '{{ or .cluster "admin@gensokyo" }}'
+          cluster: '{{ or .cluster "admin@kubernetes" }}'
     vars:
       selected:
         sh: bash {{.VOLSYNC_SCRIPTS_DIR}}/browse-backups.sh
@@ -150,7 +150,7 @@ tasks:
       ns: '{{.ns | default "default"}}'
       previous: '{{.previous | default 2}}'
       controller:
-        sh: "{{.VOLSYNC_SCRIPTS_DIR}}/which-controller.sh {{.app}} {{.ns}}"
+        sh: "{{.VOLSYNC_SCRIPTS_DIR}}/which-controller.sh {{.app}} {{.ns}} {{.cluster}}"
       claim:
         sh: kubectl --context {{.cluster}} -n {{.ns}} get replicationsources/{{.app}} -o jsonpath="{.spec.sourcePVC}"
       puid:

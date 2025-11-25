@@ -4,8 +4,6 @@ metadata:
   name: backup-now
   namespace: database
 spec:
+  method: barmanObjectStore
   cluster:
     name: postgres16
-  method: plugin
-  pluginConfiguration:
-    name: barman-cloud.cloudnative-pg.io

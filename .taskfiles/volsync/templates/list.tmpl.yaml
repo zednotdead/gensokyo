@@ -14,18 +14,8 @@ spec:
       containers:
         - name: main
           image: docker.io/restic/restic:0.16.4
-          args: ["snapshots", "--cacert", "/cert/ca.crt"]
+          args: ["snapshots", "--insecure-tls"]
           envFrom:
             - secretRef:
                 name: ${app}-volsync-secret
           resources: {}
-          volumeMounts:
-            - mountPath: /cert
-              name: certificate
-      volumes:
-        - name: certificate
-          secret:
-            secretName: ${app}-volsync-secret
-            items:
-              - key: ca.crt
-                path: ca.crt
