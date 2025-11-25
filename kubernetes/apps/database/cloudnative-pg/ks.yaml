@@ -50,11 +50,6 @@ spec:
         kind: Secret
       - name: cluster-settings
         kind: ConfigMap
-  healthCheckExprs:
-    - apiVersion: &postgresVersion postgresql.cnpg.io/v1
-      kind: &postgresKind Cluster
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   prune: true
