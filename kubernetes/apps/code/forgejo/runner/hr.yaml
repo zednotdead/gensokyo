@@ -47,7 +47,7 @@ spec:
                     name: forgejo-runner-secret
                     key: RUNNER_TOKEN
               - name: FORGEJO_INSTANCE_URL
-                value: https://git.zed.gay
+                value: https://git.${SECRET_DOMAIN}
         containers:
           daemon:
             image:
