@@ -91,7 +91,7 @@
     {
       matchUpdateTypes: ["minor"],
       semanticCommitType: "feat",
-      automerge: true,
+      automerge: false,
       automergeType: "branch",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
