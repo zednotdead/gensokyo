@@ -19,4 +19,4 @@ resources:
   - ./nextcloud/ks.yaml
   - ./memos/ks.yaml
   - ./minio/ks.yaml
-  - ./stalwart/ks.yaml
+  # - ./stalwart/ks.yaml
