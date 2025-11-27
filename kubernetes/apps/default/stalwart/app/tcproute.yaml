@@ -35,7 +35,7 @@ spec:
   parentRefs:
     - name: envoy-external
       namespace: network
-      sectionName: smtps
+      sectionName: imaps
   rules:
     - backendRefs:
         - name: stalwart

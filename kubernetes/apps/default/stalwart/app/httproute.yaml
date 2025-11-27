@@ -13,7 +13,9 @@ spec:
       sectionName: https
   hostnames:
     - mail.${SECRET_DOMAIN}
-    - mx.${SECRET_DOMAIN}
+    - mta-sts.${SECRET_DOMAIN}
+    - autodiscover.${SECRET_DOMAIN}
+    - autoconfig.${SECRET_DOMAIN}
   rules:
     - backendRefs:
         - name: stalwart

@@ -92,6 +92,43 @@ fields.email = "email"
 fields.username = "preferred_username"
 fields.full-name = "name"
 
+[directory."ldap"]
+type = "ldap"
+base-dn = "dc=zed,dc=gay"
+url = "ldap://lldap.security.svc.cluster.local:3890"
+timeout = "30s"
+tls.enable = false
+tls.allow-invalid-certs = false
+
+[directory."ldap".bind]
+dn = "uid=%{env:LDAP_USER}%,ou=people,dc=zed,dc=gay"
+secret = "%{env:LDAP_PASSWORD}%"
+
+[directory."ldap".bind.auth]
+method = "lookup"
+
+[directory."ldap".bind.filter]
+email = "(&(|(objectClass=person)(memberOf=cn=mail,ou=groups,dc=zed,dc=gay))(mail=?))"
+name = "(&(|(objectClass=person)(memberOf=cn=mail,ou=groups,dc=zed,dc=gay))(uid=?))"
+
+[directory."ldap".attributes]
+class = "objectClass"
+email = "mail"
+groups = "memberOf"
+name = "uid"
+secret = "dummyStalwartSecret"
+secret-changed = "creationdate"
+
+[directory."ldap".attributes.description]
+0 = "displayName"
+
+[directory."ldap".cache]
+entries = 500
+
+[directory."ldap".filter]
+email = "(&(objectClass=person)(mail=?))"
+name = "(&(objectClass=person)(uid=?))"
+
 [tracer.log]
 type = "log"
 level = "debug"
@@ -103,7 +140,7 @@ enable = true
 
 [tracer.console]
 type = "console"
-level = "trace"
+level = "debug"
 ansi = true
 enable = true
 
@@ -113,5 +150,5 @@ cert = "%{file:/etc/stalwart/live/${SECRET_DOMAIN}/tls.crt}%"
 private-key = "%{file:/etc/stalwart/live/${SECRET_DOMAIN}/tls.key}%"
 
 [authentication.fallback-admin]
-user = "admin"
+user = "superuser"
 secret = "%{env:ADMIN_SECRET}%"
