@@ -39,9 +39,8 @@ spec:
       - --pihole-api-version=6
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
-      - --gateway-name=envoy-internal
     triggerLoopOnEvent: true
-    sources: ["crd", "gateway-httproute", "ingress", "service"]
+    sources: ["crd", "gateway-httproute"]
     registry: noop
     domainFilters: ["${SECRET_DOMAIN}"]
     serviceMonitor:

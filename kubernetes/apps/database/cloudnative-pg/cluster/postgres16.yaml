@@ -61,9 +61,9 @@ spec:
           name: cloudnative-pg
           key: MINIO_SECRET_KEY
 
-  bootstrap:
-    recovery:
-      source: source
+  # bootstrap:
+  #   recovery:
+  #     source: source
 
   externalClusters:
     # Represents the backups stored in minio which can be restored from.

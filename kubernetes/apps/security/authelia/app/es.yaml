@@ -54,6 +54,8 @@ spec:
         JELLYFIN_CLIENT_SECRET_DIGEST: "{{ .JELLYFIN_CLIENT_SECRET_DIGEST }}"
         MINIO_CLIENT_ID: "{{ .MINIO_CLIENT_ID }}"
         MINIO_CLIENT_SECRET_DIGEST: "{{ .MINIO_CLIENT_SECRET_DIGEST }}"
+        STALWART_CLIENT_ID: "{{ .STALWART_CLIENT_ID }}"
+        STALWART_CLIENT_SECRET_DIGEST: "{{ .STALWART_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -170,3 +172,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "MINIO_$1"
+    - extract:
+        key: Stalwart
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "STALWART_$1"

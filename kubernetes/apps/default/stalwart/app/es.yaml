@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: stalwart
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: stalwart-secret
+    template:
+      data:
+        ADMIN_SECRET: "{{ .STALWART_ADMIN_SECRET }}"
+        POSTGRES_DBNAME: &dbname stalwart
+        POSTGRES_HOST: &host postgres16-rw.database.svc
+        POSTGRES_USER: &user "{{ .STALWART_DATABASE_USER }}"
+        POSTGRES_PASS: &pass "{{ .STALWART_DATABASE_PASSWORD }}"
+        INIT_POSTGRES_DBNAME: *dbname
+        INIT_POSTGRES_HOST: *host
+        INIT_POSTGRES_USER: *user
+        INIT_POSTGRES_PASS: *pass
+        INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
+        MINIO_ACCESS_KEY: "{{ .accessKey }}"
+        MINIO_SECRET_KEY: "{{ .secretKey }}"
+        LDAP_USER: "{{ .STALWART_LDAP_USER }}"
+        LDAP_PASSWORD: "{{ .STALWART_LDAP_PASSWORD }}"
+  dataFrom:
+    - extract:
+        key: Stalwart
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "STALWART_$1"
+    - extract:
+        key: Minio
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
