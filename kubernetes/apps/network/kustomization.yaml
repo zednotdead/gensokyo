@@ -6,7 +6,8 @@ namespace: network
 components:
   - ../../components/common
 resources:
-  - ./pihole-dns/ks.yaml
+  # - ./pihole-dns/ks.yaml
+  - ./adguard-dns/ks.yaml
   - ./cloudflare-dns/ks.yaml
   - ./cloudflare-tunnel/ks.yaml
   - ./envoy-gateway/ks.yaml
