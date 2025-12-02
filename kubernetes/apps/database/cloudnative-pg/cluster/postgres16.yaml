@@ -7,13 +7,13 @@ metadata:
     kyverno.io/ignore: "true"
 spec:
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.6-0.5.3
-  instances: 2
+  instances: 3
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 30Gi
+    size: 35Gi
     storageClass: ceph-block
   superuserSecret:
-    name: cloudnative-pg-secret
+    name: &secret cloudnative-pg-secret
   enableSuperuserAccess: true
   postgresql:
     shared_preload_libraries:
@@ -52,18 +52,18 @@ spec:
         maxParallel: 4
       destinationPath: s3://cnpg/
       endpointURL: http://minio.default.svc:9000
-      serverName: postgres16-v4
-      s3Credentials:
+      serverName: postgres16-v5
+      s3Credentials: &s3
         accessKeyId:
-          name: cloudnative-pg
-          key: MINIO_ACCESS_KEY
+          name: *secret
+          key: aws-access-key-id
         secretAccessKey:
-          name: cloudnative-pg
-          key: MINIO_SECRET_KEY
+          name: *secret
+          key: aws-secret-access-key
 
-  # bootstrap:
-  #   recovery:
-  #     source: source
+  bootstrap:
+    recovery:
+      source: source
 
   externalClusters:
     # Represents the backups stored in minio which can be restored from.
@@ -75,10 +75,4 @@ spec:
         destinationPath: s3://cnpg/
         endpointURL: http://minio.default.svc:9000
         serverName: postgres16-v4
-        s3Credentials:
-          accessKeyId:
-            name: cloudnative-pg
-            key: aws-access-key-id
-          secretAccessKey:
-            name: cloudnative-pg
-            key: aws-secret-access-key
+        s3Credentials: *s3
