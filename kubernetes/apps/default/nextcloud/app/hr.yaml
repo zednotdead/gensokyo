@@ -50,17 +50,10 @@ spec:
       existingSecret:
         enabled: true
         secretName: nextcloud-secret
+        smtpUsernameKey: smtp-username
+        smtpPasswordKey: smtp-password
+        smtpHostKey: smtp-host
       host: &host cloud.${SECRET_DOMAIN}
-      mail:
-        enabled: true
-        fromAddress: cluster
-        domain: ${SECRET_DOMAIN}
-        smtp:
-          host: smtp.${SECRET_DOMAIN}
-          port: 25
-          authtype: NONE
-          name: ""
-          password: ""
       defaultConfigs:
         imaginary.config.php: true
       configs:

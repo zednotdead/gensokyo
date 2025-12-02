@@ -17,7 +17,7 @@ spec:
         nextcloud-password: "{{ .password }}"
         smtp-username: "{{ .SMTP_username }}"
         smtp-password: "{{ .SMTP_password }}"
-        smtp-host: "{{ .SMTP_HOST }}:{{.SMTP_PORT}}"
+        smtp-host: "{{ .SMTP_HOST }}"
         # Postgres Init
         INIT_POSTGRES_DBNAME: nextcloud
         INIT_POSTGRES_HOST: postgres16-rw.database.svc
