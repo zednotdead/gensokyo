@@ -319,6 +319,28 @@ identity_providers:
         access_token_signed_response_alg: 'none'
         userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
+      - client_id: '{{ env "IMMICH_CLIENT_ID" }}'
+        client_name: 'immich'
+        client_secret: '{{ env "IMMICH_CLIENT_SECRET_DIGEST" }}'
+        public: false
+        authorization_policy: 'two_factor'
+        require_pkce: false
+        pkce_challenge_method: ''
+        redirect_uris:
+          - 'https://img.zed.gay/auth/login'
+          - 'https://img.zed.gay/user-settings'
+          - 'app.immich:///oauth-callback'
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'email'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
 session:
   same_site: lax
   inactivity: 5m

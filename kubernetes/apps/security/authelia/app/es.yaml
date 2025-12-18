@@ -56,6 +56,8 @@ spec:
         MINIO_CLIENT_SECRET_DIGEST: "{{ .MINIO_CLIENT_SECRET_DIGEST }}"
         STALWART_CLIENT_ID: "{{ .STALWART_CLIENT_ID }}"
         STALWART_CLIENT_SECRET_DIGEST: "{{ .STALWART_CLIENT_SECRET_DIGEST }}"
+        IMMICH_CLIENT_ID: "{{ .IMMICH_CLIENT_ID }}"
+        IMMICH_CLIENT_SECRET_DIGEST: "{{ .IMMICH_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -178,3 +180,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "STALWART_$1"
+    - extract:
+        key: Immich
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "IMMICH_$1"
