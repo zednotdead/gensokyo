@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: smtp-relay
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: smtp-relay-secret
+    template:
+      metadata:
+        labels:
+          cnpg.io/reload: "true"
+      data:
+        SMTP_HOST: "{{ .SMTP_HOST }}"
+        SMTP_PORT: "{{ .SMTP_PORT }}"
+        SMTP_USER: "{{ .SMTP_username }}"
+        SMTP_PASSWORD: "{{ .SMTP_password }}"
+  dataFrom:
+    - extract:
+        key: SMTP
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "SMTP_$1"
