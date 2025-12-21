@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app vikunja
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      vikunja:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &envFrom
+              - secretRef:
+                  name: vikunja-secret
+        containers:
+          main:
+            image:
+              repository: mirror.gcr.io/vikunja/vikunja
+              # renovate: datasource=docker depName=docker.io/vikunja/vikunja
+              tag: 0.24.6@sha256:ed1f3ed467fecec0b57e9de7bc6607f8bbcbb23ffced6a81f5dfefc794cdbe3b
+            env:
+              # Proper shell path for cli
+              PATH: /app/vikunja:$${PATH}
+              VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${SECRET_DOMAIN}
+              VIKUNJA_SERVICE_TIMEZONE: "${TIMEZONE}"
+              POSTGRES_ENABLED: "true"
+              VIKUNJA_MAILER_ENABLED: true
+              VIKUNJA_METRICS_ENABLED: true
+              VIKUNJA_DEFAULTSETTINGS_DISCOVERABLE_BY_NAME: true
+              VIKUNJA_DEFAULTSETTINGS_EMAIL_REMINDERS_ENABLED: true
+              discoverable_by_email: true
+              overdue_tasks_reminders_time: '11:00'
+              VIKUNJA_DEFAULTSETTINGS_WEEK_START: 1
+
+              # Redis
+              VIKUNJA_REDIS_ENABLED: true
+              VIKUNJA_REDIS_HOST: dragonfly.database.svc.cluster.local:6379
+              VIKUNJA_REDIS_DB: 7
+              VIKUNJA_KEYVALUE_TYPE: redis
+
+              # SMTP
+              VIKUNJA_MAILER_HOST: smtp.${SECRET_DOMAIN}
+              VIKUNJA_MAILER_PORT: 25
+              VIKUNJA_MAILER_FROMEMAIL: Vikunja <noreply@${SECRET_DOMAIN}>
+
+              # postgres
+              VIKUNJA_DATABASE_TYPE: postgres
+            envFrom:
+              - secretRef:
+                  name: vikunja-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 3456
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 100m
+                memory: 20Mi
+              limits:
+                memory: 150Mi
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: ${NAS_UID}
+            runAsGroup: ${NAS_GID}
+            fsGroup: ${NAS_GID}
+            fsGroupChangePolicy: Always
+            seccompProfile: {type: RuntimeDefault}
+    service:
+      main:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+    persistence:
+      files:
+        existingClaim: *app
+        globalMounts:
+          - path: /app/vikunja/files
+      config:
+        type: secret
+        name: vikunja-secret
+        globalMounts:
+          - path: /etc/vikunja/config.yml
+            subPath: config.yml
+            readOnly: true
