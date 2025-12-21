@@ -58,6 +58,8 @@ spec:
         STALWART_CLIENT_SECRET_DIGEST: "{{ .STALWART_CLIENT_SECRET_DIGEST }}"
         IMMICH_CLIENT_ID: "{{ .IMMICH_CLIENT_ID }}"
         IMMICH_CLIENT_SECRET_DIGEST: "{{ .IMMICH_CLIENT_SECRET_DIGEST }}"
+        VIKUNJA_CLIENT_ID: "{{ .VIKUNJA_CLIENT_ID }}"
+        VIKUNJA_CLIENT_SECRET_DIGEST: "{{ .VIKUNJA_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -186,3 +188,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "IMMICH_$1"
+    - extract:
+        key: Vikunja
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "VIKUNJA_$1"

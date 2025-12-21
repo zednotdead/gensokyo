@@ -1,0 +1,47 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: vikunja
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: vikunja-secret
+    creationPolicy: Owner
+    template:
+      data:
+        VIKUNJA_SERVICE_JWT_SECRET: "{{ .SECRET_KEY }}"
+        VIKUNJA_DATABASE_HOST: &dbHost postgres16-rw.database.svc
+        VIKUNJA_DATABASE_DATABASE: &dbName vikunja
+        VIKUNJA_DATABASE_USER: &dbUser "{{ .DATABASE_USER }}"
+        VIKUNJA_DATABASE_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
+        INIT_POSTGRES_DBNAME: *dbName
+        INIT_POSTGRES_HOST: *dbHost
+        INIT_POSTGRES_USER: *dbUser
+        INIT_POSTGRES_PASS: *dbPass
+        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
+
+        config.yml: |
+          auth:
+            local:
+              enabled: true
+            openid:
+              enabled: true
+              redirecturl: https://vikunja.${CLUSTER_DOMAIN}/auth/openid
+              providers:
+                - name: Authelia
+                  authurl: https://auth.${CLUSTER_DOMAIN}
+                  clientid: {{ .CLIENT_ID }}
+                  clientsecret: {{ .CLIENT_SECRET }}
+                  scope: openid profile email
+  dataFrom:
+    - extract:
+        key: Vikunja
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
