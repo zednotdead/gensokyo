@@ -26,13 +26,13 @@ spec:
         config.yml: |
           auth:
             local:
-              enabled: true
+              enabled: false
             openid:
               enabled: true
-              redirecturl: https://vikunja.${CLUSTER_DOMAIN}/auth/openid
+              redirecturl: https://vikunja.${SECRET_DOMAIN}/auth/openid
               providers:
                 - name: Authelia
-                  authurl: https://auth.${CLUSTER_DOMAIN}
+                  authurl: https://auth.${SECRET_DOMAIN}
                   clientid: {{ .CLIENT_ID }}
                   clientsecret: {{ .CLIENT_SECRET }}
                   scope: openid profile email

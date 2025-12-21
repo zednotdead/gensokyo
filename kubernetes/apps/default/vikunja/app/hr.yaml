@@ -49,7 +49,7 @@ spec:
               VIKUNJA_KEYVALUE_TYPE: redis
 
               # SMTP
-              VIKUNJA_MAILER_HOST: smtp.${SECRET_DOMAIN}
+              VIKUNJA_MAILER_HOST: smtp-relay.default.svc
               VIKUNJA_MAILER_PORT: 25
               VIKUNJA_MAILER_FROMEMAIL: Vikunja <noreply@${SECRET_DOMAIN}>
 
