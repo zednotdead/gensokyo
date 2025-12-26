@@ -31,7 +31,7 @@ spec:
           onlyoffice:
             image:
               repository: docker.io/onlyoffice/documentserver
-              tag: 9.0.4
+              tag: 9.2.1
             env:
               WOPI_ENABLED: true
               USE_UNAUTHORIZED_STORAGE: true
