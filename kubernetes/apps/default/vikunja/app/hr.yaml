@@ -31,6 +31,7 @@ spec:
             env:
               # Proper shell path for cli
               PATH: /app/vikunja:$${PATH}
+              VIKUNJA_API_URL: https://vikunja.${SECRET_DOMAIN}
               VIKUNJA_SERVICE_PUBLICURL: https://vikunja.${SECRET_DOMAIN}
               VIKUNJA_SERVICE_TIMEZONE: "${TIMEZONE}"
               POSTGRES_ENABLED: "true"
