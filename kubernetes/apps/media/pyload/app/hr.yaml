@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/pyload-ng
-              tag: 0.5.0@sha256:6d36fd443211a90f0d36384d43d1dae022fa80d72492c9d41a05ff35afbd1ab9
+              tag: 0.5.0@sha256:d7f4abdcda9d705d588e3edd32f5159b76552ba6b2b65a79f60f76c19dbce76f
             env:
               PUID: &uid "${NAS_UID}"
               PGID: &gid "${NAS_GID}"
