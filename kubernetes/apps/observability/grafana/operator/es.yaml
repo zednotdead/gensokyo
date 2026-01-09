@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: grafana-admin-password
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  refreshInterval: 15m
+  target:
+    name: grafana-admin-password-secret
+    template:
+      data:
+        GF_SECURITY_ADMIN_PASSWORD: "{{ .password }}"
+  dataFrom:
+    - extract:
+        key: Grafana
