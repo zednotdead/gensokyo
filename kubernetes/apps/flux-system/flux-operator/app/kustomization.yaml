@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./grafanadashboard.yaml
+  - ./podmonitor.yaml
 configMapGenerator:
   - name: flux-operator-values
     files:
