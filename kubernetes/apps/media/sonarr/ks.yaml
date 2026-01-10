@@ -33,6 +33,8 @@ spec:
       namespace: volsync-system
     - name: cloudnative-pg-cluster
       namespace: database
+  components:
+    - ../../../../components/volsync-component/
   sourceRef:
     kind: GitRepository
     name: flux-system
