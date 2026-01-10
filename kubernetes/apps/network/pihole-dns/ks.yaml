@@ -14,7 +14,7 @@ spec:
     secretRef:
       name: sops-age
   interval: 1h
-  path: ./kubernetes/apps/network/pihole-dns
+  path: ./kubernetes/apps/network/pihole-dns/app
   postBuild:
     substituteFrom:
       - name: cluster-secrets
