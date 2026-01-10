@@ -19,7 +19,6 @@ resources:
   - ./unpackerr/ks.yaml
   - ./immich/ks.yaml
   - ./autobrr/ks.yaml
-  - ./piped/ks.yaml
   - ./komga/ks.yaml
   - ./komf/ks.yaml
   - ./qui/ks.yaml
