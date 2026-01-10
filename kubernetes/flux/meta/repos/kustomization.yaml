@@ -13,3 +13,4 @@ resources:
   - ./intel.yaml
   - ./grafana.yaml
   - ./nextcloud.yaml
+  - ./tailscale.yaml
