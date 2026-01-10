@@ -32,6 +32,8 @@ metadata:
   name: &app forgejo
   namespace: &namespace code
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

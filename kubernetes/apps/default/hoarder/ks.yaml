@@ -6,6 +6,8 @@ metadata:
   name: &app hoarder
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -79,6 +81,8 @@ metadata:
   name: &app hoarder-meili
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

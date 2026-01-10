@@ -6,4 +6,3 @@ namespace: media
 resources:
   - ./hr.yaml
   - ./es.yaml
-  - ../../../../components/volsync/

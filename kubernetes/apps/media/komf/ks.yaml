@@ -6,6 +6,8 @@ metadata:
   name: &app komf
   namespace: &namespace media
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

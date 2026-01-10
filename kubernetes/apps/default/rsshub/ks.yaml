@@ -6,6 +6,8 @@ metadata:
   name: &app rsshub
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -50,6 +52,8 @@ metadata:
   name: &app rsshub-playwright
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

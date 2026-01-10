@@ -6,6 +6,8 @@ metadata:
   name: &app lldap
   namespace: &namespace security
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

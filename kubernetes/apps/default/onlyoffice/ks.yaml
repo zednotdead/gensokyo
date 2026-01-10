@@ -6,6 +6,8 @@ metadata:
   name: &app onlyoffice
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -52,6 +54,8 @@ metadata:
   name: &app onlyoffice-rabbitmq
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

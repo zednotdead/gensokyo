@@ -9,4 +9,3 @@ resources:
   - ./hr.yaml
   - ./httproute.yaml
   - ./oci.yaml
-  - ../../../../components/volsync

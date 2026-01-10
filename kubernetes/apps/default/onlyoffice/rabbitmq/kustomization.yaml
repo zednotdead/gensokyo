@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   # - ./es.yaml
   - ./hr.yaml
-  - ../../../../components/volsync/

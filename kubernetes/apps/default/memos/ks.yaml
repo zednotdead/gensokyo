@@ -6,6 +6,8 @@ metadata:
   name: &app memos
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

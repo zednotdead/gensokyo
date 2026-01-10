@@ -22,4 +22,3 @@ resources:
   - ./komga/ks.yaml
   - ./komf/ks.yaml
   - ./qui/ks.yaml
-  - ./pyload/ks.yaml
