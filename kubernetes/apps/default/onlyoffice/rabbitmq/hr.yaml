@@ -22,7 +22,7 @@ spec:
           rabbitmq:
             image:
               repository: rabbitmq
-              tag: 4.1.4
+              tag: 4.2.2
             probes:
               liveness:
                 enabled: true
