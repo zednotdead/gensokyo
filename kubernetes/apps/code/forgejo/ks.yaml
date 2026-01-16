@@ -80,6 +80,12 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - kind: ConfigMap
+        name: cluster-settings
   dependsOn:
     - name: forgejo
       namespace: *namespace
