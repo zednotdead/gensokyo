@@ -46,12 +46,6 @@ spec:
               SONARR__SERVER__PORT: &port 80
               SONARR__UPDATE__BRANCH: develop
             envFrom: *env
-            resources:
-              requests:
-                cpu: 10m
-                memory: 250Mi
-              limits:
-                memory: 1024Mi
     service:
       main:
         controller: sonarr
@@ -90,6 +84,3 @@ spec:
         path: "/mnt/core/media"
     podAnnotations:
       secret.reloader.stakater.com/reload: sonarr
-    resources:
-      limits:
-        memory: 500Mi
