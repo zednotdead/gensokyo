@@ -26,7 +26,7 @@ spec:
           runner-register:
             image:
               repository: code.forgejo.org/forgejo/runner
-              tag: 6.3.1
+              tag: 12.7.1
             command: ["sh", "-c"]
             args:
               - |
@@ -52,7 +52,7 @@ spec:
           daemon:
             image:
               repository: docker
-              tag: 28.2.2-dind
+              tag: 28.5.2-dind
             securityContext:
               privileged: true
             env:
@@ -61,7 +61,7 @@ spec:
           app:
             image:
               repository: code.forgejo.org/forgejo/runner
-              tag: 6.3.1
+              tag: 12.7.1
             command:
               [
                 "sh",
