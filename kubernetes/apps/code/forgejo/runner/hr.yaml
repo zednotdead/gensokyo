@@ -47,7 +47,7 @@ spec:
                     name: forgejo-runner-secret
                     key: RUNNER_TOKEN
               - name: FORGEJO_INSTANCE_URL
-                value: https://git.${SECRET_DOMAIN}
+                value: http://forgejo-http.code.svc.cluster.local:3000
         containers:
           daemon:
             image:
