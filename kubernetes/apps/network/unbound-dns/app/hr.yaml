@@ -32,7 +32,7 @@ spec:
           tag: v0.1.3@sha256:4bc8a0e0647b087f111795f714de1d292ee0dd5180fbddb40b80c56c671657be
         env:
           - name: UNBOUND_HOST
-            value: 10.0.0.1:5335
+            value: tcp://10.0.0.1:5335
           - name: UNBOUND_CA_PEM_PATH
             value: /usr/local/etc/unbound/ca.pem
           - name: UNBOUND_CERT_PEM_PATH
