@@ -42,7 +42,7 @@ spec:
           k8s-extension:
             image:
               repository: ghcr.io/lukasdietrich/glance-k8s/glance-k8s
-              tag: v0.4.0@sha256:8754b03b380cc9de59be4b144ab7adfaa0d07920048b59d08040968c28b25f09
+              tag: v0.4.6@sha256:c16d28a04d688429d41bf4d4dd01c2c725c5639db74c499596a03713c4e3894a
             env:
               TZ: ${TIMEZONE}
             securityContext:
