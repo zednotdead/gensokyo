@@ -52,6 +52,8 @@ spec:
               OAUTH2_PROVIDER: 'oidc'
               OAUTH2_REDIRECT_URL: 'https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback'
               OAUTH2_USER_CREATION: '1'
+              FETCHER_ALLOW_PRIVATE_NETWORKS: '1'
+              INTEGRATION_ALLOW_PRIVATE_NETWORKS: '1'
             envFrom: *env
             probes:
               liveness: &probes
