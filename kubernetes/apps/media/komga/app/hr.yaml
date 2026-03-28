@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: gotson/komga
-              tag: 1.23.5@sha256:85f0be8920742341217f2b2bdafef64da1f6062ae472dcf74426a9fa549c8a05
+              tag: 1.24.3@sha256:517033528928003d730e6d3ae99c74470e23938e3f3954924a60dd069bd28c5a
             env:
               TZ: "${TIMEZONE}"
               KOMGA_OAUTH2_ACCOUNT_CREATION: "true"
