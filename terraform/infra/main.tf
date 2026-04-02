@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.97.1"
+      version = "0.100.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -19,21 +19,26 @@ locals {
 
 provider "proxmox" {
   endpoint = "https://10.0.1.1:8006/"
+  username = "root@pam"
+  password = "Listopad2001"
   insecure = true
 
   ssh {
-    agent       = false
+    agent       = true
     username    = "root"
     private_key = file(local.ssh_path)
   }
 }
 
 locals {
-  config = yamldecode(file("../../nodes.yaml"))
-  hosts  = local.config.nodes
+  hosts = [
+    { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 16 * 1024, gpu_address = "0000:00:02.0" },
+    { node_name = "reimu", vmid = 9002, mac_address = "02:f9:53:56:3e:a8", name = "talos-02", address = "10.0.10.2", memory = 16 * 1024, gpu_address = "0000:09:00.0" },
+    { node_name = "marisa", vmid = 9003, mac_address = "bc:24:11:52:a9:e5", name = "talos-03", address = "10.0.10.3", memory = 16 * 1024 },
+  ]
 }
 
-resource "proxmox_virtual_environment_file" "talos_iso" {
+resource "proxmox_download_file" "talos_iso" {
   for_each = {
     for index, node in local.hosts :
     node.name => node
@@ -41,10 +46,11 @@ resource "proxmox_virtual_environment_file" "talos_iso" {
   content_type = "iso"
   datastore_id = "local"
   node_name    = each.value.node_name
-  source_file {
-    path      = "./talos/nocloud-amd64.raw"
-    file_name = "nocloud-amd64.img"
-  }
+
+  url = "https://factory.talos.dev/image/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70/v1.12.6/nocloud-amd64.raw.xz"
+  decompression_algorithm = "zst"
+
+  file_name = "nocloud-amd64.img"
 }
 
 resource "proxmox_virtual_environment_vm" "talos_vm" {
@@ -87,7 +93,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
     file_format  = "raw"
     interface    = "scsi0"
     size         = 40
-    file_id      = resource.proxmox_virtual_environment_file.talos_iso[each.value.name].id
+    file_id      = resource.proxmox_download_file.talos_iso[each.value.name].id
     discard      = "on"
   }
 
@@ -106,7 +112,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   #
   network_device {
     bridge      = "vmbr0"
-    mac_address = upper(each.value.mac_addr)
+    mac_address = upper(each.value.mac_address)
   }
 
   dynamic "hostpci" {

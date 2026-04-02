@@ -24,7 +24,7 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/06e6f5ace9d08b7595be32a03d6d779b2149404e8a5d32011c0b02a1f36b0499
+    talosImageURL: factory.talos.dev/installer/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -43,7 +43,7 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/06e6f5ace9d08b7595be32a03d6d779b2149404e8a5d32011c0b02a1f36b0499
+    talosImageURL: factory.talos.dev/installer/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -62,7 +62,7 @@ nodes:
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/06e6f5ace9d08b7595be32a03d6d779b2149404e8a5d32011c0b02a1f36b0499
+    talosImageURL: factory.talos.dev/installer/fa23e89863f791904fa30b723a158fc75d9a1d5e778277f832977b5b6968080c
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -76,23 +76,6 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.0.255.254"
-  - hostname: "talos-04"
-    ipAddress: "10.0.10.4"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/06e6f5ace9d08b7595be32a03d6d779b2149404e8a5d32011c0b02a1f36b0499
-    controlPlane: false
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:64:45:2c"
-        dhcp: false
-        addresses:
-          - "10.0.10.4/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.0.0.1"
-        mtu: 1500
 
 # Global patches
 patches:
@@ -105,7 +88,5 @@ patches:
 # Controller patches
 controlPlane:
   patches:
-    - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
-    - "@./patches/controller/api.yaml"
 
