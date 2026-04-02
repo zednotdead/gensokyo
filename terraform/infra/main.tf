@@ -32,9 +32,9 @@ provider "proxmox" {
 
 locals {
   hosts = [
-    { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 16 * 1024, gpu_address = "0000:00:02.0" },
-    { node_name = "reimu", vmid = 9002, mac_address = "02:f9:53:56:3e:a8", name = "talos-02", address = "10.0.10.2", memory = 16 * 1024, gpu_address = "0000:09:00.0" },
-    { node_name = "marisa", vmid = 9003, mac_address = "bc:24:11:52:a9:e5", name = "talos-03", address = "10.0.10.3", memory = 16 * 1024 },
+    { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 24 * 1024, gpu_address = "0000:00:02.0" },
+    { node_name = "reimu", vmid = 9002, mac_address = "02:f9:53:56:3e:a8", name = "talos-02", address = "10.0.10.2", memory = 24 * 1024, gpu_address = "0000:09:00.0" },
+    { node_name = "marisa", vmid = 9003, mac_address = "bc:24:11:52:a9:e5", name = "talos-03", address = "10.0.10.3", memory = 24 * 1024 },
   ]
 }
 
@@ -48,6 +48,7 @@ resource "proxmox_download_file" "talos_iso" {
   node_name    = each.value.node_name
 
   url = "https://factory.talos.dev/image/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70/v1.12.6/nocloud-amd64.raw.xz"
+  overwrite = false
   decompression_algorithm = "zst"
 
   file_name = "nocloud-amd64.img"
