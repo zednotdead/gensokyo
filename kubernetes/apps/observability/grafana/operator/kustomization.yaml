@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./hr.yaml
   - ./es.yaml
-  - ./grafanadashboard.yaml
   - ./oci.yaml
