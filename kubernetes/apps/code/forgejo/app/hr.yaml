@@ -18,6 +18,9 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    podSecurityContext:
+      runAsUser: ${NAS_UID}
+      runAsGroup: ${NAS_GID}
     deployment:
       annotations:
         secret.reloader.stakater.com/reload: forgejo-secret
