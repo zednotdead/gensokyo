@@ -6,5 +6,5 @@ resources:
   - ./ocirepository.yaml
   - ./certificate.yaml
   - ./envoy.yaml
-  - ./observability.yaml
-  - ./grafanadashboard.yaml
+  # - ./observability.yaml
+  # - ./grafanadashboard.yaml

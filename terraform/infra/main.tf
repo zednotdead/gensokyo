@@ -86,14 +86,14 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
 
   cpu {
     type  = "host"
-    cores = 4
+    cores = each.value.node_name == "reimu" ? 8 : each.value.node_name == "marisa" ? 24 : 4
   }
 
   disk {
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : "local-lvm"
     file_format  = "raw"
     interface    = "scsi0"
-    size         = 40
+    size         = 60
     file_id      = resource.proxmox_download_file.talos_iso[each.value.name].id
     discard      = "on"
   }
@@ -101,7 +101,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = each.value.node_name == "reimu" ? 50 : 150
+    size         = each.value.node_name == "reimu" ? 100 : 150
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : each.value.node_name == "marisa" ? "bulk-data" : "local-lvm"
   }
   #

@@ -21,6 +21,9 @@ spec:
     deployment:
       annotations:
         secret.reloader.stakater.com/reload: forgejo-secret
+    containerSecurityContext:
+      runAsUser: 568
+      runAsGroup: 1000
     strategy:
       type: RollingUpdate
     service:
