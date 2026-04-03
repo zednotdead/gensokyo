@@ -12,8 +12,8 @@ spec:
     name: minio-secret
     template:
       data:
-        MINIO_ROOT_USER: "{{ .accessKey }}"
-        MINIO_ROOT_PASSWORD: "{{ .secretKey }}"
+        RUSTFS_ACCESS_KEY: "{{ .accessKey }}"
+        RUSTFS_SECRET_KEY: "{{ .secretKey }}"
         # MINIO_IDENTITY_OPENID_CONFIG_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
         # MINIO_IDENTITY_OPENID_CLIENT_ID: "{{ .CLIENT_ID }}"
         # MINIO_IDENTITY_OPENID_CLIENT_SECRET:  "{{ .CLIENT_SECRET }}"
