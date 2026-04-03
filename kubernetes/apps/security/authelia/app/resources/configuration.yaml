@@ -290,13 +290,14 @@ identity_providers:
         public: false
         authorization_policy: two_factor
         redirect_uris:
-          - https://minio.${SECRET_DOMAIN}/oauth_callback
+          - https://minio.${SECRET_DOMAIN}/rustfs/admin/v3/oidc/callback/Authelia
         scopes:
           - openid
           - profile
           - email
           - groups
         userinfo_signed_response_alg: none
+        token_endpoint_auth_method: 'client_secret_post'
       - client_id: '{{ env "STALWART_CLIENT_ID" }}'
         client_name: 'Stalwart'
         client_secret: '{{ env "STALWART_CLIENT_SECRET_DIGEST" }}'  # The digest of 'insecure_secret'.
