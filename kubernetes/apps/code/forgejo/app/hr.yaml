@@ -18,6 +18,19 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    image:
+      tag: "14.0.3"
+      rootless: true
+    podSecurityContext:
+      fsGroup: 1000
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        add: ["SYS_CHROOT"]
     deployment:
       annotations:
         secret.reloader.stakater.com/reload: forgejo-secret
