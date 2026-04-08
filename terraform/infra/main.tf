@@ -101,7 +101,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = each.value.node_name == "reimu" ? 100 : 150
+    size         = each.value.node_name == "reimu" ? 80 : 150
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : each.value.node_name == "marisa" ? "bulk-data" : "local-lvm"
   }
   #
