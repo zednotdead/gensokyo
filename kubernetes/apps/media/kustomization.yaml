@@ -13,7 +13,7 @@ resources:
   - ./prowlarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./slskd/ks.yaml
-  - ./lidarr/ks.yaml
+  # - ./lidarr/ks.yaml
   - ./radarr/ks.yaml
   - ./sonarr/ks.yaml
   - ./unpackerr/ks.yaml
@@ -23,3 +23,4 @@ resources:
   - ./komf/ks.yaml
   - ./qui/ks.yaml
   - ./seerr/ks.yaml
+  - ./soulsync/ks.yaml
