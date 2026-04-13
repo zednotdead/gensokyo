@@ -20,4 +20,4 @@ resources:
   - ./memos/ks.yaml
   - ./minio/ks.yaml
   - ./smtp-relay/ks.yaml
-  # - ./notesnook/ks.yaml
+  - ./notesnook/ks.yaml

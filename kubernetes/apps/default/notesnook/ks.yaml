@@ -6,8 +6,6 @@ metadata:
   name: &app notesnook
   namespace: &namespace default
 spec:
-  components:
-    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -36,7 +34,7 @@ spec:
       namespace: external-secrets
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: notesnook-ferretdb
+    - name: notesnook-mongo
       namespace: *namespace
   targetNamespace: *namespace
   timeout: 5m
@@ -46,9 +44,11 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app notesnook-ferretdb
+  name: &app notesnook-mongo
   namespace: &namespace default
 spec:
+  components:
+    - ../../../../components/volsync/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -57,7 +57,7 @@ spec:
     secretRef:
       name: sops-age
   interval: 1h
-  path: ./kubernetes/apps/default/notesnook/ferretdb
+  path: ./kubernetes/apps/default/notesnook/mongo
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -66,6 +66,7 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -77,8 +78,8 @@ spec:
       namespace: external-secrets
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: cloudnative-pg-cluster
-      namespace: database
+    - name: volsync
+      namespace: volsync-system
   targetNamespace: *namespace
   timeout: 5m
   wait: false
