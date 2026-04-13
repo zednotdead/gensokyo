@@ -1,0 +1,119 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app notesnook
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      sync:
+        containers:
+          app:
+            image:
+              repository: streetwriters/notesnook-sync
+            envFrom: &env
+              - configMapRef:
+                  name: notesnook
+              - secretRef:
+                  name: notesnook
+            env:
+              SELF_HOSTED: "1"
+              IDENTITY_SERVER_HOST: &identityHost notesnook-identity
+              IDENTITY_SERVER_PORT: &identityPort 8264
+              NOTESNOOK_SERVER_HOST: &serverHost notesnook-server
+              NOTESNOOK_SERVER_PORT: &serverPort 5264
+              SSE_SERVER_HOST: &sseHost notesnook-sse
+              SSE_SERVER_PORT: &ssePort 7264
+              S3_INTERNAL_SERVICE_URL: "http://minio:9000"
+              S3_INTERNAL_BUCKET_NAME: &bucket "notesnook"
+              S3_SERVICE_URL: https://s3.${SECRET_DOMAIN}
+              S3_REGION: "us-east-1"
+              S3_BUCKET_NAME: *bucket
+      identity-server:
+        containers:
+          app:
+            image:
+              repository: streetwriters/identity
+            envFrom: *env
+            env:
+              SELF_HOSTED: "1"
+              IDENTITY_SERVER_HOST: *identityHost
+              IDENTITY_SERVER_PORT: *identityPort
+              NOTESNOOK_SERVER_HOST: *serverHost
+              NOTESNOOK_SERVER_PORT: *serverPort
+              SSE_SERVER_HOST: *sseHost
+              SSE_SERVER_PORT: *ssePort
+      sse:
+        containers:
+          app:
+            image:
+              repository: streetwriters/sse
+            envFrom: *env
+            env:
+              SELF_HOSTED: "1"
+              IDENTITY_SERVER_HOST: *identityHost
+              IDENTITY_SERVER_PORT: *identityPort
+              NOTESNOOK_SERVER_HOST: *serverHost
+              NOTESNOOK_SERVER_PORT: *serverPort
+              SSE_SERVER_HOST: *sseHost
+              SSE_SERVER_PORT: *ssePort
+      monograph:
+        containers:
+          app:
+            image:
+              repository: streetwriters/monograph
+            envFrom: *env
+            env:
+              SELF_HOSTED: "1"
+              IDENTITY_SERVER_HOST: *identityHost
+              IDENTITY_SERVER_PORT: *identityPort
+              NOTESNOOK_SERVER_HOST: *serverHost
+              NOTESNOOK_SERVER_PORT: *serverPort
+              SSE_SERVER_HOST: *sseHost
+              SSE_SERVER_PORT: *ssePort
+              API_HOST: http://notesnook-server:5264
+              PUBLIC_URL: https://mono.${SECRET_DOMAIN}
+    service:
+      notesnook-identity:
+        controller: identity-server
+        ports:
+          http:
+            port: *identityPort
+      notesnook-sse:
+        controller: sse
+        ports:
+          http:
+            port: *ssePort
+      notesnook-monograph:
+        controller: monograph
+        ports:
+          http:
+            port: 6264
+      notesnook-sync:
+        controller: sync
+        ports:
+          http:
+            port: *serverPort
+    serviceMonitor:
+      app:
+        serviceName: ferretdb
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /debug/metrics
+            interval: 1m
+            scrapeTimeout: 10s

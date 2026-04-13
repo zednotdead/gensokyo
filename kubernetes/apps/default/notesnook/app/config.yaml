@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notesnook
+data:
+  INSTANCE_NAME: zed-gay-instance
+  NOTESNOOK_APP_PUBLIC_URL: https://nn.${SECRET_DOMAIN}
+  MONOGRAPH_PUBLIC_URL: https://mono.${SECRET_DOMAIN}
+  AUTH_SERVER_PUBLIC_URL: https://auth.nn.${SECRET_DOMAIN}
+  ATTACHMENTS_SERVER_PUBLIC_URL: https://s3.${SECRET_DOMAIN}

@@ -25,7 +25,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -35,11 +34,9 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: volsync
-      namespace: volsync-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: notesnook-cluster
+    - name: notesnook-ferretdb
       namespace: *namespace
   targetNamespace: *namespace
   timeout: 5m
