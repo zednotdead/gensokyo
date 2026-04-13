@@ -1,0 +1,71 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ferretdb
+  annotations:
+    kyverno.io/ignore: "true"
+spec:
+  imageName: ghcr.io/ferretdb/postgres-documentdb:17-0.102.0-ferretdb-2.1.0
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 5Gi
+    storageClass: ceph-block
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: &secret cloudnative-pg-secret
+  postgresql:
+    shared_preload_libraries:
+      - pg_cron
+      - pg_documentdb_core
+      - pg_documentdb
+    parameters:
+      cron.database_name: 'ferret'
+  nodeMaintenanceWindow:
+    inProgress: false
+    reusePVC: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 2Gi
+  monitoring:
+    enablePodMonitor: true
+    # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
+    podMonitorMetricRelabelings:
+      - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
+      - { regex: cluster, action: labeldrop }
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore:
+      wal:
+        compression: bzip2
+        maxParallel: 4
+      destinationPath: s3://cnpg/
+      endpointURL: http://minio.default.svc:9000
+      serverName: ferretdb-v1
+      s3Credentials: &s3
+        accessKeyId:
+          name: *secret
+          key: aws-access-key-id
+        secretAccessKey:
+          name: *secret
+          key: aws-secret-access-key
+
+  # bootstrap:
+  #   recovery:
+  #     source: source
+  #
+  # externalClusters:
+  #   # Represents the backups stored in minio which can be restored from.
+  #   - name: source
+  #     barmanObjectStore:
+  #       wal:
+  #         compression: bzip2
+  #         maxParallel: 4
+  #       destinationPath: s3://cnpg/
+  #       endpointURL: http://minio.default.svc:9000
+  #       serverName: ferretdb-v7
+  #       s3Credentials: *s3
