@@ -52,7 +52,7 @@ spec:
           main:
             image:
               repository: ghcr.io/recyclarr/recyclarr
-              tag: 8.3.2
+              tag: 8.6.0
             env:
               TZ: America/New_York
             envFrom:
