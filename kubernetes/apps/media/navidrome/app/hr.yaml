@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app navidrome
+  namespace: media
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      navidrome:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/navidrome/navidrome
+              tag: 0.61.2@sha256:9fa40b3d8dec43ceb2213d1fa551da3dcfef6ac6d19c2e534efb92527c2bafd2
+            env:
+              TZ: Europe/Warsaw
+              ND_AUTHREQUESTLIMIT: 0
+              ND_DATAFOLDER: /config
+              ND_ENABLEGRAVATAR: true
+              ND_ENABLESHARING: true
+              ND_LOGLEVEL: info
+              ND_MUSICFOLDER: /media/audio/music
+              ND_PORT: &port 8080
+              ND_PROMETHEUS_ENABLED: "true"
+              ND_REVERSEPROXYWHITELIST: 10.0.0.0/8
+              ND_SCANSCHEDULE: "@every 1h"
+              ND_PLUGINS_FOLDER: /config/plugins
+              ND_PLUGINS_ENABLED: "true"
+              ND_PLUGINS_AUTORELOAD: "true"
+              ND_AGENTS: audiomuseai,lastfm,spotify,deezer
+              ND_DEVARTISTINFOTIMETOLIVE: 1s
+    service:
+      main:
+        controller: navidrome
+        ports:
+          http:
+            port: *port
+    route:
+      main:
+        hostnames: ["music.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /config
+      plugins:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /config/plugins
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media/software/applications/navidrome"
+      media:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /media
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media"
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *app
