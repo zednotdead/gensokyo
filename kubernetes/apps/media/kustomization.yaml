@@ -24,3 +24,4 @@ resources:
   - ./qui/ks.yaml
   - ./seerr/ks.yaml
   - ./navidrome/ks.yaml
+  - ./audiomuse/ks.yaml
