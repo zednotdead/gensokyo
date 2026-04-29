@@ -39,9 +39,10 @@ spec:
               SERVICE_TYPE: "flask"
               TZ: ${TIMEZONE}
               REDIS_URL: &redis redis://dragonfly.database.svc:6379/9
-              TEMP_DIR: "/app/temp_audio"
+              TEMP_DIR: &tempdir "/app/temp_audio"
             envFrom: *env
       worker:
+        replicas: 3
         containers:
           main:
             image: *image
@@ -49,7 +50,7 @@ spec:
               SERVICE_TYPE: "worker"
               TZ: ${TIMEZONE}
               REDIS_URL: *redis
-              TEMP_DIR: "/app/temp_audio"
+              TEMP_DIR: *tempdir
             envFrom: *env
     service:
       main:
@@ -78,4 +79,14 @@ spec:
         supplementalGroups: [10000]
     podAnnotations:
       secret.reloader.stakater.com/reload: audiomuse
-
+    persistence:
+      tempaudio:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          audiomuse:
+            main:
+              - path: *tempdir
+          worker:
+            main:
+              - path: *tempdir
