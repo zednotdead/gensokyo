@@ -51,6 +51,7 @@ spec:
 
           metadataProviders:
             malClientId: "{{ .MAL_CLIENT_ID }}" # required for mal provider. See https://myanimelist.net/forum/?topicid=1973077
+            comicVineApiKey: "{{ .COMIC_VINE_API_KEY }}"
             defaultProviders:
               mangaUpdates:
                 priority: 10
@@ -64,30 +65,45 @@ spec:
                 mediaType: "MANGA" # filter used in matching. Can be NOVEL or MANGA. MANGA type includes everything except novels
               nautiljon:
                 priority: 30
-                enabled: false
+                enabled: true
               aniList:
                 priority: 40
-                enabled: false
+                enabled: true
                 mediaType: "MANGA" # filter used in matching. Can be NOVEL or MANGA. MANGA type includes everything except novels
                 tagsScoreThreshold: 60 # tags with this score or higher will be included
                 tagsSizeLimit: 15 # amount of tags that will be included
               yenPress:
                 priority: 50
-                enabled: false
+                enabled: true
                 mediaType: "MANGA" # filter used in matching. Can be NOVEL or MANGA.
               kodansha:
                 priority: 60
-                enabled: false
+                enabled: true
               viz:
                 priority: 70
-                enabled: false
+                enabled: true
               bookWalker:
                 priority: 80
-                enabled: false
+                enabled: true
                 mediaType: "MANGA" # filter used in matching. Can be NOVEL or MANGA.
               mangaDex:
                 priority: 90
                 enabled: false
+              comicVine: # https://comicvine.gamespot.com/ requires API key. Experimental provider, can mismatch issue numbers
+                priority: 110
+                enabled: true
+              hentag:
+                priority: 120
+                enabled: true
+              webtoons:
+                priority: 130
+                enabled: true
+              mangaBaka:
+                priority: 140
+                enabled: true
+                # Datasource used for metadata retrieval. DATABASE mode will only work if MangaBaka database is installed
+                # API or DATABASE
+                mode: API
   dataFrom:
     - extract:
         key: Komf
