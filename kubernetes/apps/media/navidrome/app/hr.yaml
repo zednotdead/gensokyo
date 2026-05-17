@@ -45,6 +45,7 @@ spec:
               ND_PLUGINS_AUTORELOAD: "true"
               ND_AGENTS: audiomuseai,lastfm,spotify,deezer
               ND_DEVARTISTINFOTIMETOLIVE: 1s
+              ND_LYRICSPRIORITY: ".lrc,nd-lyrics,.txt,embedded"
     service:
       main:
         controller: navidrome
