@@ -43,6 +43,7 @@ spec:
             envFrom: *env
       worker:
         replicas: 3
+        type: statefulset
         containers:
           main:
             image: *image
