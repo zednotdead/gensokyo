@@ -19,7 +19,7 @@ spec:
     keepHistory: false
   values:
     image:
-      tag: "14.0.3"
+      tag: "15.0.2"
       rootless: true
     podSecurityContext:
       fsGroup: 1000
