@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/authelia/refs/heads/master/docs/static/schemas/v4.39/json-schema/configuration.json
 server:
     headers:
-        csp_template: "default-src 'self'; frame-src 'none'; object-src 'none'; style-src 'self' 'nonce-${NONCE}'; base-uri 'self'; frame-ancestors 'self' https://*.${SECRET_DOMAIN};"
+        csp_template: "unsafe-hashes; default-src 'self'; frame-src 'none'; object-src 'none'; style-src 'self' 'nonce-${NONCE}'; base-uri 'self'; frame-ancestors 'self' https://*.${SECRET_DOMAIN};"
 authentication_backend:
   ldap:
     implementation: custom
