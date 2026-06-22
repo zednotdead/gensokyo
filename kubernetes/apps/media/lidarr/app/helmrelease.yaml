@@ -35,7 +35,7 @@ spec:
               LIDARR__AUTH__METHOD: External
               LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
               LIDARR__LOG__DBENABLED: "False"
-              LIDARR__LOG__LEVEL: trace
+              LIDARR__LOG__LEVEL: debug
               LIDARR__SERVER__PORT: &port 80
               LIDARR__UPDATE__BRANCH: plugins
             envFrom:
