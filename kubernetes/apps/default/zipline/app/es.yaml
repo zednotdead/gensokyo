@@ -1,0 +1,46 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: zipline
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: zipline-secret
+    creationPolicy: Owner
+    template:
+      data:
+        CORE_SECRET: "{{ .ZIPLINE_CORE_SECRET }}"
+
+        DATABASE_NAME: &dbName zipline
+        DATABASE_HOST: &dbHost postgres16-rw.database.svc
+        DATABASE_USERNAME: &dbUser "{{ .DATABASE_USER }}"
+        DATABASE_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
+
+        DATASOURCE_S3_ACCESS_KEY_ID: "{{ .S3_accessKey }}"
+        DATASOURCE_S3_SECRET_ACCESS_KEY: "{{ .S3_secretKey }}"
+
+        OAUTH_OIDC_CLIENT_ID: "{{ .CLIENT_ID }}"
+        OAUTH_OIDC_CLIENT_SECRET: "{{ .CLIENT_SECRET }}"
+
+        INIT_POSTGRES_DBNAME: *dbName
+        INIT_POSTGRES_HOST: *dbHost
+        INIT_POSTGRES_USER: *dbUser
+        INIT_POSTGRES_PASS: *dbPass
+  dataFrom:
+    - extract:
+        key: Zipline
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
+    - extract:
+        key: Minio
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "S3_$1"

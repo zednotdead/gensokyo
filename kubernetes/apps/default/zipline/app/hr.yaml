@@ -1,0 +1,101 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: zipline
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  values:
+    controllers:
+      zipline:
+        labels:
+          postgres: "true"
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &envFrom
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/diced/zipline
+              tag: 4.6.2@sha256:6140981c5f9e9d0b38eedabc78623cbb360b1bd83c14e0210b229bdb20e3a473
+            env:
+              TZ: Europe/Warsaw
+              # Core config
+              CORE_RETURN_HTTPS_URLS: true
+              CORE_DEFAULT_DOMAIN: zl.${SECRET_DOMAIN}
+              # Datasources
+              DATASOURCE_TYPE: s3
+              DATASOURCE_S3_BUCKET: zipline
+              DATASOURCE_S3_ENDPOINT: https://s3.${SECRET_DOMAIN}
+              DATASOURCE_S3_PORT: 443
+              DATASOURCE_S3_FORCE_PATH_STYLE: true
+              DATASOURCE_S3_USE_SSL: true
+              DATASOURCE_S3_REGION: us-east-1
+              # Features
+              INVITES_ENABLED: false
+              FEATURES_ROBOTS_TXT: false
+              FEATURES_USER_REGISTRATION: false
+              FEATURES_OAUTH_REGISTRATION: true
+              FEATURES_VERSION_CHECKING: false
+              # OIDC
+              OAUTH_LOGIN_ONLY: true
+              OAUTH_OIDC_AUTHORIZE_URL: https://auth.${SECRET_DOMAIN}/authorize
+              OAUTH_OIDC_USERINFO_URL: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
+              OAUTH_OIDC_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
+              OAUTH_OIDC_REDIRECT_URI: https://zl.${SECRET_DOMAIN_SHORT}/api/auth/oauth/oidc
+              # Files
+              FILES_ROUTE: /u
+              FILES_LENGTH: 6
+              FILES_DEFAULT_FORMAT: "date"
+              FILES_DISABLED_EXTENSIONS: "ps1,pdf,bat,exe,sh,fish"
+              FILES_DEFAULT_DATE_FORMAT: "YYYY-MM-DD_HH-mm-ss"
+              FILES_DEFAULT_EXPIRATION: ""
+              FILES_REMOVE_GPS_METADATA: true
+              # URLs
+              URLS_ROUTE: /g
+              URLS_LENGTH: 6
+              # Website
+              WEBSITE_TITLE: Zipline
+            envFrom: *envFrom
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+                memory: 256M
+              limits:
+                memory: 512M
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+    service:
+      app:
+        ports:
+          http:
+            port: 3000
+    route:
+      app:
+        hostnames:
+          - "zl.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+    persistence:
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

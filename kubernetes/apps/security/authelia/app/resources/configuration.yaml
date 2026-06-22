@@ -363,6 +363,27 @@ identity_providers:
         access_token_signed_response_alg: 'none'
         userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
+      - client_id: '{{ env "ZIPLINE_CLIENT_ID" }}'
+        client_name: 'Zipline'
+        client_secret: '{{ env "ZIPLINE_CLIENT_SECRET_DIGEST" }}'
+        public: false
+        require_pkce: false
+        pkce_challenge_method: ''
+        redirect_uris:
+          - 'https://zl.${SECRET_DOMAIN}/api/auth/oauth/oidc'
+        scopes:
+          - 'openid'
+          - 'offline_access'
+          - 'email'
+          - 'profile'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'refresh_token'
+          - 'authorization_code'
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
       - client_id: '{{ env "PROXMOX_CLIENT_ID" }}'
         client_name: 'Proxmox'
         client_secret: '{{ env "PROXMOX_CLIENT_SECRET_DIGEST" }}'
