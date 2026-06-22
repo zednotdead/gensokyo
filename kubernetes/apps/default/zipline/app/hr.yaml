@@ -49,7 +49,7 @@ spec:
               FEATURES_VERSION_CHECKING: false
               # OIDC
               OAUTH_LOGIN_ONLY: true
-              OAUTH_OIDC_AUTHORIZE_URL: https://auth.${SECRET_DOMAIN}/authorize
+              OAUTH_OIDC_AUTHORIZE_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
               OAUTH_OIDC_USERINFO_URL: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
               OAUTH_OIDC_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
               OAUTH_OIDC_REDIRECT_URI: https://zl.${SECRET_DOMAIN_SHORT}/api/auth/oauth/oidc
