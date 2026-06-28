@@ -38,7 +38,7 @@ spec:
           migrations:
             image:
               repository: vabene1111/recipes
-              tag: 2.6.9@sha256:969c5b3552ffbf18a6f82b3ad5babbae89bfbd30ab6e3195fd3c158bcf3062ed
+              tag: 2.6.11@sha256:2eb9a80a0b03f905eaa9cea18b0d31ae0c49f37dbd53e0f55215070e7e9b7108
             envFrom: *envFrom
             command:
             - sh
@@ -53,7 +53,7 @@ spec:
           app:
             image:
               repository: vabene1111/recipes
-              tag: 2.6.9@sha256:969c5b3552ffbf18a6f82b3ad5babbae89bfbd30ab6e3195fd3c158bcf3062ed
+              tag: 2.6.11@sha256:2eb9a80a0b03f905eaa9cea18b0d31ae0c49f37dbd53e0f55215070e7e9b7108
             envFrom: *envFrom
             env:
               DEBUG: "0"
@@ -106,7 +106,7 @@ spec:
           nginx:
             image:
               repository: nginxinc/nginx-unprivileged
-              tag: 1.31.1-alpine@sha256:cc300bd2e8776708a8c2c8686a74f06eadf221c5ce01e85d0e821955d7a730ab
+              tag: 1.31.2-alpine@sha256:054e14f543eb688809d59ec2ad1644d1a61678e247c87a318ad605977eb37eaf
     service:
       app:
         controller: *app
