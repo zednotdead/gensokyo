@@ -47,7 +47,7 @@ resource "proxmox_download_file" "talos_iso" {
   datastore_id = "local"
   node_name    = each.value.node_name
 
-  url = "https://factory.talos.dev/image/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70/v1.12.6/nocloud-amd64.raw.xz"
+  url = "https://factory.talos.dev/image/306c2a7fbc0ac8fa68b56d240d7088229217c517b4fb4487db49cab9e73489f2/v1.13.5/nocloud-amd64.raw.xz"
   overwrite = false
   decompression_algorithm = "zst"
 
