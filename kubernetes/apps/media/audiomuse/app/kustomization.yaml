@@ -6,3 +6,4 @@ namespace: media
 resources:
   - ./hr.yaml
   - ./es.yaml
+  - ./dragonfly.yaml

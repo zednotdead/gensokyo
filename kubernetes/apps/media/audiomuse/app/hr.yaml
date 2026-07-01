@@ -38,7 +38,7 @@ spec:
             env:
               SERVICE_TYPE: "flask"
               TZ: ${TIMEZONE}
-              REDIS_URL: &redis redis://dragonfly.database.svc:6379/9
+              REDIS_URL: &redis redis://audiomuse-dragonfly.media.svc:6379/9
               TEMP_DIR: &tempdir "/app/temp_audio"
             envFrom: *env
       worker:
