@@ -44,7 +44,7 @@ spec:
       datadir: /var/www/data
       extraEnv:
         - name: REDIS_HOST
-          value: dragonfly.database.svc
+          value: nextcloud-dragonfly.default.svc
         - name: REDIS_HOST_PORT
           value: "6379"
       existingSecret:

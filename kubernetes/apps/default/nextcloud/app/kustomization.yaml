@@ -9,3 +9,4 @@ resources:
   - ./hr.yaml
   - ./httproute.yaml
   - ./oci.yaml
+  - ./dragonfly.yaml
