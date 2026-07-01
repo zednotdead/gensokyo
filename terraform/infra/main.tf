@@ -20,7 +20,6 @@ locals {
 provider "proxmox" {
   endpoint = "https://10.0.1.1:8006/"
   username = "root@pam"
-  password = "Listopad2001"
   insecure = true
 
   ssh {
@@ -101,7 +100,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = each.value.node_name == "reimu" ? 80 : 150
+    size         = each.value.node_name == "reimu" ? 70 : 150
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : each.value.node_name == "marisa" ? "bulk-data" : "local-lvm"
   }
   #
