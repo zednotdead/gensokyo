@@ -90,7 +90,7 @@ spec:
         cache:
           ENABLED: true
           ADAPTER: redis
-          HOST: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+          HOST: redis://forgejo-dragonfly.code.svc:6379/0?pool_size=100&idle_timeout=180s
         openid:
           ENABLE_OPENID_SIGNIN: false
           ENABLE_OPENID_SIGNUP: true
@@ -101,10 +101,10 @@ spec:
           ALLOWED_DOMAINS: "*"
         queue:
           TYPE: redis
-          CONN_STR: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+          CONN_STR: redis://forgejo-dragonfly.code.svc:6379/0?pool_size=100&idle_timeout=180s
         session:
           PROVIDER: redis
-          PROVIDER_CONFIG: redis://dragonfly.database.svc:6379/0?pool_size=100&idle_timeout=180s
+          PROVIDER_CONFIG: redis://forgejo-dragonfly.code.svc:6379/0?pool_size=100&idle_timeout=180s
         storage:
           STORAGE_TYPE: minio
           MINIO_USE_SSL: false

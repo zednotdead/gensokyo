@@ -8,3 +8,4 @@ resources:
   - ./oci.yaml
   - ./httproute.yaml
   - ./tcproute.yaml
+  - ./dragonfly.yaml
