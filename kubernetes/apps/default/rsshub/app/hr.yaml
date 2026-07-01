@@ -34,7 +34,7 @@ spec:
             env:
               NODE_ENV: production
               CACHE_TYPE: redis
-              REDIS_URL: "redis://dragonfly.database.svc.cluster.local:6379"
+              REDIS_URL: "redis://rsshub-dragonfly.default.svc.cluster.local:6379"
               PUPPETEER_WS_ENDPOINT: "ws://playwright.default.svc.cluster.local:3000" # marked
               PORT: &port 80
               LISTEN_INADDR_ANY: 1

@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
+  - ./dragonfly.yaml
