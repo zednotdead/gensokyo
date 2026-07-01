@@ -90,7 +90,7 @@ spec:
         ipFamilyPolicy: PreferDualStack
         ports:
           http:
-            port: *port
+            port: &port 80
             primary: true
           metrics:
             port: 8080

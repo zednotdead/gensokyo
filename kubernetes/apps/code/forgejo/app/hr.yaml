@@ -22,10 +22,10 @@ spec:
       tag: "15.0.2"
       rootless: true
     podSecurityContext:
-      fsGroup: 1000
+      fsGroup: 568
     containerSecurityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
+      runAsUser: 568
+      runAsGroup: 568
       runAsNonRoot: true
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
