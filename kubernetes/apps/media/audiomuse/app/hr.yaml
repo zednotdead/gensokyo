@@ -34,7 +34,7 @@ spec:
           main:
             image: &image
               repository: ghcr.io/neptunehub/audiomuse-ai
-              tag: 2.1.4@sha256:04d1c5b8c6c766a26ca2ef008c2b7e6f5f0a1e93590176f7d68ead0048d4c4dd
+              tag: 2.3.4@sha256:c0da8fdd37921ae3e08d6745c3771439777166f485202e4b94264f4e3f8167a1
             env:
               SERVICE_TYPE: "flask"
               TZ: ${TIMEZONE}
