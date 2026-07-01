@@ -1,32 +1,28 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app dragonfly-operator
 spec:
-  interval: 30m
   chartRef:
     kind: OCIRepository
-    name: app-template
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
+    name: dragonfly-operator
+  interval: 1h
   values:
     controllers:
       dragonfly-operator:
+        replicas: 1
+        serviceAccount:
+          identifier: *app
         strategy: RollingUpdate
         containers:
           app:
             image:
               repository: ghcr.io/dragonflydb/operator
-              tag: v1.3.0@sha256:ee0daee0bb11185c984bbea92b0e8cc17a06ae4cd246e0d311c814f6948fd27e
-            command: ["/manager"]
+              tag: v1.6.1@sha256:b11411142935f92ed0ec30a5ddeb31680e09ab66beecb827cb0224f1c4238638
+            command:
+              - "/manager"
             args:
               - --health-probe-bind-address=:8081
               - --metrics-bind-address=:8080
@@ -61,13 +57,17 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: {drop: ["ALL"]}
     defaultPodOptions:
+      automountServiceAccountToken: true
+      labels:
+        # required for the operator to determine a primary in each deployed cluster
+        # ref: https://deepwiki.com/dragonflydb/dragonfly-operator/2.2-manual-installation#namespace-resource
+        control-plane: controller-manager
       securityContext:
-        runAsNonRoot: true
         runAsUser: 65534
         runAsGroup: 65534
-        seccompProfile: { type: RuntimeDefault }
+        runAsNonRoot: true
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -77,17 +77,13 @@ spec:
               app.kubernetes.io/name: *app
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
           metrics:
             port: 8080
-    serviceAccount:
-      dragonfly-operator: {}
     serviceMonitor:
       app:
-        serviceName: dragonfly-operator
         endpoints:
           - port: metrics
             scheme: http
