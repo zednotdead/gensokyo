@@ -37,8 +37,6 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: dragonfly-cluster
-      namespace: database
     - name: rsshub-playwright
       namespace: *namespace
   targetNamespace: *namespace
@@ -83,8 +81,6 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: dragonfly-cluster
-      namespace: database
   targetNamespace: *namespace
   timeout: 5m
   wait: false

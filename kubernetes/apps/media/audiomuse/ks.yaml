@@ -35,8 +35,6 @@ spec:
       namespace: volsync-system
     - name: cloudnative-pg-cluster
       namespace: database
-    - name: dragonfly-cluster
-      namespace: database
   sourceRef:
     kind: GitRepository
     name: flux-system
