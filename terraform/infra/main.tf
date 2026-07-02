@@ -18,9 +18,8 @@ locals {
 }
 
 provider "proxmox" {
-  endpoint = "https://10.0.1.1:8006/"
+  endpoint = "https://10.0.1.2:8006/"
   username = "root@pam"
-  password = "Listopad2001"
   insecure = true
 
   ssh {
@@ -32,9 +31,8 @@ provider "proxmox" {
 
 locals {
   hosts = [
-    { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 24 * 1024 },
+    { node_name = "marisa", vmid = 9001, mac_address = "bc:24:11:52:a9:e5", name = "talos-01", address = "10.0.10.1", memory = 24 * 1024 },
     { node_name = "reimu", vmid = 9002, mac_address = "02:f9:53:56:3e:a8", name = "talos-02", address = "10.0.10.2", memory = 24 * 1024, gpu_address = "0000:09:00.0" },
-    { node_name = "marisa", vmid = 9003, mac_address = "bc:24:11:52:a9:e5", name = "talos-03", address = "10.0.10.3", memory = 24 * 1024 },
   ]
 }
 
@@ -101,7 +99,7 @@ resource "proxmox_virtual_environment_vm" "talos_vm" {
   disk {
     interface    = "scsi1"
     file_format  = "raw"
-    size         = each.value.node_name == "reimu" ? 80 : 150
+    size         = each.value.node_name == "reimu" ? 70 : 150
     datastore_id = each.value.node_name == "asterix" ? "data-nvme" : each.value.node_name == "marisa" ? "bulk-data" : "local-lvm"
   }
   #
