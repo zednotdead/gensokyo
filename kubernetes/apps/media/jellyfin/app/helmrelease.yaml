@@ -19,8 +19,8 @@ spec:
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
     - name: volsync
       namespace: volsync-system
   values:
@@ -50,14 +50,6 @@ spec:
                         operator: In
                         values:
                           - "true"
-              preferredDuringSchedulingIgnoredDuringExecution:
-                - preference:
-                    matchExpressions:
-                      - key: kubernetes.io/hostname
-                        operator: In
-                        values:
-                          - "talos-03" # this one has the Intel Arc A380
-                  weight: 100
         containers:
           main:
             image:

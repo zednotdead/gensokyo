@@ -11,8 +11,6 @@ spec:
     name: app-template
     namespace: flux-system
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
     - name: rabbitmq
   values:
     controllers:

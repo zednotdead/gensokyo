@@ -37,8 +37,8 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
     - name: cloudnative-pg-cluster
       namespace: database
     - name: onlyoffice-rabbitmq
@@ -85,8 +85,8 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
   targetNamespace: *namespace
   timeout: 5m
   wait: false

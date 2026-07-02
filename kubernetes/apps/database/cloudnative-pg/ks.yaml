@@ -40,8 +40,8 @@ spec:
   dependsOn:
     - name: cloudnative-pg
       namespace: database
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
     - name: external-secrets
       namespace: external-secrets
   postBuild:

@@ -47,8 +47,8 @@ spec:
   dependsOn:
     - name: grafana-operator
       namespace: *namespace
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
     - name: external-secrets-stores
       namespace: external-secrets
     - name: volsync

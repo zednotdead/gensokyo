@@ -37,8 +37,8 @@ spec:
       namespace: external-secrets
     - name: volsync
       namespace: volsync-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    - name: longhorn
+      namespace: longhorn
     - name: onlyoffice
       namespace: *namespace
   targetNamespace: *namespace
