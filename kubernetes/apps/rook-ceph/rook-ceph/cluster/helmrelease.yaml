@@ -43,6 +43,10 @@ spec:
       osd_class_update_on_start = false
       # EOF
     cephClusterSpec:
+      mgr:
+        count: 1
+      mon:
+        count: 1
       crashCollector:
         disable: false
       dashboard:
@@ -115,7 +119,7 @@ spec:
         spec:
           failureDomain: host
           replicated:
-            size: 3
+            size: 1
         storageClass:
           enabled: true
           name: ceph-block
@@ -143,11 +147,11 @@ spec:
         spec:
           metadataPool:
             replicated:
-              size: 3
+              size: 1
           dataPools:
             - failureDomain: host
               replicated:
-                size: 3
+                size: 1
               name: data0
           metadataServer:
             activeCount: 1
