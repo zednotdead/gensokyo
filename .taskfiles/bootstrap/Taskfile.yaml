@@ -4,6 +4,15 @@ version: '3'
 
 tasks:
 
+  img:
+    desc: Bootstrap the required Tofu variables
+    dir: '{{ .TALOS_DIR }}'
+    cmds:
+      - "echo 'talos_url = \"{{ .TALOS_IMAGE_URL }}\"' > {{ .ROOT_DIR }}/terraform/infra/terraform.tfvars"
+    vars:
+      TALOS_IMAGE_URL:
+        sh: "talhelper genurl image -n talos-01 -c {{.TALOS_DIR}}/talconfig.yaml --env-file {{.TALOS_DIR}}/talenv.yaml"
+
   talos:
     desc: Bootstrap the Talos cluster
     dir: '{{.TALOS_DIR}}'

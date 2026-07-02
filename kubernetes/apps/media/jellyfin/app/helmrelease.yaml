@@ -50,14 +50,6 @@ spec:
                         operator: In
                         values:
                           - "true"
-              preferredDuringSchedulingIgnoredDuringExecution:
-                - preference:
-                    matchExpressions:
-                      - key: kubernetes.io/hostname
-                        operator: In
-                        values:
-                          - "talos-03" # this one has the Intel Arc A380
-                  weight: 100
         containers:
           main:
             image:

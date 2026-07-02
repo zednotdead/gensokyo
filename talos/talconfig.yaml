@@ -18,17 +18,28 @@ clusterSvcNets: ["10.43.0.0/16"]
 cniConfig:
   name: none
 
+
+
 nodes:
   - hostname: "talos-01"
     ipAddress: "10.0.10.1"
     installDisk: "/dev/sda"
-    machineSpec:
+    machineSpec: &spec
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70
+      mode: nocloud
+      bootMethod: disk-image
+      imageSuffix: raw.xz
     controlPlane: true
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: "!system_disk"
+          minSize: 60GiB
+          grow: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:c4:51:d9"
+          hardwareAddr: "02:f9:53:56:3e:a8"
         dhcp: false
         addresses:
           - "10.0.10.1/16"
@@ -38,16 +49,32 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.0.255.254"
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            - siderolabs/i915
+            - siderolabs/intel-ice-firmware
+            - siderolabs/mei
+            - siderolabs/xe
+            - siderolabs/intel-ucode
   - hostname: "talos-02"
     ipAddress: "10.0.10.2"
     installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/3b4697f7a52d6c900a8ab97bbe9ebe21913d078e5e7f9c44f4fa5509938bfc70
-    controlPlane: true
+    machineSpec: *spec
+    controlPlane: false
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: "!system_disk"
+          minSize: 60GiB
+          grow: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "02:f9:53:56:3e:a8"
+          hardwareAddr: "bc:24:11:52:a9:e5"
         dhcp: false
         addresses:
           - "10.0.10.2/16"
@@ -57,25 +84,17 @@ nodes:
         mtu: 1500
         vip:
           ip: "10.0.255.254"
-  - hostname: "talos-03"
-    ipAddress: "10.0.10.3"
-    installDisk: "/dev/sda"
-    machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/fa23e89863f791904fa30b723a158fc75d9a1d5e778277f832977b5b6968080c
-    controlPlane: true
-    networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:52:a9:e5"
-        dhcp: false
-        addresses:
-          - "10.0.10.3/16"
-        routes:
-          - network: "0.0.0.0/0"
-            gateway: "10.0.0.1"
-        mtu: 1500
-        vip:
-          ip: "10.0.255.254"
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            - siderolabs/i915
+            - siderolabs/intel-ice-firmware
+            - siderolabs/mei
+            - siderolabs/xe
+            - siderolabs/intel-ucode
 
 # Global patches
 patches:
@@ -84,6 +103,7 @@ patches:
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
+  - "@./patches/global/machine-longhorn.yaml"
 
 # Controller patches
 controlPlane:

@@ -89,7 +89,7 @@ spec:
         type: persistentVolumeClaim
         accessMode: ReadWriteOnce
         size: 512Mi
-        storageClass: ceph-block
+        storageClass: longhorn
         globalMounts:
           - path: /var/lib/maddy
       temp:

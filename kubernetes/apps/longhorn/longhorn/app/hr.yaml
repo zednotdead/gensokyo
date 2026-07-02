@@ -1,0 +1,65 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app longhorn
+spec:
+  chart:
+    spec:
+      chart: longhorn
+      version: 1.12.0
+      interval: 60m
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn
+        namespace: longhorn
+  interval: 30m
+  timeout: 20m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    global:
+      imageRegistry: null
+    openshift:
+      enabled: false
+    defaultSettings:
+      v1DataEngine: false
+      v2DataEngine: true
+      createDefaultDiskLabeledNodes: true
+    persistence:
+      dataEngine: "v2"
+    image:
+      longhorn:
+        engine:
+          registry: &defaultRegistry docker.io
+        manager:
+          registry: *defaultRegistry
+        ui:
+          registry: *defaultRegistry
+        instanceManager:
+          registry: *defaultRegistry
+        shareManager:
+          registry: *defaultRegistry
+        backingImageManager:
+          registry: *defaultRegistry
+        supportBundleKit:
+          registry: *defaultRegistry
+      csi:
+        attacher:
+          registry: *defaultRegistry
+        provisioner:
+          registry: *defaultRegistry
+        nodeDriverRegistrar:
+          registry: *defaultRegistry
+        resizer:
+          registry: *defaultRegistry
+        snapshotter:
+          registry: *defaultRegistry
+        livenessProbe:
+          registry: *defaultRegistry

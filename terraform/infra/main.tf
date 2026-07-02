@@ -11,6 +11,11 @@ terraform {
   }
 }
 
+variable "talos_url" {
+  type = string
+  description = "Talos URL generated with talhelper"
+}
+
 provider "local" {}
 
 locals {
@@ -32,9 +37,9 @@ provider "proxmox" {
 
 locals {
   hosts = [
-    { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 24 * 1024 },
-    { node_name = "reimu", vmid = 9002, mac_address = "02:f9:53:56:3e:a8", name = "talos-02", address = "10.0.10.2", memory = 24 * 1024, gpu_address = "0000:09:00.0" },
-    { node_name = "marisa", vmid = 9003, mac_address = "bc:24:11:52:a9:e5", name = "talos-03", address = "10.0.10.3", memory = 24 * 1024 },
+    # { node_name = "asterix", vmid = 9001, mac_address = "bc:24:11:c4:51:d9", name = "talos-01", address = "10.0.10.1", memory = 24 * 1024 },
+    { node_name = "marisa", vmid = 9001, mac_address = "02:f9:53:56:3e:a8", name = "talos-01", address = "10.0.10.1", memory = 32 * 1024 },
+    { node_name = "reimu", vmid = 9002, mac_address = "bc:24:11:52:a9:e5", name = "talos-02", address = "10.0.10.2", memory = 24 * 1024, gpu_address = "0000:09:00.0" },
   ]
 }
 
@@ -47,7 +52,7 @@ resource "proxmox_download_file" "talos_iso" {
   datastore_id = "local"
   node_name    = each.value.node_name
 
-  url = "https://factory.talos.dev/image/306c2a7fbc0ac8fa68b56d240d7088229217c517b4fb4487db49cab9e73489f2/v1.13.5/nocloud-amd64.raw.xz"
+  url = var.talos_url
   overwrite = false
   decompression_algorithm = "zst"
 

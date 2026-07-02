@@ -11,7 +11,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 35Gi
-    storageClass: ceph-block
+    storageClass: longhorn
   superuserSecret:
     name: &secret cloudnative-pg-secret
   enableSuperuserAccess: true
