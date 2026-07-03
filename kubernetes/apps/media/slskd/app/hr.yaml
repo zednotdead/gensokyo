@@ -58,8 +58,6 @@ spec:
               runAsUser: 1000
               runAsGroup: 1000
               runAsNonRoot: true
-              fsGroup: 1000
-              fsGroupChangePolicy: OnRootMismatch
             resources:
               requests:
                 cpu: 10m
