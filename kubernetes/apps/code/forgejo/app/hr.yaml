@@ -24,9 +24,6 @@ spec:
     podSecurityContext:
       fsGroup: 568
     containerSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      runAsNonRoot: true
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
       capabilities:
