@@ -15,7 +15,7 @@ spec:
         CORE_SECRET: "{{ .CORE_SECRET }}"
 
         DATABASE_NAME: &dbName zipline
-        DATABASE_HOST: &dbHost postgres16-rw.database.svc
+        DATABASE_HOST: &dbHost postgres-lb.database.svc
         DATABASE_USERNAME: &dbUser "{{ .DATABASE_USER }}"
         DATABASE_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
         DATABASE_PORT: "5432"

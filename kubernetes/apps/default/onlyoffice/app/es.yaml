@@ -15,7 +15,7 @@ spec:
       engineVersion: v2
       data:
         DB_TYPE: postgres
-        DB_HOST: &dbHost postgres16-rw.database.svc
+        DB_HOST: &dbHost postgres-lb.database.svc
         DB_PORT: "5432"
         DB_NAME: &dbName onlyoffice
         DB_USER: &dbUser "{{ .ONLYOFFICE_DATABASE_USER }}"

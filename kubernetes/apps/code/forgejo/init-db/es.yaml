@@ -16,7 +16,7 @@ spec:
           cnpg.io/reload: "true"
       data:
         INIT_POSTGRES_DBNAME: forgejo
-        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_HOST: postgres-lb.database.svc
         INIT_POSTGRES_USER: "{{ .DATABASE_USER }}"
         INIT_POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
         INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"

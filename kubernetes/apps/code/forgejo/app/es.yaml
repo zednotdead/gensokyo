@@ -19,7 +19,7 @@ spec:
         password: "{{ .ADMIN_PASSWORD }}"
         email: "me@${SECRET_DOMAIN}"
         POSTGRES_DBNAME: forgejo
-        POSTGRES_HOST: postgres16-rw.database.svc
+        POSTGRES_HOST: postgres-lb.database.svc
         POSTGRES_USER: "{{ .DATABASE_USER }}"
         POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
         ACCESS_KEY: "{{ .S3_accessKey }}"

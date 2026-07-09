@@ -15,7 +15,7 @@ spec:
         DB_ENGINE: django.db.backends.postgresql
         SECRET_KEY: "{{ .SECRET_KEY }}"
         POSTGRES_DB: &dbName tandoor
-        POSTGRES_HOST: &dbHost postgres16-rw.database.svc
+        POSTGRES_HOST: &dbHost postgres-lb.database.svc
         POSTGRES_USER: &dbUser "{{ .DATABASE_USER }}"
         POSTGRES_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
         INIT_POSTGRES_DBNAME: *dbName

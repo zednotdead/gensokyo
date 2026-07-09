@@ -16,9 +16,9 @@ spec:
         OAUTH2_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
         OAUTH2_CLIENT_SECRET: "{{ .MINIFLUX_CLIENT_SECRET }}"
         DATABASE_URL: >-
-          password={{ .MINIFLUX_DATABASE_PASS }} dbname=miniflux host=postgres16-rw.database.svc sslmode=disable user={{ .MINIFLUX_DATABASE_USER }}
+          password={{ .MINIFLUX_DATABASE_PASS }} dbname=miniflux host=postgres-lb.database.svc sslmode=disable user={{ .MINIFLUX_DATABASE_USER }}
         INIT_POSTGRES_DBNAME: miniflux
-        INIT_POSTGRES_HOST: postgres16-rw.database.svc
+        INIT_POSTGRES_HOST: postgres-lb.database.svc
         INIT_POSTGRES_USER: "{{ .MINIFLUX_DATABASE_USER }}"
         INIT_POSTGRES_PASS: "{{ .MINIFLUX_DATABASE_PASS }}"
         INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'

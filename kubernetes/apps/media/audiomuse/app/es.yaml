@@ -12,7 +12,7 @@ spec:
     creationPolicy: Owner
     template:
       data:
-        POSTGRES_HOST: &dbHost postgres16-rw.database.svc
+        POSTGRES_HOST: &dbHost postgres-lb.database.svc
         POSTGRES_DB: &dbDatabase audiomuse_main
         POSTGRES_USER: &dbUser "{{ .DATABASE_USER }}"
         POSTGRES_PASSWORD: &dbPass "{{ .DATABASE_PASSWORD }}"
