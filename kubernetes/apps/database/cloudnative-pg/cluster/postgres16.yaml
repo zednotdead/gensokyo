@@ -23,7 +23,7 @@ spec:
       method: any
       number: 1
     parameters:
-      max_connections: "400"
+      max_connections: "800"
       shared_buffers: 256MB
       "pgaudit.log": "all, -misc"
       "pgaudit.log_catalog": "off"
@@ -44,13 +44,14 @@ spec:
       - { regex: cluster, action: labeldrop }
   backup:
     retentionPolicy: 30d
+    target: prefer-standby
     barmanObjectStore:
       wal:
         compression: bzip2
         maxParallel: 4
       destinationPath: s3://cnpg/
       endpointURL: http://minio.default.svc:9000
-      serverName: postgres16-v11
+      serverName: postgres16-v12
       s3Credentials: &s3
         accessKeyId:
           name: *secret
@@ -72,5 +73,5 @@ spec:
           maxParallel: 4
         destinationPath: s3://cnpg/
         endpointURL: http://minio.default.svc:9000
-        serverName: postgres16-v10
+        serverName: postgres16-v11
         s3Credentials: *s3
