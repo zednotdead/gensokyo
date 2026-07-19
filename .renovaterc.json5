@@ -98,14 +98,14 @@
     {
       matchUpdateTypes: ["patch"],
       semanticCommitType: "fix",
-      automerge: true,
+      automerge: false,
       automergeType: "branch",
       commitMessageExtra: "( {{currentVersion}} → {{newVersion}} )",
     },
     {
       matchUpdateTypes: ["digest"],
       semanticCommitType: "chore",
-      automerge: true,
+      automerge: false,
       automergeType: "branch",
       commitMessageExtra: "( {{currentDigestShort}} → {{newDigestShort}} )",
     },
