@@ -51,7 +51,7 @@ spec:
         maxParallel: 4
       destinationPath: s3://cnpg/
       endpointURL: http://minio.default.svc:9000
-      serverName: postgres16-v12
+      serverName: postgres-v1
       s3Credentials: &s3
         accessKeyId:
           name: *secret
@@ -73,5 +73,5 @@ spec:
           maxParallel: 4
         destinationPath: s3://cnpg/
         endpointURL: http://minio.default.svc:9000
-        serverName: postgres16-v11
+        serverName: postgres16-v12
         s3Credentials: *s3

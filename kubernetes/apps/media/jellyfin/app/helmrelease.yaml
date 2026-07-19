@@ -62,9 +62,10 @@ spec:
           main:
             image:
               repository: ghcr.io/jellyfin/jellyfin
-              tag: 12.0-rc2
+              tag: 10.11.9
             resources:
               requests:
+                ephemeral-storage: 100M
                 gpu.intel.com/i915: 1
               limits:
                 gpu.intel.com/i915: 1
@@ -116,13 +117,8 @@ spec:
         path: "${NAS_BASE_URL}/media"
         globalMounts:
           - path: /media
-      transcode:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /transcode
       cache:
         enabled: true
-        type: emptyDir
+        existingClaim: jellyfin-transcode
         globalMounts:
           - path: /cache
