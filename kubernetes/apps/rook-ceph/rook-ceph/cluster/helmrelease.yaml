@@ -7,14 +7,9 @@ metadata:
 spec:
   interval: 30m
   timeout: 15m
-  chart:
-    spec:
-      chart: rook-ceph-cluster
-      version: v1.19.6
-      sourceRef:
-        kind: HelmRepository
-        name: rook-ceph
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: rook-ceph-cluster
   install:
     remediation:
       retries: 3
@@ -43,73 +38,33 @@ spec:
       osd_class_update_on_start = false
       # EOF
     cephClusterSpec:
+      cleanupPolicy:
+        wipeDevicesFromOtherClusters: true
       crashCollector:
         disable: false
+      csi:
+        readAffinity:
+          enabled: false # https://github.com/ceph/ceph-csi/issues/5772
       dashboard:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:10902
+        prometheusEndpoint: http://prometheus-operated.o11y.svc.cluster.local:9090
+      mgr:
+        modules:
+          - name: pg_autoscaler
+            enabled: true
       network:
-        provider: host
         connections:
           requireMsgr2: true
-      storage:
-        useAllNodes: true
-        useAllDevices: true
-        deviceFilter: sdb
-        config:
-          osdsPerDevice: "1"
-      placement:
-        mgr: &placement
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: node-role.kubernetes.io/control-plane
-                      operator: Exists
-        mon: *placement
       resources:
-        mgr:
-          requests:
-            cpu: "125m"
-            memory: "512Mi"
-          limits:
-            memory: "1Gi"
-        mon:
-          requests:
-            cpu: "49m"
-            memory: "512Mi"
-          limits:
-            memory: "1Gi"
         osd:
-          requests:
-            cpu: "512m"
-            memory: "2Gi"
-        mgr-sidecar:
-          requests:
-            cpu: "49m"
-            memory: "128Mi"
           limits:
-            memory: "256Mi"
-        crashcollector:
-          requests:
-            cpu: "15m"
-            memory: "64Mi"
-          limits:
-            memory: "64Mi"
-        logcollector:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
-        cleanup:
-          requests:
-            cpu: "250m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
+            memory: 8Gi # Required for bootstrap
+      storage:
+        deviceFilter: sdb
+        useAllDevices: false
+        useAllNodes: true
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -119,40 +74,44 @@ spec:
         storageClass:
           enabled: true
           name: ceph-block
-          isDefault: true
-          reclaimPolicy: Delete
           allowVolumeExpansion: true
-          volumeBindingMode: Immediate
+          isDefault: true
+          mountOptions:
+            - discard
           parameters:
-            imageFormat: "2"
-            imageFeatures: layering
-            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            compression_algorithm: zstd
+            compression_mode: passive
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/controller-publish-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/controller-publish-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-            csi.storage.k8s.io/fstype: ext4
+            csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
+            imageFeatures: deep-flatten,exclusive-lock,fast-diff,layering,object-map
+            imageFormat: "2"
+          reclaimPolicy: Delete
+          volumeBindingMode: Immediate
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-blockpool
-      isDefault: true
       deletionPolicy: Delete
+      isDefault: true
     cephFileSystems:
-      - name: &cephFileSystemName ceph-filesystem
+      - name: ceph-filesystem
         spec:
           metadataPool:
             replicated:
               size: 3
           dataPools:
-            - failureDomain: host
+            - name: data0
+              failureDomain: host
               replicated:
                 size: 3
-              name: data0
           metadataServer:
             activeCount: 1
             activeStandby: true
-            priorityClassName: system-cluster-critical
             placement:
               topologySpreadConstraints:
                 - maxSkew: 1
@@ -161,29 +120,34 @@ spec:
                   labelSelector:
                     matchLabels:
                       app.kubernetes.io/name: ceph-mds
-                      app.kubernetes.io/part-of: *cephFileSystemName
+                      app.kubernetes.io/part-of: ceph-filesystem
+            priorityClassName: system-cluster-critical
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 4Gi
         storageClass:
           enabled: true
-          isDefault: false
           name: ceph-filesystem
+          allowVolumeExpansion: true
+          isDefault: false
+          parameters:
+            csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+            csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/controller-publish-secret-name: rook-csi-cephfs-provisioner
+            csi.storage.k8s.io/controller-publish-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+            csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
           pool: data0
           reclaimPolicy: Delete
-          allowVolumeExpansion: true
           volumeBindingMode: Immediate
-          parameters:
-            csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-            csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-            csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-            csi.storage.k8s.io/fstype: ext4
-          mountOptions:
-            - ms_mode=prefer-crc
-            - _netdev
     cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-filesystem
-      isDefault: false
       deletionPolicy: Delete
+      isDefault: false
     cephObjectStores: []
