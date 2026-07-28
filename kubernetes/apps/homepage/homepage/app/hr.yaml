@@ -43,18 +43,18 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/nginxinc/nginx-unprivileged
-              tag: "1.27.4"
+              repository: nginx
+              tag: "1.31.3"
               pullPolicy: IfNotPresent
             ports:
-              - containerPort: 8080
+              - containerPort: &port 80
 
     service:
       app:
         controller: nginx-static
         ports:
           http:
-            port: &port 8080
+            port: *port
 
     route:
       main:
