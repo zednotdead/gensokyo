@@ -19,7 +19,7 @@ spec:
       retries: 3
   values:
     image:
-      flavor: fpm-alpine
+      flavor: fpm
     nginx:
       enabled: true
     imaginary:
