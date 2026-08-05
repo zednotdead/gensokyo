@@ -9,6 +9,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
   path: ./kubernetes/apps/external-secrets/external-secrets/app
   postBuild:
@@ -35,6 +39,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   interval: 1h
   path: ./kubernetes/apps/external-secrets/external-secrets/stores
   postBuild:
