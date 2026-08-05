@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: qbittorrent
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: qbittorrent
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      qbittorrent:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/home-operations/qbittorrent
+              tag: 5.2.3
+            env:
+              TZ: Europe/Warsaw
+              QBITTORRENT__PORT: &port 80
+              QBITTORRENT__BT_PORT: &bittorrentPort 50413
+              QBT_Preferences__WebUI__AlternativeUIEnabled: false
+              QBT_Preferences__WebUI__LocalHostAuth: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 3Gi
+
+    service:
+      main:
+        controller: qbittorrent
+        ports:
+          http:
+            port: *port
+      bittorrent:
+        enabled: true
+        type: LoadBalancer
+        controller: qbittorrent
+        ports:
+          bittorrent:
+            enabled: true
+            port: *bittorrentPort
+            protocol: TCP
+            targetPort: *bittorrentPort
+        externalTrafficPolicy: Cluster
+    route:
+      main:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: 80
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+    persistence:
+      config:
+        enabled: true
+        existingClaim: qbittorrent
+      media:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /media
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media"
+    resources:
+      limits:
+        memory: 1Gi
