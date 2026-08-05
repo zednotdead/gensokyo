@@ -22,7 +22,7 @@ resources:
   # - ./autobrr/ks.yaml
   # - ./komga/ks.yaml
   # - ./komf/ks.yaml
-  # - ./qui/ks.yaml
+  - ./qui/ks.yaml
   # - ./seerr/ks.yaml
   # - ./navidrome/ks.yaml
   # - ./audiomuse/ks.yaml
