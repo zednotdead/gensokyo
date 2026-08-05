@@ -1,0 +1,77 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres16
+  annotations:
+    kyverno.io/ignore: "true"
+spec:
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:17.5-0.4.3
+  instances: 2
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 35Gi
+    storageClass: ceph-block
+  superuserSecret:
+    name: &secret cloudnative-pg-secret
+  enableSuperuserAccess: true
+  postgresql:
+    shared_preload_libraries:
+      - "pgaudit"
+      - "vchord.so"
+    synchronous:
+      method: any
+      number: 1
+    parameters:
+      max_connections: "800"
+      shared_buffers: 256MB
+      "pgaudit.log": "all, -misc"
+      "pgaudit.log_catalog": "off"
+      "pgaudit.log_parameter": "on"
+      "pgaudit.log_relation": "on"
+  nodeMaintenanceWindow:
+    inProgress: false
+    reusePVC: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  monitoring:
+    enablePodMonitor: true
+    # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
+    podMonitorMetricRelabelings:
+      - { sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace }
+      - { regex: cluster, action: labeldrop }
+  backup:
+    retentionPolicy: 30d
+    target: prefer-standby
+    barmanObjectStore:
+      wal:
+        compression: bzip2
+        maxParallel: 4
+      destinationPath: s3://cnpg/
+      endpointURL: &s3addr http://rustfs.default.svc:9000
+      serverName: postgres-v3
+      s3Credentials: &s3
+        accessKeyId:
+          name: *secret
+          key: aws-access-key-id
+        secretAccessKey:
+          name: *secret
+          key: aws-secret-access-key
+
+  bootstrap:
+    recovery:
+      source: source
+
+  externalClusters:
+    # Represents the backups stored in minio which can be restored from.
+    - name: source
+      barmanObjectStore:
+        wal:
+          compression: bzip2
+          maxParallel: 4
+        destinationPath: s3://cnpg/
+        endpointURL: *s3addr
+        serverName: postgres-v2
+        s3Credentials: *s3

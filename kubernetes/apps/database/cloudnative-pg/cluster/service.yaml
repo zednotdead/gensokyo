@@ -1,0 +1,67 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.1-standalone-strict/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-lb
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: postgres.${SECRET_DOMAIN}
+    lbipam.cilium.io/ips: "${CLOUDNATIVE_PGO_ADDRESS}"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ipFamilies: [IPv4]
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgres16
+    role: primary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-r
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgres16
+    cnpg.io/podRole: instance
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-ro
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgres16
+    role: replica
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-rw
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgres16
+    role: primary
+  sessionAffinity: None

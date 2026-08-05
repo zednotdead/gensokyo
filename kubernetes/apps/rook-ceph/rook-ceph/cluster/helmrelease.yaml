@@ -60,7 +60,9 @@ spec:
       resources:
         osd:
           limits:
-            memory: 2Gi # Required for bootstrap
+            memory: 4Gi # Required for bootstrap
+          requests:
+            memory: 2Gi
       storage:
         deviceFilter: sdb
         useAllDevices: false
