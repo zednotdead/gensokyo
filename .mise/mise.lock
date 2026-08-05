@@ -492,7 +492,7 @@ checksum = "sha256:ba76657b79d0ebcc3c029c171fc83c96351ba5ce0e71d185f1e5b8b873360
 url = "https://dl.k8s.io/v1.36.3/bin/windows/amd64/kubectl.exe"
 
 [[tools.kustomize]]
-version = "5.8.1"
+version = "kustomize/v5.8.1"
 backend = "aqua:kubernetes-sigs/kustomize"
 
 [tools.kustomize."platforms.linux-arm64"]
