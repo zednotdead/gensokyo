@@ -85,6 +85,45 @@ checksum = "sha256:8635da433b6df8194746e88ed9d2589566c20e38bfc2a80e431a348b7c765
 url = "https://github.com/cloudflare/cloudflared/releases/download/2026.7.3/cloudflared-windows-amd64.exe"
 url_api = "https://api.github.com/repos/cloudflare/cloudflared/releases/assets/487053700"
 
+[[tools.envsubst]]
+version = "1.4.3"
+backend = "aqua:a8m/envsubst"
+
+[tools.envsubst."platforms.linux-arm64"]
+checksum = "md5:6d4a9e5ea75525bff5cfc44c65030c95"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Linux-arm64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842613"
+
+[tools.envsubst."platforms.linux-arm64-musl"]
+checksum = "md5:6d4a9e5ea75525bff5cfc44c65030c95"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Linux-arm64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842613"
+
+[tools.envsubst."platforms.linux-x64"]
+checksum = "md5:f16bdc6948726c00d3d96908221464e1"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Linux-x86_64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842596"
+
+[tools.envsubst."platforms.linux-x64-musl"]
+checksum = "md5:f16bdc6948726c00d3d96908221464e1"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Linux-x86_64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842596"
+
+[tools.envsubst."platforms.macos-arm64"]
+checksum = "md5:d0060b1585156176354f96cd570a4cc1"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Darwin-arm64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842595"
+
+[tools.envsubst."platforms.macos-x64"]
+checksum = "md5:f0c1f592bff9f2842b4bcf4d6e7aac10"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst-Darwin-x86_64"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842616"
+
+[tools.envsubst."platforms.windows-x64"]
+checksum = "md5:e35ad08861db03c07b19ba782bb0d53e"
+url = "https://github.com/a8m/envsubst/releases/download/v1.4.3/envsubst.exe"
+url_api = "https://api.github.com/repos/a8m/envsubst/releases/assets/232842598"
+
 [[tools.flux2]]
 version = "2.9.3"
 backend = "aqua:fluxcd/flux2"

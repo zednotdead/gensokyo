@@ -32,3 +32,6 @@ configure:
 [group('template')]
 init:
     just template init
+
+[doc('Volsync')]
+mod volsync '.just/volsync.just'
