@@ -38,11 +38,11 @@ spec:
             sonarr: ["http://sonarr.media.svc.cluster.local/?apikey={{ .SONARR_API_KEY }}"],
             useClientTorrents: true,
             torznab: [
-              11, // AnimeTorrents
-              6, // FearNoPeer
+              14, // AnimeZ
+              16, // AvistaZ
+              15, // CinemaZ
               7, // Milkie
               8, // TorrentLeech
-              9, // CinemaZ
             ].map(i => `http://prowlarr.media.svc.cluster.local/$${i}/api?apikey={{ .PROWLARR_API_KEY }}`),
           };
   dataFrom:
