@@ -6,7 +6,7 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: cloudflare-dns
+    name: external-dns
   interval: 1h
   values:
     fullnameOverride: *app
