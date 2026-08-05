@@ -79,5 +79,5 @@ spec:
         type: nfs
         globalMounts:
           - path: /media/downloads
-        server: "10.0.2.3"
+        server: "10.0.2.1"
         path: "/mnt/core/media/downloads"

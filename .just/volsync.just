@@ -73,8 +73,6 @@ unlock app ns="default":
     envsubst < <(cat {{ templates_dir }}/unlock.tmpl.yaml) | kubectl apply -f -
     bash {{ scripts_dir }}/wait.sh unlock-{{ app }}-${ts} {{ ns }}
     kubectl -n {{ ns }} wait job/unlock-{{ app }}-${ts} --for condition=complete --timeout=1m
-    kubectl -n {{ ns }} logs job/{{ app }}-unlock-snapshots-${ts} --container unlock-minio
-    kubectl -n {{ ns }} logs job/{{ app }}-unlock-snapshots-${ts} --container unlock-r2
     kubectl -n {{ ns }} delete job unlock-{{ app }}-${ts}
 
 [doc('Snapshot a PVC for an application')]
