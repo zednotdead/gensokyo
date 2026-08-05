@@ -50,7 +50,6 @@ spec:
               RUSTFS_UPDATE: "off"
               RUSTFS_BROWSER_REDIRECT_URL: https://minio.${SECRET_DOMAIN}
               RUSTFS_SERVER_URL: https://s3.${SECRET_DOMAIN}
-              RUSTFS_IDENTITY_OPENID_ENABLE: off
             envFrom:
               - secretRef:
                   name: minio-secret
@@ -99,8 +98,7 @@ spec:
             scrapeTimeout: 10s
     persistence:
       config:
-        type: nfs
-        server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/rustfs"
+        enabled: true
+        existingClaim: minio-nfs
         globalMounts:
           - path: /data

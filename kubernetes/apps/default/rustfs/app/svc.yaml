@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.30.1-standalone-strict/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: rustfs
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9001
+      targetPort: 9000
+    - name: api
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.30.1-standalone-strict/endpointslice-discovery-v1.json
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: rustfs-1
+  labels:
+    kubernetes.io/service-name: rustfs
+addressType: IPv4
+ports:
+  - name: http
+    protocol: TCP
+    port: 9001
+  - name: api
+    protocol: TCP
+    port: 9000
+endpoints:
+  - addresses:
+      - "${NAS_ADDRESS}"
