@@ -1,0 +1,78 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cross-seed
+spec:
+  refreshInterval: 5m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: cross-seed-secret
+    template:
+      engineVersion: v2
+      data:
+        config.js: |
+          module.exports = {
+            action: "inject",
+            apiKey: "{{.CROSS_SEED_API_KEY}}",
+            delay: 30,
+            searchCadence: "3 days",
+            excludeRecentSearch: "9 days",
+            excludeOlder: "3 weeks",
+            duplicateCategories: true,
+            flatLinking: false,
+            includeEpisodes: true,
+            includeNonVideos: true,
+            includeSingleEpisodes: true,
+            linkCategory: "cross-seed",
+            linkType: "hardlink",
+            matchMode: "safe",
+            outputDir: "/tmp",
+            port: 80,
+            qbittorrentUrl: "http://{{ .QB_username }}:{{ .QB_password }}@qbittorrent-main.media.svc.cluster.local",
+            radarr: ["http://radarr.media.svc.cluster.local/?apikey={{ .RADARR_API_KEY }}"],
+            skipRecheck: true,
+            sonarr: ["http://sonarr.media.svc.cluster.local/?apikey={{ .SONARR_API_KEY }}"],
+            useClientTorrents: true,
+            torznab: [
+              11, // AnimeTorrents
+              6, // FearNoPeer
+              7, // Milkie
+              8, // TorrentLeech
+              9, // CinemaZ
+            ].map(i => `http://prowlarr.media.svc.cluster.local/$${i}/api?apikey={{ .PROWLARR_API_KEY }}`),
+          };
+  dataFrom:
+    - extract:
+        key: cross-seed
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CROSS_SEED_$1"
+    - extract:
+        key: Prowlarr
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "PROWLARR_$1"
+    - extract:
+        key: Radarr
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "RADARR_$1"
+    - extract:
+        key: Sonarr
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "SONARR_$1"
+    - extract:
+        key: qBittorrent
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "QB_$1"

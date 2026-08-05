@@ -10,3 +10,4 @@ resources:
   - ./namespace.yaml
   - ./echo/ks.yaml
   - ./rustfs/ks.yaml
+  - ./home-assistant/ks.yaml

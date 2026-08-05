@@ -1,0 +1,86 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: recyclarr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: recyclarr
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      recyclarr:
+        type: statefulset
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: ceph-block
+              globalMounts:
+                - path: /config
+        pod:
+          enableServiceLinks: true
+          securityContext:
+            runAsUser: ${NAS_UID}
+            runAsGroup: ${NAS_GID}
+            fsGroup: ${NAS_GID}
+            fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          init-config:
+            image:
+              repository: public.ecr.aws/docker/library/busybox
+              tag: latest@sha256:fd8d9aa63ba2f0982b5304e1ee8d3b90a210bc1ffb5314d980eb6962f1a9715d
+              pullPolicy: IfNotPresent
+            command:
+              - "/bin/sh"
+              - "-c"
+              - "cp /tmp/config/recyclarr.yml /config/recyclarr.yml"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/recyclarr/recyclarr
+              tag: 8.6.0@sha256:3c38ceeb54438dd8327e4e65c9b48ba601a6d20fff833342d93c9b0bc4b1930b
+            env:
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: recyclarr-secret
+            resources:
+              limits:
+                memory: 128M
+    service:
+      main:
+        controller: recyclarr
+        enabled: false
+
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      config-file:
+        enabled: true
+        type: configMap
+        name: recyclarr-configmap
+        advancedMounts:
+          recyclarr:
+            init-config:
+              - path: /tmp/config
+                readOnly: true

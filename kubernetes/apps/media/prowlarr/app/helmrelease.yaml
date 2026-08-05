@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app prowlarr
+  namespace: media
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: prowlarr
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      prowlarr:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/home-operations/prowlarr
+              tag: 2.3.7.5365
+            env:
+              TZ: Europe/Warsaw
+              PROWLARR__APP__INSTANCENAME: Prowlarr
+              PROWLARR__APP__THEME: dark
+              PROWLARR__AUTH__METHOD: External
+              PROWLARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              PROWLARR__LOG__DBENABLED: "False"
+              PROWLARR__LOG__LEVEL: debug
+              PROWLARR__SERVER__PORT: &port 80
+              PROWLARR__UPDATE__BRANCH: develop
+            envFrom:
+              - secretRef:
+                  name: prowlarr-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 250Mi
+              limits:
+                memory: 500Mi
+    service:
+      main:
+        controller: prowlarr
+        ports:
+          http:
+            port: *port
+    route:
+      main:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *app
+    resources:
+      limits:
+        memory: 500Mi

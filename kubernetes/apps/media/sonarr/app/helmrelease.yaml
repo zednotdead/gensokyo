@@ -1,0 +1,86 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sonarr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: sonarr
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      sonarr:
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: sonarr-secret
+        containers:
+          main:
+            image:
+              repository: ghcr.io/home-operations/sonarr
+              tag: 4.0.18.2978
+            env:
+              TZ: Europe/Warsaw
+              SONARR__APP__INSTANCENAME: Sonarr
+              SONARR__APP__THEME: dark
+              SONARR__AUTH__METHOD: External
+              SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              SONARR__LOG__DBENABLED: "False"
+              SONARR__LOG__LEVEL: debug
+              SONARR__SERVER__PORT: &port 80
+              SONARR__UPDATE__BRANCH: develop
+            envFrom: *env
+    service:
+      main:
+        controller: sonarr
+        ports:
+          http:
+            port: *port
+    route:
+      main:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+    persistence:
+      config:
+        enabled: true
+        existingClaim: sonarr
+      media:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /media
+        server: "10.0.2.3"
+        path: "/mnt/core/media"
+    podAnnotations:
+      secret.reloader.stakater.com/reload: sonarr

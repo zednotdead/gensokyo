@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/external-secrets.io/externalsecret_v1beta1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: slskd
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  refreshInterval: 15m
+  target:
+    name: slskd-secret
+    template:
+      engineVersion: v2
+      data:
+        SLSKD_SLSK_USERNAME: "{{ .username }}"
+        SLSKD_SLSK_PASSWORD: "{{ .password }}"
+        slskd.yml: |
+          web:
+            authentication:
+              disabled: false
+              username: "{{ .username }}"
+              password: "{{ .password }}"
+              api_keys:
+                soularr:
+                  key: "{{ .SLSKD_API_KEY }}"
+                  role: ReadWrite
+                  cidr: 0.0.0.0/0,::/0
+          directories:
+            downloads: /media/downloads/soulseek/complete
+            incomplete: /media/downloads/soulseek/incomplete
+          flags:
+            no_version_check: true
+          metrics:
+            enabled: true
+            url: /metrics
+            authentication:
+              disabled: true
+          permissions:
+            file:
+              mode: 750
+          remote_configuration: false
+          shares:
+            directories:
+              - /media/downloads/soulseek
+              - /media/audio/music
+            filters:
+              - \.ini$
+              - Thumbs.db$
+              - \.DS_Store$
+  dataFrom:
+    - extract:
+        key: slskd
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "SLSKD_$1"
+    - extract:
+        key: Soulseek

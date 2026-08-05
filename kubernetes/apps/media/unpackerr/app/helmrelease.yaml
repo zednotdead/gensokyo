@@ -1,0 +1,83 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: unpackerr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: unpackerr
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      unpackerr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/unpackerr/unpackerr
+              tag: 0.15.2@sha256:89e13608521ece21dd300c39229fd595a55fbf4b8152771af5670a7455b5c747
+            env:
+              TZ: America/New_York
+              UN_WEBSERVER_METRICS: true
+              UN_WEBSERVER_LOG_FILE: /logs/webserver.log
+              UN_ACTIVITY: true
+              UN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
+              UN_SONARR_0_PATHS_0: /media/downloads
+              UN_RADARR_0_URL: http://radarr.media.svc.cluster.local
+              UN_RADARR_0_PATHS_0: /media/downloads
+            envFrom:
+              - secretRef:
+                  name: unpackerr-secret
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: unpackerr
+        ports:
+          http:
+            port: 5656
+    serviceMonitor:
+      app:
+        serviceName: unpackerr
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
+    persistence:
+      logs:
+        type: emptyDir
+      downloads:
+        enabled: true
+        type: nfs
+        globalMounts:
+          - path: /media/downloads
+        server: "10.0.2.3"
+        path: "/mnt/core/media/downloads"
