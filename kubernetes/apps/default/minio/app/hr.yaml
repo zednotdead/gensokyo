@@ -1,0 +1,106 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rustfs
+spec:
+  interval: 1h
+  timeout: 5m
+  chartRef:
+    kind: OCIRepository
+    name: rustfs
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 5
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 473
+        runAsUser: 473
+    controllers:
+      minio:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: docker.io/rustfs/rustfs
+              tag: 1.0.0-beta.12
+            probes:
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            env:
+              RUSTFS_VOLUMES: "/data"
+              RUSTFS_ADDRESS: "0.0.0.0:9000"
+              RUSTFS_CONSOLE_ENABLE: "true"
+              RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+              RUSTFS_UPDATE: "off"
+              RUSTFS_BROWSER_REDIRECT_URL: https://minio.${SECRET_DOMAIN}
+              RUSTFS_SERVER_URL: https://s3.${SECRET_DOMAIN}
+              RUSTFS_IDENTITY_OPENID_ENABLE: off
+            envFrom:
+              - secretRef:
+                  name: minio-secret
+    service:
+      main:
+        controller: minio
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: ${MINIO_ADDRESS}
+        externalTrafficPolicy: Cluster
+        ports:
+          http:
+            port: 9001
+          api:
+            port: 9000
+    route:
+      main:
+        hostnames: ["minio.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: minio
+                port: 9001
+      s3:
+        hostnames: ["s3.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: minio
+                port: 9000
+    serviceMonitor:
+      main:
+        serviceName: minio
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /minio/v2/metrics/cluster
+            interval: 1m
+            scrapeTimeout: 10s
+    persistence:
+      config:
+        type: nfs
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/rustfs"
+        globalMounts:
+          - path: /data
