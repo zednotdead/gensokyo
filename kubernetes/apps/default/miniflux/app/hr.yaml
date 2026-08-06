@@ -1,0 +1,110 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app miniflux
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    controllers:
+      miniflux:
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: miniflux-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/miniflux/miniflux
+              tag: 2.3.2-distroless@sha256:e2a2d2939d79687315385749c0ebcda0a1e8220e02c7e4f41f0e55cba2fbf1b7
+            env:
+              BASE_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+              # DEBUG: "1"
+              LOG_DATE_TIME: "1"
+              METRICS_ALLOWED_NETWORKS: 10.42.0.0/16
+              METRICS_COLLECTOR: "1"
+              POLLING_SCHEDULER: entry_frequency
+              POLLING_FREQUENCY: "15"
+              PORT: &port 80
+              RUN_MIGRATIONS: "1"
+              OAUTH2_OIDC_DISCOVERY_ENDPOINT: "https://auth.${SECRET_DOMAIN}"
+              OAUTH2_OIDC_PROVIDER_NAME: "Authelia"
+              OAUTH2_PROVIDER: "oidc"
+              OAUTH2_REDIRECT_URL: "https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback"
+              OAUTH2_USER_CREATION: "1"
+              FETCHER_ALLOW_PRIVATE_NETWORKS: "1"
+              INTEGRATION_ALLOW_PRIVATE_NETWORKS: "1"
+            envFrom: *env
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthcheck
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: miniflux
+        ports:
+          http:
+            port: *port
+    serviceMonitor:
+      app:
+        serviceName: miniflux
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port

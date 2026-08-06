@@ -1,0 +1,37 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: miniflux
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: miniflux-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        OAUTH2_CLIENT_ID: "{{ .MINIFLUX_CLIENT_ID }}"
+        OAUTH2_CLIENT_SECRET: "{{ .MINIFLUX_CLIENT_SECRET }}"
+        DATABASE_URL: >-
+          password={{ .MINIFLUX_DATABASE_PASS }} dbname=miniflux host=postgres-lb.database.svc sslmode=disable user={{ .MINIFLUX_DATABASE_USER }}
+        INIT_POSTGRES_DBNAME: miniflux
+        INIT_POSTGRES_HOST: postgres-lb.database.svc
+        INIT_POSTGRES_USER: "{{ .MINIFLUX_DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .MINIFLUX_DATABASE_PASS }}"
+        INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
+  dataFrom:
+    - extract:
+        key: Miniflux
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "MINIFLUX_$1"
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"
