@@ -1,0 +1,124 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app jellyfin
+spec:
+  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      jellyfin:
+        pod:
+          securityContext:
+            supplementalGroups:
+              - 44
+              - 109
+              - 122
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: intel.feature.node.kubernetes.io/gpu
+                        operator: In
+                        values:
+                          - "true"
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - preference:
+                    matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - "talos-03" # this one has the Intel Arc A380
+                  weight: 100
+        containers:
+          main:
+            image:
+              repository: ghcr.io/jellyfin/jellyfin
+              tag: 10.11.9
+            resources:
+              requests:
+                ephemeral-storage: 100M
+                gpu.intel.com/i915: 1
+              limits:
+                gpu.intel.com/i915: 1
+            probes:
+              # liveness: &probes
+              #   enabled: true
+              #   custom: true
+              #   spec:
+              #     httpGet:
+              #       path: /health
+              #       port: &port 8096
+              #     initialDelaySeconds: 90
+              #     periodSeconds: 10
+              #     timeoutSeconds: 1
+              #     failureThreshold: 300
+              # readiness: *probes
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8096
+    route:
+      app:
+        hostnames: ["jf.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /config
+      media:
+        enabled: true
+        type: nfs
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media"
+        globalMounts:
+          - path: /media
+      cache:
+        enabled: true
+        existingClaim: jellyfin-transcode
+        globalMounts:
+          - path: /cache

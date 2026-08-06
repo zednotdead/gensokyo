@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: audiomuse
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: audiomuse
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      audiomuse:
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 17.6.0@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+            envFrom: &env
+              - secretRef:
+                  name: audiomuse-secret
+        containers:
+          main:
+            image: &image
+              repository: ghcr.io/neptunehub/audiomuse-ai
+              tag: 2.5.0@sha256:f7f9f96d5ef71a6e0a87c5beaafa66c0cb07319af7a13fad384caccaff133236
+            env:
+              SERVICE_TYPE: "flask"
+              TZ: ${TIMEZONE}
+              REDIS_URL: &redis redis://audiomuse-dragonfly.media.svc:6379/9
+              TEMP_DIR: &tempdir "/app/temp_audio"
+            envFrom: *env
+      worker:
+        replicas: 3
+        type: statefulset
+        containers:
+          main:
+            image: *image
+            env:
+              SERVICE_TYPE: "worker"
+              TZ: ${TIMEZONE}
+              REDIS_URL: *redis
+              TEMP_DIR: *tempdir
+            envFrom: *env
+    service:
+      main:
+        controller: audiomuse
+        ports:
+          http:
+            port: &port 8000
+    route:
+      main:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: main
+                port: *port
+    defaultPodOptions:
+      enableServiceLinks: true
+      securityContext:
+        runAsUser: ${NAS_UID}
+        runAsGroup: ${NAS_GID}
+        fsGroup: ${NAS_GID}
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+    podAnnotations:
+      secret.reloader.stakater.com/reload: audiomuse
+    persistence:
+      tempaudio:
+        enabled: true
+        type: emptyDir
+        advancedMounts:
+          audiomuse:
+            main:
+              - path: *tempdir
+          worker:
+            main:
+              - path: *tempdir

@@ -7,7 +7,7 @@ components:
   - ../../components/sops
 resources:
   - ./namespace.yaml
-  # - ./jellyfin/ks.yaml
+  - ./jellyfin/ks.yaml
   - ./qbittorrent/ks.yaml
   - ./cross-seed/ks.yaml
   - ./flaresolverr/ks.yaml
@@ -24,5 +24,5 @@ resources:
   # - ./komf/ks.yaml
   - ./qui/ks.yaml
   # - ./seerr/ks.yaml
-  # - ./navidrome/ks.yaml
-  # - ./audiomuse/ks.yaml
+  - ./navidrome/ks.yaml
+  - ./audiomuse/ks.yaml
