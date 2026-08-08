@@ -14,3 +14,4 @@ resources:
   - ./miniflux/ks.yaml
   - ./rsshub/ks.yaml
   - ./zipline/ks.yaml
+  - ./karakeep/ks.yaml

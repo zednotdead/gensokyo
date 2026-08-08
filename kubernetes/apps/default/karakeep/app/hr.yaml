@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app karakeep
+spec:
+  interval: 30m
+  maxHistory: 3
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      karakeep:
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/karakeep-app/karakeep
+              tag: 0.33.1
+            resources:
+              requests:
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            env:
+              DATA_DIR: /data
+              MEILI_ADDR: http://karakeep-meili:7700
+              NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
+              BROWSER_WEB_URL: http://karakeep-chrome:9222
+              DISABLE_PASSWORD_AUTH: true
+              DISABLE_SIGNUPS: true
+              CRAWLER_DOWNLOAD_BANNER_IMAGE: true
+              CRAWLER_ENABLE_ADBLOCKER: true
+              CRAWLER_STORE_SCREENSHOT: true
+              DISABLE_NEW_RELEASE_CHECK: true
+              OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
+              OAUTH_WELLKNOWN_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
+              OAUTH_PROVIDER_NAME: Authelia
+            envFrom:
+              - secretRef:
+                  name: karakeep-secret
+    service:
+      app:
+        controller: karakeep
+        ports:
+          http:
+            port: &port 3000
+    route:
+      main:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data

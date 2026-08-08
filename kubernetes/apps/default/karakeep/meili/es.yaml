@@ -1,0 +1,25 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: karakeep-meili
+  namespace: default
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  refreshInterval: 5m
+  target:
+    name: karakeep-meili-secret
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        MEILI_MASTER_KEY: "{{ .HOARDER_MEILI_MASTER_KEY }}"
+  dataFrom:
+    - extract:
+        key: Hoarder
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "HOARDER_$1"
