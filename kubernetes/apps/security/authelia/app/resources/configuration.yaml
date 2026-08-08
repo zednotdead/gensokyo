@@ -34,7 +34,7 @@ access_control:
 identity_providers:
   oidc:
     claims_policies:
-      karakeep:
+      hoarder:
         id_token:
           - email
       grafana:
@@ -66,7 +66,7 @@ identity_providers:
       - client_id: '{{ env "HOARDER_CLIENT_ID" }}'
         client_secret: '{{ env "HOARDER_CLIENT_SECRET_DIGEST" }}'
         client_name: Hoarder
-        claims_policy: karakeep
+        claims_policy: hoarder
         public: false
         authorization_policy: "two_factor"
         require_pkce: false
