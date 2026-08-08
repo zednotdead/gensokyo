@@ -11,10 +11,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   interval: 1h
   path: ./kubernetes/apps/default/zipline/app
   postBuild:
@@ -39,7 +35,7 @@ spec:
       namespace: volsync-system
     - name: authelia
       namespace: security
-    - name: minio
+    - name: rustfs
       namespace: default
   targetNamespace: *namespace
   timeout: 5m

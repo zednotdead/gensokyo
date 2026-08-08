@@ -9,7 +9,7 @@ spec:
   maxHistory: 3
   chartRef:
     kind: OCIRepository
-    name: app-template
+    name: *app
   install:
     remediation:
       retries: 3
@@ -24,13 +24,13 @@ spec:
     controllers:
       rsshub:
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         strategy: Recreate
         containers:
           app:
             image:
               repository: ghcr.io/diygod/rsshub
-              tag: latest@sha256:dd086415069a75b65b8391d0d986dbaa7147176caae166d17f80411223fbadc8
+              tag: latest@sha256:f325c8c2e5b1d76c36f449ab6a70c9fce9816be7f344382291d60ad9c4dafd7c
             env:
               NODE_ENV: production
               CACHE_TYPE: redis

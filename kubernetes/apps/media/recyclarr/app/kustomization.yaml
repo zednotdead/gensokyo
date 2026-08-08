@@ -6,6 +6,7 @@ resources:
   - ./helmrelease.yaml
   - ./config-pvc.yaml
   - ./externalsecret.yaml
+  - ./oci.yaml
 configMapGenerator:
   - name: recyclarr-configmap
     files:

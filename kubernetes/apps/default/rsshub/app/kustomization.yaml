@@ -6,3 +6,4 @@ resources:
   - ./es.yaml
   - ./hr.yaml
   - ./dragonfly.yaml
+  - ./oci.yaml

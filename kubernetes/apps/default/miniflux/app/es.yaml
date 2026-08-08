@@ -21,7 +21,7 @@ spec:
         INIT_POSTGRES_HOST: postgres-lb.database.svc
         INIT_POSTGRES_USER: "{{ .MINIFLUX_DATABASE_USER }}"
         INIT_POSTGRES_PASS: "{{ .MINIFLUX_DATABASE_PASS }}"
-        INIT_POSTGRES_SUPER_PASS: '{{ .CNPG_password }}'
+        INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
   dataFrom:
     - extract:
         key: Miniflux

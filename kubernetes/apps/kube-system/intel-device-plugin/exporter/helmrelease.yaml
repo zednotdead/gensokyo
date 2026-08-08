@@ -9,7 +9,7 @@ spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: app-template
+    name: *app
   maxHistory: 2
   install:
     createNamespace: true
@@ -63,4 +63,3 @@ spec:
             relabelings:
               - sourceLabels: [__meta_kubernetes_pod_node_name]
                 targetLabel: node
-

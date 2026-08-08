@@ -1,8 +1,8 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/authelia/refs/heads/master/docs/static/schemas/v4.39/json-schema/configuration.json
 server:
-    headers:
-        csp_template: "default-src 'self'; frame-src 'none'; object-src 'none'; style-src 'self' 'nonce-$${NONCE}'; base-uri 'self'; frame-ancestors 'self' https://*.${SECRET_DOMAIN};"
+  headers:
+    csp_template: "default-src 'self'; frame-src 'none'; object-src 'none'; style-src 'self' 'nonce-$${NONCE}'; base-uri 'self'; frame-ancestors 'self' https://*.${SECRET_DOMAIN};"
 authentication_backend:
   ldap:
     implementation: custom
@@ -38,16 +38,17 @@ identity_providers:
         id_token:
           - email
       grafana:
-        id_token: ['email', 'name', 'groups', 'preferred_username']
+        id_token: ["email", "name", "groups", "preferred_username"]
       nextcloud_userinfo:
         custom_claims:
           is_nextcloud_admin: {}
       minio:
-        id_token: ['rat', 'groups', 'email', 'email_verified', 'alt_emails', 'preferred_username', 'name']
+        id_token:
+          ["rat", "groups", "email", "email_verified", "alt_emails", "preferred_username", "name"]
     scopes:
       nextcloud_userinfo:
         claims:
-          - 'is_nextcloud_admin'
+          - "is_nextcloud_admin"
     clients:
       - client_id: '{{ env "MEALIE_CLIENT_ID" }}'
         client_secret: '{{ env "MEALIE_CLIENT_SECRET_DIGEST" }}'
@@ -67,177 +68,177 @@ identity_providers:
         client_name: Hoarder
         claims_policy: karakeep
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: false
         pkce_challenge_method: S256
         redirect_uris:
-          - 'https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom'
+          - "https://hoarder.${SECRET_DOMAIN}/api/auth/callback/custom"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "KOMGA_CLIENT_ID" }}'
-        client_name: 'Komga'
+        client_name: "Komga"
         client_secret: '{{ env "KOMGA_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         redirect_uris:
-          - 'https://komga.${SECRET_DOMAIN}/login/oauth2/code/authelia'
+          - "https://komga.${SECRET_DOMAIN}/login/oauth2/code/authelia"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         grant_types:
-          - 'authorization_code'
-        userinfo_signed_response_alg: 'none'
+          - "authorization_code"
+        userinfo_signed_response_alg: "none"
       - client_id: '{{ env "GRAFANA_CLIENT_ID" }}'
         client_secret: '{{ env "GRAFANA_CLIENT_SECRET_DIGEST" }}'
-        claims_policy: 'grafana'
-        client_name: 'Grafana'
+        claims_policy: "grafana"
+        client_name: "Grafana"
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://grafana.${SECRET_DOMAIN}/login/generic_oauth'
+          - "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'groups'
-          - 'email'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "openid"
+          - "profile"
+          - "groups"
+          - "email"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "MINIFLUX_CLIENT_ID" }}'
         client_secret: '{{ env "MINIFLUX_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback'
+          - "https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "PAPERLESS_CLIENT_ID" }}'
-        client_name: 'Paperless'
-        client_secret:  '{{ env "PAPERLESS_CLIENT_SECRET_DIGEST" }}'
+        client_name: "Paperless"
+        client_secret: '{{ env "PAPERLESS_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://paperless.${SECRET_DOMAIN}/accounts/oidc/authelia/login/callback/'
+          - "https://paperless.${SECRET_DOMAIN}/accounts/oidc/authelia/login/callback/"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
-          - 'groups'
+          - "openid"
+          - "profile"
+          - "email"
+          - "groups"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "NEXTCLOUD_CLIENT_ID" }}'
-        client_name: 'Nextcloud'
+        client_name: "Nextcloud"
         client_secret: '{{ env "NEXTCLOUD_CLIENT_SECRET_DIGEST" }}' # The digest of 'insecure_secret'.
         public: false
-        authorization_policy: 'one_factor'
+        authorization_policy: "one_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
-        claims_policy: 'nextcloud_userinfo'
+        pkce_challenge_method: "S256"
+        claims_policy: "nextcloud_userinfo"
         redirect_uris:
-          - 'https://cloud.${SECRET_DOMAIN}/apps/oidc_login/oidc'
+          - "https://cloud.${SECRET_DOMAIN}/apps/oidc_login/oidc"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
-          - 'groups'
-          - 'nextcloud_userinfo'
+          - "openid"
+          - "profile"
+          - "email"
+          - "groups"
+          - "nextcloud_userinfo"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "HASS_CLIENT_ID" }}'
-        client_name: 'Home Assistant'
+        client_name: "Home Assistant"
         client_secret: '{{ env "HASS_CLIENT_SECRET_DIGEST" }}'
         public: false
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://ha.${SECRET_DOMAIN}/auth/oidc/callback'
+          - "https://ha.${SECRET_DOMAIN}/auth/oidc/callback"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'groups'
+          - "openid"
+          - "profile"
+          - "groups"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "TANDOOR_CLIENT_ID" }}'
-        client_name: 'Tandoor'
+        client_name: "Tandoor"
         client_secret: '{{ env "TANDOOR_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://tandoor.${SECRET_DOMAIN}/accounts/oidc/authelia/login/callback/'
+          - "https://tandoor.${SECRET_DOMAIN}/accounts/oidc/authelia/login/callback/"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "FORGEJO_CLIENT_ID" }}'
-        client_name: 'Forgejo'
+        client_name: "Forgejo"
         client_secret: '{{ env "FORGEJO_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://git.${SECRET_DOMAIN}/user/oauth2/Authelia/callback'
+          - "https://git.${SECRET_DOMAIN}/user/oauth2/Authelia/callback"
         scopes:
-          - 'openid'
-          - 'email'
-          - 'profile'
-          - 'groups'
+          - "openid"
+          - "email"
+          - "profile"
+          - "groups"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
-      - client_name:  '{{ env "QUI_CLIENT_ID" }}'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
+      - client_name: '{{ env "QUI_CLIENT_ID" }}'
         client_id: qui
         client_secret: '{{ env "QUI_CLIENT_SECRET_DIGEST" }}'
         public: false
@@ -267,28 +268,28 @@ identity_providers:
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_post
       - client_id: '{{ env "JELLYFIN_CLIENT_ID" }}'
-        client_name: 'Jellyfin'
+        client_name: "Jellyfin"
         client_secret: '{{ env "JELLYFIN_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
           - https://jf.${SECRET_DOMAIN}/sso/OID/redirect/authelia
           - http://jf.${SECRET_DOMAIN}/sso/OID/redirect/authelia
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'groups'
+          - "openid"
+          - "profile"
+          - "groups"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "MINIO_CLIENT_ID" }}'
-        client_name: 'Minio'
+        client_name: "Minio"
         client_secret: '{{ env "MINIO_CLIENT_SECRET_DIGEST" }}'
         public: false
         authorization_policy: two_factor
@@ -300,114 +301,114 @@ identity_providers:
           - email
           - groups
         userinfo_signed_response_alg: none
-        token_endpoint_auth_method: 'client_secret_post'
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "STALWART_CLIENT_ID" }}'
-        client_name: 'Stalwart'
-        client_secret: '{{ env "STALWART_CLIENT_SECRET_DIGEST" }}'  # The digest of 'insecure_secret'.
+        client_name: "Stalwart"
+        client_secret: '{{ env "STALWART_CLIENT_SECRET_DIGEST" }}' # The digest of 'insecure_secret'.
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://mail.${SECRET_DOMAIN}'
+          - "https://mail.${SECRET_DOMAIN}"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "IMMICH_CLIENT_ID" }}'
-        client_name: 'immich'
+        client_name: "immich"
         client_secret: '{{ env "IMMICH_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://img.zed.gay/auth/login'
-          - 'https://img.zed.gay/user-settings'
-          - 'app.immich:///oauth-callback'
+          - "https://img.zed.gay/auth/login"
+          - "https://img.zed.gay/user-settings"
+          - "app.immich:///oauth-callback"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "VIKUNJA_CLIENT_ID" }}'
-        client_name: 'Vikunja'
+        client_name: "Vikunja"
         client_secret: '{{ env "VIKUNJA_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://vikunja.${SECRET_DOMAIN}/auth/openid/authelia'
+          - "https://vikunja.${SECRET_DOMAIN}/auth/openid/authelia"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "ZIPLINE_CLIENT_ID" }}'
-        client_name: 'Zipline'
+        client_name: "Zipline"
         client_secret: '{{ env "ZIPLINE_CLIENT_SECRET_DIGEST" }}'
         public: false
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://zl.${SECRET_DOMAIN}/api/auth/oauth/oidc'
+          - "https://zl.${SECRET_DOMAIN}/api/auth/oauth/oidc"
         scopes:
-          - 'openid'
-          - 'offline_access'
-          - 'email'
-          - 'profile'
+          - "openid"
+          - "offline_access"
+          - "email"
+          - "profile"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'refresh_token'
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "refresh_token"
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_post"
       - client_id: '{{ env "PROXMOX_CLIENT_ID" }}'
-        client_name: 'Proxmox'
+        client_name: "Proxmox"
         client_secret: '{{ env "PROXMOX_CLIENT_SECRET_DIGEST" }}'
         public: false
-        authorization_policy: 'two_factor'
+        authorization_policy: "two_factor"
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://10.0.1.1:8006'
-          - 'https://10.0.1.2:8006'
-          - 'https://10.0.1.3:8006'
-          - 'https://10.0.1.4:8006'
+          - "https://10.0.1.1:8006"
+          - "https://10.0.1.2:8006"
+          - "https://10.0.1.3:8006"
+          - "https://10.0.1.4:8006"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
-          - 'groups'
+          - "openid"
+          - "profile"
+          - "email"
+          - "groups"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
 session:
   same_site: lax
   inactivity: 5m

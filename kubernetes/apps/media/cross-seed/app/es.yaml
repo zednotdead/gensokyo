@@ -38,41 +38,41 @@ spec:
             sonarr: ["http://sonarr.media.svc.cluster.local/?apikey={{ .SONARR_API_KEY }}"],
             useClientTorrents: true,
             torznab: [
-              11, // AnimeTorrents
-              6, // FearNoPeer
+              14, // AnimeZ
+              16, // AvistaZ
+              15, // CinemaZ
               7, // Milkie
               8, // TorrentLeech
-              9, // CinemaZ
             ].map(i => `http://prowlarr.media.svc.cluster.local/$${i}/api?apikey={{ .PROWLARR_API_KEY }}`),
           };
   dataFrom:
     - extract:
         key: cross-seed
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "CROSS_SEED_$1"
+        - regexp:
+            source: "(.*)"
+            target: "CROSS_SEED_$1"
     - extract:
         key: Prowlarr
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "PROWLARR_$1"
+        - regexp:
+            source: "(.*)"
+            target: "PROWLARR_$1"
     - extract:
         key: Radarr
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "RADARR_$1"
+        - regexp:
+            source: "(.*)"
+            target: "RADARR_$1"
     - extract:
         key: Sonarr
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "SONARR_$1"
+        - regexp:
+            source: "(.*)"
+            target: "SONARR_$1"
     - extract:
         key: qBittorrent
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "QB_$1"
+        - regexp:
+            source: "(.*)"
+            target: "QB_$1"

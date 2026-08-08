@@ -68,6 +68,6 @@ spec:
       comics:
         type: nfs
         server: "${NAS_ADDRESS}"
-        path: "${NAS_BASE_URL}/media/documents"
+        path: "${NAS_BASE_URL}/media/books"
         globalMounts:
-          - path: /mnt/storage/media/documents
+          - path: /mnt/storage/media/books

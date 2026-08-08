@@ -1,25 +1,31 @@
 ---
+# yaml-language-server: $schema=https://crd.movishell.pl/core/persistentvolume_v1.json
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: immich-nfs
 spec:
-  storageClassName: immich-nfs
   capacity:
-    storage: 1Mi # Size does not matter
+    storage: 1Gi
+  volumeMode: Filesystem
   accessModes: ["ReadWriteMany"]
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
   nfs:
-    server: "10.0.2.3"
-    path: "/mnt/core/media/software/applications/immich"
+    server: "${NAS_ADDRESS}"
+    path: "${NAS_BASE_URL}/media/software/applications/immich"
+  mountOptions: ["nfsvers=4.2", "nconnect=8", "hard", "noatime", "nodiratime"]
 ---
+# yaml-language-server: $schema=https://crd.movishell.pl/core/persistentvolumeclaim_v1.json
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: immich-nfs
 spec:
   accessModes: ["ReadWriteMany"]
-  storageClassName: immich-nfs
   resources:
     requests:
-      storage: 1Mi # Size does not matter
+      storage: 1Gi
+  storageClassName: nfs
+  volumeMode: Filesystem
+  volumeName: immich-nfs

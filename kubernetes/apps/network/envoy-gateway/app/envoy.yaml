@@ -52,7 +52,7 @@ spec:
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: external.${SECRET_DOMAIN}
-      lbipam.cilium.io/ips: "10.0.255.251"
+      lbipam.cilium.io/ips: "10.0.10.253"
   listeners:
     - name: http
       protocol: HTTP
@@ -73,30 +73,6 @@ spec:
     - name: ssh
       protocol: TCP
       port: 22
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TCPRoute
-    - name: smtp
-      protocol: TCP
-      port: 25
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TCPRoute
-    - name: smtps
-      protocol: TCP
-      port: 465
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TCPRoute
-    - name: imaps
-      protocol: TCP
-      port: 993
       allowedRoutes:
         namespaces:
           from: All
@@ -114,7 +90,7 @@ spec:
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}
-      lbipam.cilium.io/ips: "10.0.255.252"
+      lbipam.cilium.io/ips: "10.0.10.254"
   listeners:
     - name: http
       protocol: HTTP
@@ -132,14 +108,6 @@ spec:
         certificateRefs:
           - kind: Secret
             name: ${SECRET_DOMAIN/./-}-production-tls
-    - name: ssh
-      protocol: TCP
-      port: 22
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TCPRoute
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: BackendTrafficPolicy
@@ -173,22 +141,15 @@ metadata:
 spec:
   clientIPDetection:
     xForwardedFor:
-      numTrustedHops: 1
-  connection:
-    bufferLimit: 4Mi
-    maxAcceptPerSocketEvent: 0
+      trustedCIDRs:
+        - "10.42.0.0/16"
   http2:
-    initialStreamWindowSize: 512Ki
-    initialConnectionWindowSize: 8Mi
     onInvalidMessage: TerminateStream
   http3: {}
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
   tcpKeepalive: {}
-  timeout:
-    http:
-      requestReceivedTimeout: 0s
   tls:
     minVersion: "1.2"
     alpnProtocols:

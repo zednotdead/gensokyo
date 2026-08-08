@@ -53,8 +53,8 @@ spec:
     - extract:
         key: slskd
       rewrite:
-      - regexp:
-          source: "(.*)"
-          target: "SLSKD_$1"
+        - regexp:
+            source: "(.*)"
+            target: "SLSKD_$1"
     - extract:
         key: Soulseek

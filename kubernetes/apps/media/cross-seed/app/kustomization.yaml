@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./es.yaml
   - ./hr.yaml
+  - ./oci.yaml
 configMapGenerator:
   - name: cross-seed-loki-rules
     files:

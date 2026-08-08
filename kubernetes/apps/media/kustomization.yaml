@@ -4,8 +4,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: media
 components:
-  - ../../components/common
+  - ../../components/sops
 resources:
+  - ./namespace.yaml
   - ./jellyfin/ks.yaml
   - ./qbittorrent/ks.yaml
   - ./cross-seed/ks.yaml
@@ -19,9 +20,9 @@ resources:
   - ./unpackerr/ks.yaml
   - ./immich/ks.yaml
   - ./autobrr/ks.yaml
-  - ./komga/ks.yaml
-  - ./komf/ks.yaml
+  # - ./komga/ks.yaml
+  # - ./komf/ks.yaml
   - ./qui/ks.yaml
-  - ./seerr/ks.yaml
+  # - ./seerr/ks.yaml
   - ./navidrome/ks.yaml
   - ./audiomuse/ks.yaml

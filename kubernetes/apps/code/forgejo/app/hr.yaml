@@ -105,7 +105,7 @@ spec:
         storage:
           STORAGE_TYPE: minio
           MINIO_USE_SSL: false
-          MINIO_ENDPOINT: minio.default.svc:9000
+          MINIO_ENDPOINT: rustfs.default.svc:9000
           MINIO_BUCKET: forgejo
           MINIO_LOCATION: us-east-1
           MINIO_INSECURE_SKIP_VERIFY: false
@@ -113,7 +113,7 @@ spec:
         - name: Authelia
           provider: openidConnect
           scopes: email profile groups
-          autoDiscoverUrl: 'https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration'
+          autoDiscoverUrl: "https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration"
       metrics:
         enabled: true
         serviceMonitor:
