@@ -1,0 +1,106 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app karakeep
+  namespace: &namespace default
+spec:
+  components:
+    - ../../../../components/volsync/
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+  interval: 1h
+  path: ./kubernetes/apps/default/karakeep/app
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 10Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  dependsOn:
+    - name: karakeep-meili
+    - name: karakeep-chrome
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app karakeep-chrome
+  namespace: &namespace default
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+  interval: 1h
+  path: ./kubernetes/apps/default/karakeep/chrome
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 10Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app karakeep-meili
+  namespace: &namespace default
+spec:
+  components:
+    - ../../../../components/volsync/
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
+  interval: 1h
+  path: ./kubernetes/apps/default/karakeep/meili
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+      - name: cluster-settings
+        kind: ConfigMap
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 10Gi
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: *namespace
+  timeout: 5m
+  wait: false
