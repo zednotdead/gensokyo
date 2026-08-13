@@ -14,5 +14,5 @@ resources:
   - ./miniflux/ks.yaml
   - ./rsshub/ks.yaml
   - ./zipline/ks.yaml
-  - ./hoarder/ks.yaml
   - ./onlyoffice/ks.yaml
+  - ./opencloud/ks.yaml

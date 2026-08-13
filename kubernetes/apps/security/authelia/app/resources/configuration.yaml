@@ -409,6 +409,96 @@ identity_providers:
         access_token_signed_response_alg: "none"
         userinfo_signed_response_alg: "none"
         token_endpoint_auth_method: "client_secret_basic"
+      - client_id: '{{ env "OPENCLOUD_CLIENT_ID" }}'
+        client_name: 'openCloud'
+        public: true
+        authorization_policy: 'two_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        scopes:
+          - 'openid'
+          - 'offline_access'
+          - 'groups'
+          - 'profile'
+          - 'email'
+        redirect_uris:
+          - 'https://oc.${SECRET_DOMAIN}/'
+          - 'https://oc.${SECRET_DOMAIN}/oidc-callback.html'
+          - 'https://oc.${SECRET_DOMAIN}/oidc-silent-redirect.html'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+          - 'refresh_token'
+        access_token_signed_response_alg: 'RS256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'none'
+      - client_id: '{{ env "OPENCLOUD_CLIENT_ID" }}-android'
+        client_name: 'openCloud'
+        public: true
+        authorization_policy: 'two_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'oc://android.opencloud.eu'
+        scopes:
+          - 'openid'
+          - 'offline_access'
+          - 'groups'
+          - 'profile'
+          - 'email'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+          - 'refresh_token'
+        access_token_signed_response_alg: 'RS256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'none'
+      - client_id: '{{ env "OPENCLOUD_CLIENT_ID" }}-desktop'
+        client_name: 'openCloud'
+        public: true
+        authorization_policy: 'two_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        scopes:
+          - 'openid'
+          - 'offline_access'
+          - 'groups'
+          - 'profile'
+          - 'email'
+        redirect_uris:
+          - 'http://127.0.0.1'
+          - 'http://localhost'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+          - 'refresh_token'
+        access_token_signed_response_alg: 'RS256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'none'
+      - client_id: '{{ env "OPENCLOUD_CLIENT_ID" }}-ios'
+        client_name: 'openCloud'
+        public: true
+        authorization_policy: 'two_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'oc://ios.opencloud.eu'
+          - 'oc.ios://ios.opencloud.eu'
+        scopes:
+          - 'openid'
+          - 'offline_access'
+          - 'groups'
+          - 'profile'
+          - 'email'
+        grant_types:
+          - 'authorization_code'
+          - 'refresh_token'
+        access_token_signed_response_alg: 'RS256'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'none'
 session:
   same_site: lax
   inactivity: 5m

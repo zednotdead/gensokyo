@@ -64,6 +64,7 @@ spec:
         PROXMOX_CLIENT_SECRET_DIGEST: "{{ .PROXMOX_CLIENT_SECRET_DIGEST }}"
         ZIPLINE_CLIENT_ID: "{{ .ZIPLINE_CLIENT_ID }}"
         ZIPLINE_CLIENT_SECRET_DIGEST: "{{ .ZIPLINE_CLIENT_SECRET_DIGEST }}"
+        OPENCLOUD_CLIENT_ID: "{{ .OPENCLOUD_CLIENT_ID }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -210,3 +211,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "ZIPLINE_$1"
+    - extract:
+        key: Opencloud
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "OPENCLOUD_$1"
