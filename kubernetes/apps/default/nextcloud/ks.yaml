@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app opencloud
+  name: &app nextcloud
   namespace: &namespace default
 spec:
   components:
@@ -11,8 +11,10 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  decryption:
+    provider: sops
   interval: 1h
-  path: ./kubernetes/apps/default/opencloud/app
+  path: ./kubernetes/apps/default/nextcloud/app
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -21,7 +23,7 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_CAPACITY: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -31,8 +33,12 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: rustfs
-      namespace: default
+    - name: volsync
+      namespace: volsync-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: cloudnative-pg-cluster
+      namespace: database
   targetNamespace: *namespace
   timeout: 5m
   wait: false
