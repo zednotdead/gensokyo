@@ -9,11 +9,10 @@ spec:
   chartRef:
     kind: OCIRepository
     name: *app
-    namespace: flux-system
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: rabbitmq
+    - name: onlyoffice-rabbitmq
   values:
     controllers:
       onlyoffice:
@@ -31,11 +30,11 @@ spec:
           onlyoffice:
             image:
               repository: docker.io/onlyoffice/documentserver
-              tag: 9.3.1
+              tag: 9.4.0.1
             env:
               WOPI_ENABLED: true
               USE_UNAUTHORIZED_STORAGE: true
-              AMQP_URI: amqp://guest:guest@rabbitmq
+              AMQP_URI: amqp://guest:guest@onlyoffice-rabbitmq
             envFrom: *env
             probes:
               liveness:
