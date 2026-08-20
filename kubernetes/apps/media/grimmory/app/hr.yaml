@@ -1,0 +1,151 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/refs/heads/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app grimmory
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  values:
+    controllers:
+      grimmory:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          mariadb:
+            image:
+              repository: docker.io/library/mariadb
+              tag: 12.3.2-noble@sha256:759869cb6f003234a95c6384cdee245b4bce7de26913fe607a8110362c0c007d
+            env:
+              MARIADB_DATABASE: grimmory
+              MARIADB_USER: grimmory
+              MARIADB_PASSWORD: grimmory
+              MARIADB_ROOT_PASSWORD: root
+              TZ: America/Los_Angeles
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - mariadb-admin
+                      - ping
+                      - --socket=/run/mysqld/mysqld.sock
+                      - --user=root
+                      - --password=root
+            restartPolicy: Always
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+              readOnlyRootFilesystem: true
+              # NOTE: io_uring is blocked by the default containerd v2 seccomp profile
+              # https://github.com/containerd/containerd/pull/9320
+              seccompProfile: { type: Unconfined }
+        containers:
+          grimmory:
+            image:
+              repository: ghcr.io/grimmory-tools/grimmory
+              tag: v3.3.2@sha256:8a3a046822dee460f3e67df5d548e3b9842057a54ed830026edb20ecc116c8ce
+            # Bypass /usr/local/bin/entrypoint.sh — it expects to start as root
+            # to addgroup/adduser/chown before su-exec'ing down to USER_ID. With
+            # pod-level runAsUser: 1000, that fails. Invoke java directly; the
+            # JVM runs as UID 1000 from the start. JAVA_TOOL_OPTIONS is preserved
+            # from the image ENV (Shenandoah GC, MaxRAMPercentage=60, etc.).
+            command: ["java"]
+            args:
+              - "--enable-native-access=ALL-UNNAMED"
+              - "--enable-preview"
+              - "-jar"
+              - /app/app.jar
+            env:
+              DATABASE_PASSWORD: grimmory
+              DATABASE_URL: jdbc:mariadb://localhost:3306/grimmory
+              DATABASE_USERNAME: grimmory
+              TZ: America/Los_Angeles
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/healthcheck
+                    port: &port 6060
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/healthcheck
+                    port: *port
+                  failureThreshold: 30
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+              readOnlyRootFilesystem: true
+        pod:
+          labels:
+            pod-security.kantai.xyz/allow-seccomp-unconfined: "true"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      data:
+        existingClaim: "${APP}"
+        advancedMounts:
+          grimmory:
+            grimmory:
+              - path: /app/data
+                subPath: app
+            mariadb:
+              - path: /var/lib/mysql
+                subPath: mysql
+      media:
+        enabled: true
+        type: nfs
+        server: "${NAS_ADDRESS}"
+        path: "${NAS_BASE_URL}/media/literature"
+        advancedMounts:
+          grimmory:
+            grimmory:
+              - path: /books
+                subPath: books
+              - path: /bookdrop
+                subPath: bookdrop
+      mysqld:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 1Mi
+        advancedMounts:
+          grimmory:
+            mariadb:
+              - path: /run/mysqld
+      tmp:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 256Mi
+        advancedMounts:
+          grimmory:
+            grimmory:
+              - path: /tmp
+            mariadb:
+              - path: /tmp
+    route:
+      grimmory:
+        hostnames: ["grimmory.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    service:
+      grimmory:
+        controller: grimmory
+        ports:
+          http:
+            port: *port
