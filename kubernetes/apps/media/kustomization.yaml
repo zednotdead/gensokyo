@@ -25,3 +25,4 @@ resources:
   - ./navidrome/ks.yaml
   - ./audiomuse/ks.yaml
   - ./grimmory/ks.yaml
+  - ./kavita/ks.yaml
