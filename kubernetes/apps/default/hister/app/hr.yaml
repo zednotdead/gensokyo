@@ -44,24 +44,12 @@ spec:
               HISTER__SERVER__ADDRESS: 0.0.0.0:4433
               HISTER__SERVER__BASE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}
               HISTER__SERVER__OAUTH__OIDC__CONFIGURATION_URL: "https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration"
+              HISTER__EXTRACTORS__YTDLP__ENABLE: "true"
             envFrom: *envFrom
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: &port 4433
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
     service:
       app:
         ports:
