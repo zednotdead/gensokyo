@@ -425,6 +425,19 @@ identity_providers:
           - offline_access
         redirect_uris:
           - https://grimmory.${SECRET_DOMAIN}/oauth2-callback
+      - client_id: '{{ env "HISTER_CLIENT_ID" }}'
+        client_name: 'Hister'
+        client_secret: '{{ env "HISTER_CLIENT_SECRET_DIGEST" }}'
+        authorization_policy: one_factor
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+          - offline_access
+        redirect_uris:
+          - https://hister.${SECRET_DOMAIN}/api/oauth/callback?provider=oidc
+        token_endpoint_auth_method: "client_secret_post"
 session:
   same_site: lax
   inactivity: 5m

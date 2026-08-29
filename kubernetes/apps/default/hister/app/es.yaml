@@ -1,0 +1,32 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: hister
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: hister-secret
+    creationPolicy: Owner
+    template:
+      data:
+        HISTER__SERVER__DATABASE: 'host=postgres-lb.database.svc user={{ .DATABASE_USER }} password={{ .DATABASE_PASSWORD }} dbname=hister port=5432 sslmode=disable TimeZone=${TIMEZONE}'
+        HISTER__SERVER__OAUTH__OIDC__CLIENT_ID: "{{ .CLIENT_ID }}"
+        HISTER__SERVER__OAUTH__OIDC__CLIENT_SECRET: "{{ .CLIENT_SECRET }}"
+
+        INIT_POSTGRES_DBNAME: hister
+        INIT_POSTGRES_HOST: postgres-lb.database.svc
+        INIT_POSTGRES_USER: "{{ .DATABASE_USER }}"
+        INIT_POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
+        INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
+  dataFrom:
+    - extract:
+        key: Hister
+    - extract:
+        key: cloudnative-pg
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CNPG_$1"

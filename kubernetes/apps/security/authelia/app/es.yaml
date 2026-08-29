@@ -66,6 +66,8 @@ spec:
         ZIPLINE_CLIENT_SECRET_DIGEST: "{{ .ZIPLINE_CLIENT_SECRET_DIGEST }}"
         GRIMMORY_CLIENT_ID: "{{ .GRIMMORY_CLIENT_ID }}"
         GRIMMORY_CLIENT_SECRET_DIGEST: "{{ .GRIMMORY_CLIENT_SECRET_DIGEST }}"
+        HISTER_CLIENT_ID: "{{ .HISTER_CLIENT_ID }}"
+        HISTER_CLIENT_SECRET_DIGEST: "{{ .HISTER_CLIENT_SECRET_DIGEST }}"
         INIT_POSTGRES_DBNAME: *dbName
         INIT_POSTGRES_HOST: *dbHost
         INIT_POSTGRES_USER: *dbUser
@@ -218,3 +220,9 @@ spec:
         - regexp:
             source: "(.*)"
             target: "GRIMMORY_$1"
+    - extract:
+        key: Hister
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "HISTER_$1"
