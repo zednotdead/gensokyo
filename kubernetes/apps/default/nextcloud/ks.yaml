@@ -26,6 +26,8 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
       KOPIUR_CAPACITY: 10Gi
+      KOPIUR_PUID: "0"
+      KOPIUR_PGID: "82"
   prune: true
   retryInterval: 2m
   sourceRef:

@@ -5,6 +5,8 @@ kind: ClusterRepository
 metadata:
   name: storage
 spec:
+  create:
+    enabled: false
   allowedNamespaces:
     all: true
   credentialProjection:

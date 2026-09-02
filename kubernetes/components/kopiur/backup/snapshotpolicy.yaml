@@ -23,6 +23,6 @@ spec:
       mode: Persistent
       storageClassName: ${KOPIUR_CACHE_STORAGECLASS:=ceph-block}
     podSecurityContext:
-      runAsUser: ${KOPIUR_PUID:=1000}
-      runAsGroup: ${KOPIUR_PGID:=1000}
-      fsGroup: ${KOPIUR_PGID:=1000}
+      runAsUser: ${KOPIUR_PUID:=568}
+      runAsGroup: ${KOPIUR_PGID:=568}
+      fsGroup: ${KOPIUR_PGID:=568}
