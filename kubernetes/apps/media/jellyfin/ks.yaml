@@ -8,6 +8,7 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync/
+    - ../../../../components/kopiur/backup
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -23,6 +24,7 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_CACHE_CAPACITY: 20Gi
+      KOPIUR_CAPACITY: 20Gi
       GATUS_SUBDOMAIN: jf
   prune: true
   retryInterval: 2m

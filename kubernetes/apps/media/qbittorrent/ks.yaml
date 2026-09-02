@@ -8,6 +8,7 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync/
+    - ../../../../components/kopiur/backup
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -26,6 +27,10 @@ spec:
       VOLSYNC_ACCESSMODES: ReadWriteMany
       VOLSYNC_STORAGECLASS: ceph-filesystem
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-filesystem
+      KOPIUR_CAPACITY: 5Gi
+      KOPIUR_ACCESSMODES: ReadWriteMany
+      KOPIUR_STORAGECLASS: ceph-filesystem
+      KOPIUR_SNAPSHOTCLASS: csi-ceph-filesystem
   prune: true
   retryInterval: 2m
   sourceRef:

@@ -6,9 +6,6 @@ metadata:
   name: &app zipline
   namespace: &namespace default
 spec:
-  components:
-    - ../../../../components/volsync/
-    - ../../../../components/kopiur/backup
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -22,8 +19,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 10Gi
-      KOPIUR_CAPACITY: 10Gi
   prune: true
   retryInterval: 2m
   sourceRef:

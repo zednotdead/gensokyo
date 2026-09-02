@@ -19,7 +19,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
   prune: true
   retryInterval: 2m
   dependsOn:
