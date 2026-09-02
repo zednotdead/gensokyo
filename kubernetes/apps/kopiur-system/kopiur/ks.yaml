@@ -26,6 +26,8 @@ spec:
   dependsOn:
     - name: rustfs
       namespace: default
+    - name: external-secrets-stores
+      namespace: external-secrets
   targetNamespace: *namespace
   timeout: 5m
   wait: false

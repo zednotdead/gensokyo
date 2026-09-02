@@ -10,4 +10,9 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kopiur
-  values: {}
+  values:
+    features:
+      credentialProjection:
+        enabled: true
+      kopiaUi:
+        enabled: true
