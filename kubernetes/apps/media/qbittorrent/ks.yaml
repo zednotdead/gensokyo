@@ -31,6 +31,8 @@ spec:
       KOPIUR_ACCESSMODES: ReadWriteMany
       KOPIUR_STORAGECLASS: ceph-filesystem
       KOPIUR_SNAPSHOTCLASS: csi-ceph-filesystem
+      KOPIUR_PUID: ${NAS_UID}
+      KOPIUR_PGID: ${NAS_GID}
   prune: true
   retryInterval: 2m
   sourceRef:

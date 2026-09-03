@@ -33,5 +33,8 @@ configure:
 init:
     just template init
 
-[doc('Volsync')]
+[group: 'Volsync']
 mod volsync '.just/volsync.just'
+
+[group: 'kopiur']
+mod kopiur '.just/kopiur.just'
