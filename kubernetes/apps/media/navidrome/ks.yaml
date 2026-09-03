@@ -9,6 +9,15 @@ spec:
   components:
     - ../../../../components/volsync/
     - ../../../../components/kopiur/backup
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/files/ignoreRules
+          value:
+            - cache/plugins
+      target:
+        kind: SnapshotPolicy
+        labelSelector: app.kubernetes.io/name=navidrome
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -28,6 +37,7 @@ spec:
       KOPIUR_PRIVILEGED: "true"
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "3001"
+      KOPIUR_IGNORE_ERRORS: "true"
   prune: true
   retryInterval: 2m
   dependsOn:
