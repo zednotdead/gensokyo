@@ -23,6 +23,8 @@ spec:
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "568"
+      KOPIUR_PRIVILEGED: "true"
+      KOPIUR_NON_ROOT: "false"
   prune: true
   retryInterval: 2m
   dependsOn:

@@ -28,6 +28,7 @@ spec:
       KOPIUR_CAPACITY: 10Gi
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "82"
+      KOPIUR_PRIVILEGED: "true"
   prune: true
   retryInterval: 2m
   sourceRef:

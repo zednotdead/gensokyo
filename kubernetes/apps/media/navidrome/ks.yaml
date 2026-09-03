@@ -24,6 +24,8 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
+      KOPIUR_NON_ROOT: "false"
+      KOPIUR_PRIVILEGED: "true"
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "3001"
   prune: true
