@@ -31,6 +31,8 @@ spec:
       KOPIUR_ACCESSMODES: ReadWriteMany
       KOPIUR_STORAGECLASS: ceph-filesystem
       KOPIUR_SNAPSHOTCLASS: csi-ceph-filesystem
+      KOPIUR_PUID: "3000"
+      KOPIUR_PGID: "3001"
   prune: true
   retryInterval: 2m
   sourceRef:

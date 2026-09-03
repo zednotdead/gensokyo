@@ -24,8 +24,8 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
-      KOPIUR_PUID: "${NAS_UID}"
-      KOPIUR_PGID: "${NAS_GID}"
+      KOPIUR_PUID: "0"
+      KOPIUR_PGID: "3001"
   prune: true
   retryInterval: 2m
   dependsOn:

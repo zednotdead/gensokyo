@@ -28,6 +28,8 @@ talosctl = "1.13.7"
 yq = "4.53.3"
 zizmor = "1.29.0"
 envsubst = "latest"
+kopia = "latest"
+kubens = "latest"
 
 [hooks]
 postinstall = "lefthook install"
