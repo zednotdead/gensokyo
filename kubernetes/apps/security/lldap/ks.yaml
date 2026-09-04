@@ -8,6 +8,7 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync/
+    - ../../../../components/kopiur/backup/
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
@@ -23,6 +24,7 @@ spec:
       APP: *app
       GATUS_SUBDOMAIN: ldap
       VOLSYNC_CAPACITY: 5Gi
+      KOPIUR_CAPACITY: 5Gi
   dependsOn:
     - name: cloudnative-pg-cluster
       namespace: database
