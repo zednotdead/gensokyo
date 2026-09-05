@@ -11,6 +11,17 @@ spec:
     all: true
   credentialProjection:
     allowed: true
+  maintenance:
+    enabled: true
+    takeoverPolicy: Force
+    schedule:
+      full:
+        cron: 0 3 * * *
+      quick:
+        cron: 0 0/6 * * *
+  bootstrap:
+    failurePolicy:
+      activeDeadlineSeconds: 1200
   backend:
     s3:
       auth:

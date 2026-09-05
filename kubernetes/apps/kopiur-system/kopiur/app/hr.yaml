@@ -17,4 +17,4 @@ spec:
       kopiaUi:
         enabled: true
     logging:
-      level: debug
+      level: info,kopia=debug
