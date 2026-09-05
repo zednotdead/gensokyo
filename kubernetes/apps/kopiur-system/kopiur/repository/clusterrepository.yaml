@@ -17,8 +17,10 @@ spec:
     schedule:
       full:
         cron: 0 3 * * *
+        jitter: 1h
       quick:
-        cron: 0 0/6 * * *
+        cron: 0 0/2 * * *
+        jitter: 30m
   bootstrap:
     failurePolicy:
       activeDeadlineSeconds: 1200
