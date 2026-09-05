@@ -9,4 +9,4 @@ spec:
   interval: 1h
   url: oci://ghcr.io/home-operations/charts/kopiur
   ref:
-    tag: 0.8.0 # pin the chart version
+    tag: 0.10.7 # pin the chart version
