@@ -21,6 +21,7 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
+      KOPIUR_IGNORE_ERRORS: "true"
   prune: true
   retryInterval: 2m
   dependsOn:
