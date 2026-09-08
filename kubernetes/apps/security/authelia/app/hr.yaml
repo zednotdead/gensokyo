@@ -121,3 +121,8 @@ spec:
           - path: /config/configuration.yaml
             subPath: configuration.yaml
             readOnly: true
+      secret-files:
+        type: secret
+        name: authelia-secret
+        globalMounts:
+          - path: /config/secret

@@ -122,4 +122,3 @@ spec:
         existingClaim: jellyfin-transcode
         globalMounts:
           - path: /cache
-          - path: /jellyfin
