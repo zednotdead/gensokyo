@@ -121,3 +121,10 @@ spec:
           - path: /config/configuration.yaml
             subPath: configuration.yaml
             readOnly: true
+      secret-files:
+        type: secret
+        name: authelia-secret
+        globalMounts:
+          - path: /config/secrets/OIDC_JWKS_KEY
+            subPath: OIDC_JWKS_KEY
+            readOnly: true
