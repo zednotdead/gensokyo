@@ -44,7 +44,7 @@ spec:
           main:
             image:
               repository: nginx
-              tag: "1.31.3"
+              tag: "1.31.5"
               pullPolicy: IfNotPresent
             ports:
               - containerPort: &port 80
