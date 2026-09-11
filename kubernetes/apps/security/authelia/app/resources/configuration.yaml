@@ -33,6 +33,9 @@ access_control:
 
 identity_providers:
   oidc:
+    jwks:
+      - key: |
+          {{ secret "/config/secret/JWKS_PRIVATE_KEY" | mindent 10 "|" | msquote }}
     claims_policies:
       hoarder:
         id_token:
@@ -46,7 +49,7 @@ identity_providers:
         id_token:
           ["rat", "groups", "email", "email_verified", "alt_emails", "preferred_username", "name"]
       booklore:
-        id_token: ['email', 'preferred_username', 'name']
+        id_token: ["email", "preferred_username", "name"]
     scopes:
       nextcloud_userinfo:
         claims:
@@ -412,7 +415,7 @@ identity_providers:
         userinfo_signed_response_alg: "none"
         token_endpoint_auth_method: "client_secret_basic"
       - client_id: '{{ env "GRIMMORY_CLIENT_ID" }}'
-        client_name: 'Grimmory'
+        client_name: "Grimmory"
         client_secret: '{{ env "GRIMMORY_CLIENT_SECRET_DIGEST" }}'
         authorization_policy: two_factor
         require_pkce: true
@@ -426,7 +429,7 @@ identity_providers:
         redirect_uris:
           - https://grimmory.${SECRET_DOMAIN}/oauth2-callback
       - client_id: '{{ env "HISTER_CLIENT_ID" }}'
-        client_name: 'Hister'
+        client_name: "Hister"
         client_secret: '{{ env "HISTER_CLIENT_SECRET_DIGEST" }}'
         authorization_policy: one_factor
         scopes:
