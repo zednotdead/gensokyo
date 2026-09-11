@@ -73,6 +73,8 @@ spec:
         INIT_POSTGRES_USER: *dbUser
         INIT_POSTGRES_PASS: *dbPass
         INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
+        JWKS_PRIVATE_KEY: '{{ index . "private.pem" }}'
+        JWKS_PUBLIC_CERTIFICATE: '{{ index . "public.crt" }}'
   dataFrom:
     - extract:
         key: Authelia
