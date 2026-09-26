@@ -17,3 +17,4 @@ resources:
   - ./zipline/ks.yaml
   - ./nextcloud/ks.yaml
   - ./hister/ks.yaml
+  - ./syncthing/ks.yaml

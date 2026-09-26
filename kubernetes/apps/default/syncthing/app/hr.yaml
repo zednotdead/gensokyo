@@ -1,0 +1,156 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app syncthing
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      syncthing:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/haraldkoch/syncthing
+              tag: 2.0.11
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 15m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+          filebrowser:
+            image:
+              repository: docker.io/gtstef/filebrowser
+              tag: 1.5.6-stable-slim@sha256:708cfb8562e5b2f6dbdbc2d95d9269ac74feda8641e3a56bb1e765074078fa06
+            env:
+              FILEBROWSER_CONFIG: /config/config.yaml
+            probes:
+              liveness: &fb-probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &fb-port 8080
+                  periodSeconds: 10
+              readiness: *fb-probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: false
+    configMaps:
+      filebrowser-config:
+        data:
+          config.yaml: |
+            auth:
+              methods:
+                noauth: true
+            server:
+              port: 8080
+              cacheDir: /home/filebrowser/data/cache
+              sources:
+                - path: /var/syncthing
+                  config:
+                    defaultEnabled: true
+    service:
+      app:
+        controller: syncthing
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: ${SYNCTHING_ADDRESS}
+        primary: true
+        ports:
+          http:
+            port: 8384
+            primary: true
+      listen:
+        controller: syncthing
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: ${SYNCTHING_LISTEN_ADDRESS}
+        externalTrafficPolicy: Local
+        ports:
+          listen:
+            port: 22000
+            protocol: TCP
+            targetPort: 22000
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+            targetPort: 21027
+      filebrowser:
+        controller: syncthing
+        ports:
+          http:
+            port: *fb-port
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 8384
+      filebrowser:
+        hostnames: ["sync.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: filebrowser
+                port: *fb-port
+    persistence:
+      config:
+        existingClaim: syncthing
+      filebrowser-config:
+        type: configMap
+        identifier: filebrowser-config
+        advancedMounts:
+          syncthing:
+            filebrowser:
+              - path: /config/config.yaml
+                subPath: config.yaml
+                readOnly: true
+      filebrowser-data:
+        type: emptyDir
+        advancedMounts:
+          syncthing:
+            filebrowser:
+              - path: /home/filebrowser/data
+      data:
+        enabled: true
+        type: nfs
+        server: ${NAS_ADDRESS}
+        path: "${NAS_BASE_URL}/media/software/syncthing"
+        globalMounts:
+          - path: /var/syncthing
