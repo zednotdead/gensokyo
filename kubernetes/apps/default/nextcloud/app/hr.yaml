@@ -37,7 +37,7 @@ spec:
           mountPath: /nfs/media
       extraInitContainers:
         - name: init-db
-          image: ghcr.io/home-operations/postgres-init:17@sha256:86a1992d46273c58fd4ad95b626081dfaabfe16bd56944675169e406d1a660dd
+          image: ghcr.io/home-operations/postgres-init:18@sha256:b6d3af974df781c673d37e49bdddfa14a6f5be28b18d2cb7713f0449bea4057b
           envFrom:
             - secretRef:
                 name: &secret nextcloud-secret
