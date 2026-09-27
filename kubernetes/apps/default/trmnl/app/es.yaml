@@ -18,6 +18,8 @@ spec:
         INIT_POSTGRES_PASS: "{{ .DATABASE_PASSWORD }}"
         INIT_POSTGRES_SUPER_PASS: "{{ .CNPG_password }}"
         DATABASE_URL: "postgresql://{{ .DATABASE_USER }}:{{ .DATABASE_PASSWORD }}@postgres-lb.database.svc:5432/trmnl?sslmode=disable"
+        KEYVALUE_URL: "redis://trmnl-dragonfly:6379/0"
+        APP_SECRET: "{{ .APP_SECRET }}"
   dataFrom:
     - extract:
         key: trmnl
