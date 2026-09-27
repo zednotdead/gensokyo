@@ -18,3 +18,4 @@ resources:
   - ./nextcloud/ks.yaml
   - ./hister/ks.yaml
   - ./syncthing/ks.yaml
+  - ./trmnl/ks.yaml
