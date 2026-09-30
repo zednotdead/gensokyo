@@ -1,15 +1,16 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.26.1-standalone-strict/persistentvolumeclaim-v1.json
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyfin-transcode
-  labels:
-    app.kubernetes.io/name: jellyfin
+  name: ${APP}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ${KOPIUR_ACCESSMODES:=ReadWriteOnce}
+  dataSourceRef:
+    apiGroup: kopiur.home-operations.com
+    kind: Restore
+    name: ${APP}
   resources:
     requests:
-      storage: 20Gi
-  storageClassName: ceph-block
+      storage: ${KOPIUR_CAPACITY:=5Gi}
+  storageClassName: ${KOPIUR_STORAGECLASS:=ceph-block}
