@@ -25,10 +25,10 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_IGNORE_ERRORS: "true"
-      KOPIUR_PUID: "3001"
+      KOPIUR_PUID: "0"
       KOPIUR_PGID: "3001"
-      # KOPIUR_PRIVILEGED: "true"
-      # KOPIUR_NON_ROOT: "false"
+      KOPIUR_PRIVILEGED: "true"
+      KOPIUR_NON_ROOT: "false"
   prune: true
   retryInterval: 2m
   sourceRef:

@@ -21,8 +21,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 20Gi
-      VOLSYNC_CACHE_CAPACITY: 20Gi
       KOPIUR_CAPACITY: 20Gi
       GATUS_SUBDOMAIN: jf
   prune: true
