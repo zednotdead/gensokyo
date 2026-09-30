@@ -24,6 +24,9 @@ spec:
   bootstrap:
     failurePolicy:
       activeDeadlineSeconds: 1200
+  parameters:
+    epoch:
+      minDuration: "1h"
   backend:
     s3:
       auth:
