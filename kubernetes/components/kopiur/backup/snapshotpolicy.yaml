@@ -16,8 +16,8 @@ spec:
     - pvc:
         name: ${APP}
   retention:
-    keepDaily: 14
-    keepWeekly: 4
+    keepDaily: 7
+    keepWeekly: 2
   volumeSnapshotClassName: ${KOPIUR_SNAPSHOTCLASS:=csi-ceph-blockpool}
   errorHandling:
     ignoreFileErrors: ${KOPIUR_IGNORE_ERRORS:=false}
