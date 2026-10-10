@@ -38,7 +38,7 @@ spec:
           filebrowser:
             image:
               repository: docker.io/gtstef/filebrowser
-              tag: 1.5.6-stable-slim@sha256:708cfb8562e5b2f6dbdbc2d95d9269ac74feda8641e3a56bb1e765074078fa06
+              tag: 2.0.0-stable-slim@sha256:095e258fbc17f6f5b9b8e080e7b435a6dbad3a1074c61125ca0a59e24514c1a1
             env:
               FILEBROWSER_CONFIG: /config/config.yaml
             probes:
