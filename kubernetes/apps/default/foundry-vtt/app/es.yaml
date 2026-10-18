@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://schemas.mortebrume.eu/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: foundry
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    template:
+      data:
+        FOUNDRY_USERNAME: "{{ .FOUNDRY_USERNAME }}"
+        FOUNDRY_PASSWORD: "{{ .FOUNDRY_PASSWORD }}"
+        FOUNDRY_ADMIN_KEY: "{{ .FOUNDRY_ADMIN_KEY }}"
+  dataFrom:
+    - extract:
+        key: Foundry
