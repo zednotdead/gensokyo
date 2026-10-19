@@ -19,7 +19,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_IGNORE_ERRORS: "true"
   prune: true
@@ -32,7 +31,6 @@ spec:
     - name: cloudnative-pg-cluster
       namespace: database
   components:
-    - ../../../../components/volsync/
     - ../../../../components/kopiur/backup
   sourceRef:
     kind: GitRepository
