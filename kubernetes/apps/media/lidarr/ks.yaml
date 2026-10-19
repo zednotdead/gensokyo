@@ -32,8 +32,10 @@ spec:
   dependsOn:
     - name: external-secrets-stores
       namespace: external-secrets
-    - name: volsync
-      namespace: volsync-system
+    - name: kopiur
+      namespace: kopiur-system
+    - name: cloudnative-pg-cluster
+      namespace: database
   sourceRef:
     kind: GitRepository
     name: flux-system
