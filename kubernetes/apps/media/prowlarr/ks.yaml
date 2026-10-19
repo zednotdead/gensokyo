@@ -7,7 +7,6 @@ metadata:
   namespace: &namespace media
 spec:
   components:
-    - ../../../../components/volsync/
     - ../../../../components/kopiur/backup
   commonMetadata:
     labels:
@@ -22,13 +21,8 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
       KOPIUR_IGNORE_ERRORS: "true"
-      KOPIUR_PUID: "0"
-      KOPIUR_PGID: "3001"
-      KOPIUR_PRIVILEGED: "true"
-      KOPIUR_NON_ROOT: "false"
   prune: true
   retryInterval: 2m
   sourceRef:
