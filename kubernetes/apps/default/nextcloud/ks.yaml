@@ -7,7 +7,6 @@ metadata:
   namespace: &namespace default
 spec:
   components:
-    - ../../../../components/volsync/
     - ../../../../components/kopiur/backup
   commonMetadata:
     labels:
@@ -24,7 +23,6 @@ spec:
         kind: ConfigMap
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 10Gi
       KOPIUR_CAPACITY: 10Gi
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "82"

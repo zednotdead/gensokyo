@@ -10,3 +10,4 @@ resources:
   - ./httproute.yaml
   - ./oci.yaml
   - ./dragonfly.yaml
+  - ./pvc.yaml
