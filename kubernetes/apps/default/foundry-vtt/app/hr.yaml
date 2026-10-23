@@ -44,23 +44,6 @@ spec:
                 memory: 1434Mi
               limits:
                 memory: 5Gi
-      proxy:
-        containers:
-          app:
-            image:
-              repository: ghcr.io/mrprimate/ddb-proxy
-              tag: 7.0.26@sha256:edf3c3647a7db219019ff532f661460b7c4c67b686c9f18d28b62bbcf98f9845
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-            resources:
-              requests:
-                cpu: 10m
-                memory: 50Mi
-              limits:
-                memory: 512Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -92,16 +75,6 @@ spec:
           - backendRefs:
               - identifier: app
                 port: *port
-      proxy:
-        hostnames:
-          - vtt-proxy.${SECRET_DOMAIN}
-        parentRefs:
-          - name: envoy-external
-            namespace: network
-        rules:
-          - backendRefs:
-              - identifier: proxy
-                port: 3000
     persistence:
       data:
         existingClaim: foundry-vtt
