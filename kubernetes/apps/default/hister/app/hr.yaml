@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: ghcr.io/asciimoo/hister
-              tag: v0.18.0@sha256:55ca3b00da9d3245cc689a7f4455be5f4a3931c29d3450d6d1f46f8c931cce35
+              tag: v0.21.0@sha256:4dab1cbd7aabe8ade8e696e4085ecd3254e1170467c4502debec792a904abdbc
             env:
               TZ: ${TIMEZONE}
               HISTER__APP__USER_HANDLING: "true"
