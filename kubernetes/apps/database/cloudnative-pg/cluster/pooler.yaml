@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: postgres16-pgbouncer
+  namespace: database
+spec:
+  cluster:
+    name: postgres16
+  instances: 2
+  type: rw
+  pgbouncer:
+    poolMode: session
+    parameters:
+      max_client_conn: "200"
+      default_pool_size: "20"
