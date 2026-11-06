@@ -27,6 +27,7 @@ spec:
       KOPIUR_PUID: "0"
       KOPIUR_PGID: "33"
       KOPIUR_PRIVILEGED: "true"
+      KOPIUR_IGNORE_ERRORS: "true"
   prune: true
   retryInterval: 2m
   sourceRef:
