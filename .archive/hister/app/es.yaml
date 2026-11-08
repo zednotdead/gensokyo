@@ -12,7 +12,7 @@ spec:
     creationPolicy: Owner
     template:
       data:
-        HISTER__SERVER__DATABASE: 'host=postgres-lb.database.svc user={{ .DATABASE_USER }} password={{ .DATABASE_PASSWORD }} dbname=hister port=5432 sslmode=disable TimeZone=${TIMEZONE}'
+        HISTER__SERVER__DATABASE: "host=postgres-lb.database.svc user={{ .DATABASE_USER }} password={{ .DATABASE_PASSWORD }} dbname=hister port=5432 sslmode=disable TimeZone=${TIMEZONE}"
         HISTER__SERVER__OAUTH__OIDC__CLIENT_ID: "{{ .CLIENT_ID }}"
         HISTER__SERVER__OAUTH__OIDC__CLIENT_SECRET: "{{ .CLIENT_SECRET }}"
 
