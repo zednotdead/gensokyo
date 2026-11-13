@@ -10,7 +10,7 @@ spec:
   instances: 2
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 35Gi
+    size: 15Gi
     storageClass: ceph-block
   superuserSecret:
     name: &secret cloudnative-pg-secret
@@ -51,7 +51,7 @@ spec:
         maxParallel: 4
       destinationPath: s3://cnpg/
       endpointURL: &s3addr http://rustfs.default.svc:9000
-      serverName: postgres-v3
+      serverName: postgres-v4
       s3Credentials: &s3
         accessKeyId:
           name: *secret
@@ -73,5 +73,5 @@ spec:
           maxParallel: 4
         destinationPath: s3://cnpg/
         endpointURL: *s3addr
-        serverName: postgres-v2
+        serverName: postgres-v3
         s3Credentials: *s3
