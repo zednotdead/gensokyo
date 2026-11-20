@@ -12,3 +12,4 @@ resources:
   - ./pihole-dns/ks.yaml
   - ./envoy-gateway/ks.yaml
   - ./k8s-gateway/ks.yaml
+  - ./crowdsec/ks.yaml

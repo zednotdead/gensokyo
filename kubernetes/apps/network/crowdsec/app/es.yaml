@@ -1,0 +1,23 @@
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: crowdsec
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword-connect
+  target:
+    name: crowdsec-secret
+    creationPolicy: Owner
+    template:
+      data:
+        BOUNCER_KEY_ENVOY: "{{ .CROWDSEC_BOUNCER_KEY }}"
+        ENROLL_KEY: "{{ .CROWDSEC_ENROLL_KEY }}"
+  dataFrom:
+    - extract:
+        key: Crowdsec
+      rewrite:
+        - regexp:
+            source: "(.*)"
+            target: "CROWDSEC_$1"
