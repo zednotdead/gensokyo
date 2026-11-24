@@ -17,6 +17,9 @@ spec:
     namespace: flux-system
   targetNamespace: network
   wait: true
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: external-secrets
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -36,3 +39,8 @@ spec:
     namespace: flux-system
   targetNamespace: network
   wait: true
+  dependsOn:
+    - name: external-secrets-stores
+      namespace: external-secrets
+    - name: crowdsec
+      namespace: network
