@@ -35,7 +35,7 @@ spec:
               OC_URL: https://oc.${SECRET_DOMAIN}
               OC_SHARING_PUBLIC_SHARE_MUST_HAVE_PASSWORD: false
               OCIS_LOG_COLOR: false
-              OCIS_LOG_LEVEL: info
+              OCIS_LOG_LEVEL: debug
               OCIS_LOG_PRETTY: false
               SEARCH_EXTRACTOR_TYPE: tika
               SEARCH_EXTRACTOR_TIKA_TIKA_URL: http://localhost:9998
