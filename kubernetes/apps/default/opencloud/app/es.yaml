@@ -33,8 +33,8 @@ spec:
         WEBFINGER_DESKTOP_OIDC_CLIENT_ID: "opencloud-desktop"
         WEBFINGER_DESKTOP_OIDC_CLIENT_SCOPES: "openid profile email groups offline_access"
         OC_EXCLUDE_RUN_SERVICES: "idp"
-        PROXY_ROLE_ASSIGNMENT_DRIVER: "default"
         GRAPH_ASSIGN_DEFAULT_USER_ROLE: "false"
+        PROXY_ROLE_ASSIGNMENT_DRIVER: oidc
         # Storage
         STORAGE_USERS_DECOMPOSEDS3_ENDPOINT: https://s3.${SECRET_DOMAIN}
         STORAGE_USERS_DECOMPOSEDS3_REGION: default
