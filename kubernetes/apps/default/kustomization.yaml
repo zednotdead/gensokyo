@@ -18,3 +18,4 @@ resources:
   - ./nextcloud/ks.yaml
   - ./syncthing/ks.yaml
   - ./foundry-vtt/ks.yaml
+  - ./opencloud/ks.yaml
