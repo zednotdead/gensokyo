@@ -1,5 +1,4 @@
 role_assignment:
-  driver: oidc
   oidc_role_mapper:
     role_claim: groups
     role_mapping:
