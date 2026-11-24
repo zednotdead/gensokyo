@@ -52,6 +52,7 @@ spec:
               SETTINGS_SETUP_DEFAULT_ASSIGNMENTS: false
               GRAPH_ASSIGN_DEFAULT_USER_ROLE: false
               GRAPH_USERNAME_MATCH: none
+              PROXY_TLS: false
             resources:
               requests:
                 cpu: 100m
