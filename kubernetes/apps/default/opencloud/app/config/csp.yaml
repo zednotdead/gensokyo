@@ -7,7 +7,6 @@ directives:
     - "blob:"
     - "https://raw.githubusercontent.com/opencloud-eu/awesome-apps/"
     - "https://auth.${SECRET_DOMAIN}/"
-    - "https://oc.${SECRET_DOMAIN}/"
   default-src:
     - "'none'"
   font-src:
@@ -20,6 +19,7 @@ directives:
     - "https://embed.diagrams.net/"
     # This is needed for the external-sites web extension when embedding sites
     - "https://docs.opencloud.eu"
+    - "https://auth.${SECRET_DOMAIN}/"
   img-src:
     - "'self'"
     - "data:"
@@ -35,6 +35,7 @@ directives:
   script-src:
     - "'self'"
     - "'unsafe-inline'"
+    - "https://auth.${SECRET_DOMAIN}/"
   style-src:
     - "'self'"
     - "'unsafe-inline'"
