@@ -37,9 +37,11 @@ spec:
             url: /metrics
             authentication:
               disabled: true
-          permissions:
-            file:
-              mode: 750
+          transfers:
+            download:
+              destination:
+                permissions:
+                  mode: 750
           remote_configuration: false
           shares:
             directories:
