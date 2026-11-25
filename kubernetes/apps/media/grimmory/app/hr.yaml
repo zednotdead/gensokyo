@@ -18,7 +18,7 @@ spec:
           mariadb:
             image:
               repository: docker.io/library/mariadb
-              tag: 12.3.2-noble@sha256:a02fe89cb597d4375812b2eac90cf9d0775d4686daa7f7cc750ebbcad7525bbc
+              tag: 12.3.3-noble@sha256:4aaf88b3106382c8c18e49f0cec60267be618fc22f858c4503afb2a2555afed3
             env:
               MARIADB_DATABASE: grimmory
               MARIADB_USER: grimmory
