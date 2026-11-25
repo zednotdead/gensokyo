@@ -66,6 +66,22 @@ spec:
       host: &host cloud.${SECRET_DOMAIN}
       defaultConfigs:
         imaginary.config.php: true
+      phpConfigs:
+        uploadLimit.ini: |
+          max_input_time = 3600
+          max_execution_time = 3600
+        www.conf: |
+          [www]
+          user = www-data
+          group = 82
+          listen = 127.0.0.1:9000
+          pm = dynamic
+          pm.max_children = 57
+          pm.start_servers = 14
+          pm.min_spare_servers = 14
+          pm.max_spare_servers = 42
+          pm.max_requests = 500
+          pm.process_idle_timeout = 10s
       configs:
         proxy.config.php: |-
           <?php
