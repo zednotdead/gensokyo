@@ -27,7 +27,7 @@ spec:
                   name: foundry
             image:
               repository: ghcr.io/felddy/foundryvtt
-              tag: 14.369.0@sha256:76497e09a7eeae769359eebdaae3bbcf39c9c826068f7dcc061b8b7e9bffaec8
+              tag: 14.370.1@sha256:31f69b964d637cc573e571992b14818e7f3bd4272ef8d2291511d4ada5636116
             probes:
               liveness:
                 enabled: true
