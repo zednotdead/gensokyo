@@ -35,47 +35,6 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 1Gi
-          filebrowser:
-            image:
-              repository: docker.io/gtstef/filebrowser
-              tag: 2.1.0-stable-slim@sha256:015308dd44fc9ca945e83682ed586f3bdb99e05156f6979f787eb608a388bc3b
-            env:
-              FILEBROWSER_CONFIG: /config/config.yaml
-            probes:
-              liveness: &fb-probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /health
-                    port: &fb-port 8080
-                  periodSeconds: 10
-              readiness: *fb-probes
-            resources:
-              requests:
-                cpu: 10m
-                memory: 32Mi
-              limits:
-                memory: 128Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ["ALL"]
-              readOnlyRootFilesystem: false
-    configMaps:
-      filebrowser-config:
-        data:
-          config.yaml: |
-            auth:
-              methods:
-                noauth: true
-            server:
-              port: 8080
-              cacheDir: /home/filebrowser/data/cache
-              sources:
-                - path: /var/syncthing
-                  config:
-                    defaultEnabled: true
     service:
       app:
         controller: syncthing
@@ -90,11 +49,6 @@ spec:
           sync:
             protocol: TCP
             port: &sync 22000
-      filebrowser:
-        controller: syncthing
-        ports:
-          http:
-            port: *fb-port
     route:
       app:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
@@ -116,34 +70,9 @@ spec:
           - backendRefs:
               - name: syncthing
                 port: *sync
-      filebrowser:
-        hostnames: ["sync.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: filebrowser
-                port: *fb-port
     persistence:
       config:
         existingClaim: syncthing
-      filebrowser-config:
-        type: configMap
-        identifier: filebrowser-config
-        advancedMounts:
-          syncthing:
-            filebrowser:
-              - path: /config/config.yaml
-                subPath: config.yaml
-                readOnly: true
-      filebrowser-data:
-        type: emptyDir
-        advancedMounts:
-          syncthing:
-            filebrowser:
-              - path: /home/filebrowser/data
       data:
         enabled: true
         type: nfs
