@@ -49,7 +49,7 @@ spec:
           grimmory:
             image:
               repository: ghcr.io/grimmory-tools/grimmory
-              tag: v3.3.2@sha256:8a3a046822dee460f3e67df5d548e3b9842057a54ed830026edb20ecc116c8ce
+              tag: v3.5.1@sha256:678d8e8af92f3587d4cfae28ffbe44854105ea56fed6b9590fc56b454f512585
             # Bypass /usr/local/bin/entrypoint.sh — it expects to start as root
             # to addgroup/adduser/chown before su-exec'ing down to USER_ID. With
             # pod-level runAsUser: 1000, that fails. Invoke java directly; the
