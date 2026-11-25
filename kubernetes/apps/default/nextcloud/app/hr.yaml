@@ -70,6 +70,8 @@ spec:
         uploadLimit.ini: |
           max_input_time = 3600
           max_execution_time = 3600
+          upload_max_filesize = 16G
+          post_max_size = 16G
         www.conf: |
           [www]
           user = www-data
