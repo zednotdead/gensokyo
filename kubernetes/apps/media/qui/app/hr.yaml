@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: qui
+  name: &app qui
 spec:
   chartRef:
     kind: OCIRepository
@@ -63,7 +63,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: qui
+        existingClaim: *app
     route:
       app:
         hostnames:
