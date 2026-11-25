@@ -78,6 +78,14 @@ spec:
           from: All
         kinds:
           - kind: TCPRoute
+    - name: syncthing
+      protocol: TCP
+      port: 22000
+      allowedRoutes:
+        namespaces:
+          from: All
+        kinds:
+          - kind: TCPRoute
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway

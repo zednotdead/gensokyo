@@ -22,8 +22,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/haraldkoch/syncthing
-              tag: 2.0.11
+              repository: ghcr.io/syncthing/syncthing
+              tag: 2.1.7@sha256:2b71da7c0d0a91a6ae5285ad079226fecc0a365d08b27720e1f7037b018f7546
             probes:
               liveness:
                 enabled: true
@@ -86,23 +86,10 @@ spec:
         ports:
           http:
             port: 8384
-            primary: true
-      listen:
-        controller: syncthing
-        type: LoadBalancer
-        annotations:
-          lbipam.cilium.io/ips: ${SYNCTHING_LISTEN_ADDRESS}
-        externalTrafficPolicy: Local
-        ports:
-          listen:
-            port: 22000
+            targetPort: &port 8384
+          sync:
             protocol: TCP
-            targetPort: 22000
-          discovery:
-            enabled: true
-            port: 21027
-            protocol: UDP
-            targetPort: 21027
+            port: &sync 22000
       filebrowser:
         controller: syncthing
         ports:
@@ -118,7 +105,17 @@ spec:
         rules:
           - backendRefs:
               - identifier: app
-                port: 8384
+                port: *port
+      sync:
+        kind: TCPRoute
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: syncthing
+        rules:
+          - backendRefs:
+              - name: syncthing
+                port: *sync
       filebrowser:
         hostnames: ["sync.${SECRET_DOMAIN}"]
         parentRefs:
